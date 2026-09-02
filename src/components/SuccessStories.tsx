@@ -6,6 +6,10 @@ import { Quote, Sparkles } from 'lucide-react';
 export const SuccessStories: React.FC = () => {
   const [activeStory, setActiveStory] = useState<SuccessStory | null>(null);
 
+  // "Real outcomes, restored joy" over an empty grid is worse than no section
+  // at all. Hooks run first so this stays a legal early return.
+  if (SUCCESS_STORIES.length === 0) return null;
+
   return (
     <section id="success" className="py-20 sm:py-28 bg-[#ffffff]">
       <div className="max-w-[1280px] mx-auto px-4 sm:px-8">

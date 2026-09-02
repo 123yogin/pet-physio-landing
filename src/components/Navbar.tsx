@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useLayoutEffect } from 'react';
 import {Menu, X, Calendar, ChevronRight } from 'lucide-react';
+import { SUCCESS_STORIES } from '../data/clinicData';
 
 interface NavbarProps {
   onOpenBooking: () => void;
@@ -34,11 +35,17 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // "Stories" is conditional: the section it targets hides itself when there
+  // are no real success stories, and a nav item that scrolls to nothing is a
+  // dead control in both the desktop bar and the mobile drawer below. It comes
+  // back on its own as soon as SUCCESS_STORIES has an entry.
   const navLinks = [
     { label: 'Home', href: '/#home', id: 'home' },
     { label: 'Conditions', href: '/#conditions', id: 'conditions' },
     { label: 'Services', href: '/#services', id: 'services' },
-    { label: 'Stories', href: '/#success', id: 'success' },
+    ...(SUCCESS_STORIES.length > 0
+      ? [{ label: 'Stories', href: '/#success', id: 'success' }]
+      : []),
     { label: 'About', href: '/#about', id: 'about' },
     { label: 'Gallery', href: '/#gallery', id: 'gallery' },
     { label: 'FAQs', href: '/#faqs', id: 'faqs' },

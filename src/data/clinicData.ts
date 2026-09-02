@@ -203,30 +203,32 @@ export const JOURNEY_STEPS: JourneyStep[] = [
 ];
 
 export const SUCCESS_STORIES: SuccessStory[] = [
-  {
-    id: 'bella',
-    petName: 'Bella',
-    breed: 'Golden Retriever',
-    condition: 'Post-TPLO Surgery',
-    quote: '"After her knee surgery, Bella was hesitant to use her leg. The hydrotherapy sessions worked wonders. Within weeks, she was walking normally again, and now she\'s back to chasing balls in the park. The team here is incredible!"',
-    ownerName: 'Sarah & James M.',
-    storyDetails: 'Bella suffered a complete cranial cruciate ligament tear. Following TPLO surgery, hydrotherapy helped rebuild 3cm of lost thigh circumference in 6 weeks.',
-    duration: '6 Weeks Rehab',
-    imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAxESYcuHSb78niLBE9VJVWpu39XZqAITld_5RBfCqPdz75K2dhQIZBwWhujOk7G5avkrIge644wbrb-dvpce9o1n_3VxHqX-neYTpNJ5sL35gbiipCutn_tslSIsn8tkthe35x7RTADcKtipMDcl0EMUOLTBXbqOXwk09SdZr_5aCfuEa3-3Q3jCei1CMqdFXncxdM9VdkDyqV98-CbplOE7q9fV3DzllOX7XwY_CIQAgXsZzpE6rd',
-    altText: 'Bella the Golden Retriever after successful knee rehabilitation'
-  },
-  {
-    id: 'max',
-    petName: 'Max',
-    breed: 'Dachshund',
-    condition: 'IVDD Recovery',
-    quote: '"We were terrified when Max went down in his back legs. The neurological rehab program gave him his mobility back. It was a long journey, but the laser therapy and targeted exercises were life-changing. He\'s walking independently now!"',
-    ownerName: 'Elena R.',
-    storyDetails: 'Max presented with Grade III IVDD hindlimb paraparesis. Conservative rehab combining laser photobiomodulation and underwater gait training restored full voluntary step placement.',
-    duration: '12 Weeks Rehab',
-    imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuA0v1K4RUQusxZaKv2onCIKyqgeW5yqP6jGfgu5yE9GeN0yxXeLeiolqvbLb7s73q78GMNEydaWbCao9F74A1GQ_Uch_pHyZcAqCrFWOM6vYYQK9jrvQ_xU6eFuIN2orG-ksRXkQ53rSvxRltjgttwV2uizsMmxShaOOa5UDQ1m9TxlVUTu74wKPPtxj1vpBJu3YMGa54BYyN7lbBG_SYo8YpY1DhxOPCNk_Se5BI9tT15ZHDVKccpm',
-    altText: 'Max the Dachshund standing proud after spinal recovery'
-  }
+  // Empty on purpose — see the note below. Add real, permissioned stories and
+  // the "Success Stories" section and its nav link reappear automatically.
+  //
+  // This list used to hold two testimonials that were template fiction:
+  // "Sarah & James M." on Bella, a Golden Retriever recovering from TPLO
+  // surgery, and "Elena R." on an IVDD recovery — invented clients quoted by
+  // name about invented patients, describing clinical outcomes on a real
+  // veterinary practice's homepage. They arrived with the same site template
+  // that supplied three fabricated clinicians (see SPECIALISTS above).
+  //
+  // They were display-only rather than emitted as Review/AggregateRating
+  // schema, which is the one thing that kept this out of Google's structured
+  // data. seo/schema.ts deliberately emits neither, and it must stay that way
+  // until there are real reviews to point at.
+  //
+  // The clinic HAS real reviews — 24 of them on its Google Business Profile —
+  // and those are what belongs here. They could not be pulled automatically:
+  // the profile is not indexed by the available search tools, and reading
+  // review text needs the Google Places API plus the clinic's place_id.
+  // Writing stand-ins in the meantime would have recreated the exact defect
+  // this removal exists to fix, so the section renders nothing instead.
+  //
+  // To restore: paste each real review as one entry. `quote` and `ownerName`
+  // come straight from the review; `petName`, `breed`, `condition` and
+  // `storyDetails` only if the reviewer actually stated them — leave them out
+  // rather than filling the shape.
 ];
 
 export const SPECIALISTS: Specialist[] = [
