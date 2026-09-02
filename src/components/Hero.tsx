@@ -8,7 +8,12 @@ interface HeroProps {
 
 export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
   return (
-    <section id="home" className="relative w-full min-h-[85vh] lg:min-h-[720px] flex items-center justify-center overflow-hidden bg-[#f8f3ed] pt-24 pb-16 lg:py-0">
+    <section id="home" className="relative w-full min-h-[85vh] lg:min-h-[720px] flex items-center justify-center overflow-hidden bg-[#f8f3ed] pb-16 lg:pb-0"
+      // Clears the fixed navbar at every breakpoint and in both its scrolled
+      // and unscrolled states. --nav-h is published by Navbar from its own
+      // measured height; the CSS fallback covers the server-rendered HTML
+      // before hydration.
+      style={{ paddingTop: 'calc(var(--nav-h, 113px) + 2rem)' }}>
       {/* Background Image Container */}
       <div className="absolute inset-0 z-0 w-full lg:w-1/2 lg:left-1/2">
         {/* LCP element: eager + high priority, explicit dimensions to reserve space (CLS). */}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useLayoutEffect } from 'react';
 import {Menu, X, Calendar, ChevronRight } from 'lucide-react';
 
 interface NavbarProps {
@@ -45,8 +45,29 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
     { label: 'Contact', href: '/#contact', id: 'contact' },
   ];
 
+  // The nav is `position: fixed`, so it takes no space in flow and the hero has
+  // to leave room for it. That gap used to be a hardcoded `pt-24`, which was
+  // right for the 85px mobile bar and wrong for the 113px desktop one — the
+  // hero's own `lg:py-0` then removed it entirely and the "Certified
+  // Veterinary Rehabilitation Center" badge sat 18px underneath the nav.
+  //
+  // Publishing the real measured height means the two cannot drift: the bar
+  // also shrinks on scroll, and any future change to its padding or logo size
+  // is picked up automatically rather than needing a matching edit elsewhere.
+  const navRef = useRef<HTMLElement>(null);
+  useLayoutEffect(() => {
+    const el = navRef.current;
+    if (!el || typeof ResizeObserver === 'undefined') return;
+    const publish = () =>
+      document.documentElement.style.setProperty('--nav-h', `${el.offsetHeight}px`);
+    publish();
+    const ro = new ResizeObserver(publish);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
   return (
-    <nav className={`bg-[#fef9f2]/95 backdrop-blur-md text-[#3C2117] font-['Inter'] fixed top-0 w-full z-50 transition-all duration-300 border-b ${
+    <nav ref={navRef} className={`bg-[#fef9f2]/95 backdrop-blur-md text-[#3C2117] font-['Inter'] fixed top-0 w-full z-50 transition-all duration-300 border-b ${
       scrolled ? 'border-[#d4c3bd]/40 shadow-xs py-2' : 'border-[#d4c3bd]/20 py-3.5 sm:py-4'
     }`}>
       <div className="flex justify-between items-center w-full px-4 sm:px-6 lg:px-8 max-w-[1280px] mx-auto h-14 sm:h-16 lg:h-20 gap-2 sm:gap-4">
@@ -55,9 +76,14 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
           href="/#home" 
           className="font-['Plus_Jakarta_Sans'] text-lg sm:text-xl lg:text-2xl font-light text-[#3C2117] flex items-center gap-2 tracking-tight group shrink-0 whitespace-nowrap"
         >
-          <span className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#3C2117] text-[#fef9f2] flex items-center justify-center font-semibold text-xs sm:text-sm group-hover:scale-105 transition-transform shrink-0">
-            P
-          </span>
+          <img
+            src="/logo.svg"
+            alt=""
+            aria-hidden="true"
+            width={36}
+            height={36}
+            className="w-8 h-8 sm:w-9 sm:h-9 shrink-0 group-hover:scale-105 transition-transform"
+          />
           <span className="font-medium whitespace-nowrap tracking-tight">The Pet Physio Vet</span>
         </a>
 
