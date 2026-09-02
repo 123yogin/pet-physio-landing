@@ -84,6 +84,17 @@ export const Footer: React.FC = () => {
 
       <div className="border-t border-[#d4c3bd]/30 py-8 text-center text-[#504440] font-light text-xs tracking-wide">
         © {new Date().getFullYear()} {SITE.brandName}. All rights reserved.
+        {/* Deliberately discreet. Pet owners and clinic staff share one login —
+            the account's role decides which portal they land in. Hiding this
+            link would add no security (the route is public regardless), it
+            would just make staff hunt for the URL. */}
+        <span className="mx-2 text-[#d4c3bd]">·</span>
+        <a
+          href="/app/login"
+          className="underline underline-offset-4 hover:text-[#84523e] transition-colors"
+        >
+          Staff &amp; client login
+        </a>
       </div>
     </footer>
   );
