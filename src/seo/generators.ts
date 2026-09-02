@@ -1,0 +1,152 @@
+/**
+ * robots.txt / sitemap.xml / llms.txt builders.
+ *
+ * All three are generated from ROUTES + SITE at build time, so adding a condition
+ * to clinicData.ts adds its sitemap entry automatically. Nothing here is a static
+ * file checked into the repo — a hand-maintained sitemap drifts out of sync with
+ * the routes, and a stale sitemap is worse than none.
+ */
+
+import { SITE, absoluteUrl } from './siteConfig';
+import { indexableRoutes } from './routes';
+import { getPageMeta } from './metadata';
+import { CONDITIONS, SERVICES, SPECIALISTS } from '../data/clinicData';
+import { conditionPath, servicePath, specialistPath } from './routes';
+
+/**
+ * AI crawlers, split by purpose.
+ *
+ * Search/citation crawlers are the ones that can send traffic and cite the clinic
+ * in an answer, so they are always allowed — blocking them removes the site from
+ * the citation pool entirely. Training crawlers are a separate business decision,
+ * toggled by SITE.allowAiTrainingCrawlers.
+ */
+export const AI_CRAWLERS = {
+  search: ['OAI-SearchBot', 'Claude-SearchBot', 'PerplexityBot', 'Bingbot', 'Applebot'],
+  training: ['GPTBot', 'ClaudeBot', 'anthropic-ai', 'Google-Extended', 'CCBot', 'Applebot-Extended', 'meta-externalagent'],
+} as const;
+
+export function buildRobotsTxt(): string {
+  const sitemapUrl = `${SITE.origin}/sitemap.xml`;
+
+  // Staging / pre-launch: block everything and say so plainly.
+  if (!SITE.indexable) {
+    return [
+      '# Non-production environment — indexing disabled via SITE.indexable in src/seo/siteConfig.ts',
+      'User-agent: *',
+      'Disallow: /',
+      '',
+    ].join('\n');
+  }
+
+  const lines: string[] = [
+    `# robots.txt for ${SITE.brandName}`,
+    '# Generated at build time from src/seo/siteConfig.ts + src/seo/routes.ts — do not edit dist/ by hand.',
+    '',
+    '# Default: allow crawling. Nothing on this site needs to be hidden from search.',
+    'User-agent: *',
+    'Allow: /',
+    '',
+    '# No crawlable value, and they burn crawl budget on duplicate URLs.',
+    'Disallow: /*?*utm_',
+    'Disallow: /*?*fbclid',
+    'Disallow: /*?*gclid',
+    'Disallow: /*/amp/',
+    '',
+    '# AI search & citation crawlers — explicitly allowed. These are the bots that can',
+    '# cite the clinic in an AI answer; blocking them removes us from the candidate pool.',
+  ];
+
+  for (const bot of AI_CRAWLERS.search) {
+    lines.push(`User-agent: ${bot}`, 'Allow: /', '');
+  }
+
+  lines.push(
+    SITE.allowAiTrainingCrawlers
+      ? '# Model-training crawlers — allowed (SITE.allowAiTrainingCrawlers = true).'
+      : '# Model-training crawlers — disallowed (SITE.allowAiTrainingCrawlers = false).',
+  );
+  for (const bot of AI_CRAWLERS.training) {
+    lines.push(`User-agent: ${bot}`, SITE.allowAiTrainingCrawlers ? 'Allow: /' : 'Disallow: /', '');
+  }
+
+  lines.push(`Sitemap: ${sitemapUrl}`, '');
+  return lines.join('\n');
+}
+
+const xmlEscape = (value: string): string =>
+  value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;');
+
+/**
+ * @param lastmod ISO date for every URL. Real per-page dates should come from the
+ * CMS once content is live — an inaccurate lastmod teaches Google to ignore the field.
+ */
+export function buildSitemapXml(lastmod: string): string {
+  if (!SITE.indexable) {
+    return '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"></urlset>\n';
+  }
+
+  const entries = indexableRoutes()
+    .filter((route) => !getPageMeta(route.path).robots.startsWith('noindex'))
+    .map((route) => {
+      const loc = xmlEscape(absoluteUrl(route.path));
+      return [
+        '  <url>',
+        `    <loc>${loc}</loc>`,
+        `    <lastmod>${lastmod}</lastmod>`,
+        `    <changefreq>${route.changefreq}</changefreq>`,
+        `    <priority>${route.priority.toFixed(1)}</priority>`,
+        '  </url>',
+      ].join('\n');
+    });
+
+  return [
+    '<?xml version="1.0" encoding="UTF-8"?>',
+    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+    ...entries,
+    '</urlset>',
+    '',
+  ].join('\n');
+}
+
+/**
+ * llms.txt — a curated map for AI agents.
+ *
+ * Adoption is around 10% of domains and no major engine has confirmed using it for
+ * retrieval, so this is a cheap bet, not a strategy. It is generated rather than
+ * written so it cannot go stale.
+ */
+export function buildLlmsTxt(): string {
+  const line = (path: string, label: string, note: string) =>
+    `- [${label}](${absoluteUrl(path)}): ${note.replace(/\s+/g, ' ').trim()}`;
+
+  return [
+    `# ${SITE.brandName}`,
+    '',
+    `> ${SITE.description}`,
+    '',
+    `${SITE.organizationNote}`,
+    '',
+    `Location: ${SITE.address.streetAddress}, ${SITE.address.addressLocality}, ${SITE.address.addressRegion} ${SITE.address.postalCode}, ${SITE.address.addressCountry}`,
+    `Phone: ${SITE.contact.phoneDisplay} · Email: ${SITE.contact.email}`,
+    `Areas served: ${SITE.areaServed.join(', ')}`,
+    '',
+    '## Conditions treated',
+    '',
+    ...CONDITIONS.map((c) => line(conditionPath(c.id), c.title, `${c.shortDesc} Expected recovery: ${c.expectedRecoveryTime}.`)),
+    '',
+    '## Treatment modalities',
+    '',
+    ...SERVICES.map((s) => line(servicePath(s.id), s.title, `${s.shortDesc} Typical session: ${s.duration}.`)),
+    '',
+    '## Clinicians',
+    '',
+    ...SPECIALISTS.map((p) => line(specialistPath(p.id), p.name, `${p.role}. ${p.credentials}.`)),
+    '',
+    '## Notes',
+    '',
+    '- Content is served as fully rendered HTML; no JavaScript execution is required to read any page.',
+    `- Canonical origin: ${SITE.origin}`,
+    '',
+  ].join('\n');
+}

@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!--
+      Per-route <title>, description, canonical, Open Graph, Twitter and JSON-LD are
+      injected at build time by scripts/prerender.mjs (from src/seo/head.ts) and kept
+      in sync on client navigation by the same generator. The title below is only a
+      fallback for the dev server, where prerendering does not run.
+    -->
+    <title>The Pet Physio Vet</title>
+
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="theme-color" content="#fef9f2" />
+
+    <!--
+      Fonts: preconnect saves a round trip on the render-blocking stylesheet, and
+      display=swap keeps text painting immediately instead of blocking LCP on the
+      font file. Both stylesheets are Google Fonts, the one external host allowed here.
+    -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Remote image host for the hero/LCP image; saves the connection setup cost. -->
+    <link rel="preconnect" href="https://lh3.googleusercontent.com" crossorigin />
+  </head>
+  <body
+    class="bg-[#fef9f2] text-[#3C2117] antialiased selection:bg-[#3c2117] selection:text-white min-h-screen flex flex-col font-['Inter']"
+  >
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
