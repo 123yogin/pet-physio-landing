@@ -141,7 +141,10 @@ export function buildLlmsTxt(): string {
     '',
     '## Clinicians',
     '',
-    ...SPECIALISTS.map((p) => line(specialistPath(p.id), p.name, `${p.role}. ${p.credentials}.`)),
+    // Skip the parts we don't have rather than emitting ". ." as a description.
+    ...SPECIALISTS.map((p) =>
+      line(specialistPath(p.id), p.name, [p.role, p.credentials].filter(Boolean).join('. ')),
+    ),
     '',
     '## Notes',
     '',

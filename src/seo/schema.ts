@@ -263,7 +263,10 @@ export function personNode(person: Specialist): Node {
     url: absoluteUrl(specialistPath(person.id)),
     jobTitle: person.role,
     description: person.bio,
-    image: absoluteUrl(person.imageUrl),
+    // `absoluteUrl('')` resolves to the site origin, which is a non-empty
+    // string and would survive prune() — publishing the homepage URL as this
+    // person's photograph. Guard before, not after.
+    image: person.imageUrl ? absoluteUrl(person.imageUrl) : '',
     worksFor: { '@id': ID.business() },
     knowsAbout: person.specialties,
     hasCredential: person.credentials

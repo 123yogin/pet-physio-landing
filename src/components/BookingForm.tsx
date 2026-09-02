@@ -60,8 +60,14 @@ export const BookingForm: React.FC<BookingFormProps> = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (submitting) return;
-    if (!formData.firstName || !formData.email || !formData.petName) {
-      setSubmitError('Please fill in your name, your pet\u2019s name, and your email address.');
+    // Exactly the four fields the API requires and the labels above star.
+    // These three lists — asterisk, `required`, serializer — have to agree;
+    // when they drifted, a visitor who filled in everything starred was told
+    // "lastName: This field may not be blank."
+    if (!formData.firstName || !formData.petName || !formData.email || !formData.phone) {
+      setSubmitError(
+        'Please fill in your name, your pet\u2019s name, your email address and a phone number.'
+      );
       return;
     }
 
@@ -263,11 +269,12 @@ export const BookingForm: React.FC<BookingFormProps> = ({
 
               <div>
                 <label className="block text-xs tracking-widest text-[#504440] uppercase mb-2 font-medium" htmlFor="phone">
-                  Phone Number
+                  Phone Number *
                 </label>
                 <input
                   id="phone"
                   type="tel"
+                  required
                   value={formData.phone}
                   onChange={handleChange}
                   placeholder="e.g. (555) 019-2831"
@@ -276,24 +283,32 @@ export const BookingForm: React.FC<BookingFormProps> = ({
               </div>
             </div>
 
-            <div>
-              <label className="block text-xs tracking-widest text-[#504440] uppercase mb-2 font-medium" htmlFor="preferredSpecialist">
-                Preferred Specialist
-              </label>
-              <select
-                id="preferredSpecialist"
-                value={formData.preferredSpecialist}
-                onChange={handleChange}
-                className="w-full border-b border-[#3C2117]/40 focus:border-[#3C2117] bg-transparent px-0 py-2.5 text-sm text-[#3C2117] focus:outline-none cursor-pointer"
-              >
-                <option value="">Any Available Specialist</option>
-                {SPECIALISTS.map((s) => (
-                  <option key={s.id} value={s.name}>
-                    {s.name} ({s.role})
-                  </option>
-                ))}
-              </select>
-            </div>
+            {/* Only rendered when there is an actual choice to make. With a
+                single clinician the control offered "Any Available Specialist"
+                against one name — a decision the visitor cannot get wrong and
+                should not be asked to make. It previously listed three people
+                who do not work here at all, and those names travelled into the
+                clinic's enquiry inbox as a routing preference. */}
+            {SPECIALISTS.length > 1 && (
+              <div>
+                <label className="block text-xs tracking-widest text-[#504440] uppercase mb-2 font-medium" htmlFor="preferredSpecialist">
+                  Preferred Specialist
+                </label>
+                <select
+                  id="preferredSpecialist"
+                  value={formData.preferredSpecialist}
+                  onChange={handleChange}
+                  className="w-full border-b border-[#3C2117]/40 focus:border-[#3C2117] bg-transparent px-0 py-2.5 text-sm text-[#3C2117] focus:outline-none cursor-pointer"
+                >
+                  <option value="">Any Available Specialist</option>
+                  {SPECIALISTS.map((s) => (
+                    <option key={s.id} value={s.name}>
+                      {s.role ? `${s.name} (${s.role})` : s.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
 
             <div>
               <label className="block text-xs tracking-widest text-[#504440] uppercase mb-2 font-medium" htmlFor="reason">

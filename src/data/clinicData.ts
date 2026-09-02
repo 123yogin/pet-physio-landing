@@ -230,39 +230,58 @@ export const SUCCESS_STORIES: SuccessStory[] = [
 ];
 
 export const SPECIALISTS: Specialist[] = [
+  // The clinic's actual clinician, taken from its own production record
+  // (UserProfile: Dhanvi Patel, role DOCTOR, clinic "Pet Physio Vet").
+  //
+  // This list previously held three people who do not work here — Dr. Sarah
+  // Jenkins, Dr. Mark Roberts and Emma Davies — carried over from the site
+  // template, complete with invented DVM/CCRP/RVN credentials, invented years
+  // in practice, invented biographies and stock photographs. They were not
+  // merely decorative: they had their own /specialists/* pages, they were
+  // listed in the sitemap, they populated the "Preferred Specialist" dropdown
+  // on the booking form, and they were published to Google as `employee`
+  // Person nodes of a real, named veterinary business with
+  // `EducationalOccupationalCredential` entries attached. Fabricated clinical
+  // credentials for a real medical practice are not a placeholder problem.
+  //
+  // Everything below that is empty is empty ON PURPOSE. Every consumer of this
+  // record skips a field it cannot fill, and `prune()` in seo/schema.ts drops
+  // empty values from the JSON-LD, so nothing unverified reaches a visitor or
+  // a search engine. Fill these in once the clinic supplies the real details.
+  //
+  // `credentials`, `bio` and `specialties` below are not written here from
+  // scratch — every claim is a restatement of the clinic's own published
+  // description in seo/siteConfig.ts, which was taken from its Google Business
+  // listing: "Qualified veterinary physiotherapist (M.V.Sc.) treating mobility
+  // problems, post-surgical recovery, arthritis and injury in dogs and cats,
+  // with avian and exotic experience. Clinic visits at Sola, Science City
+  // Road, and home visits across Ahmedabad." Nothing is added to it.
+  //
+  // `experienceYears` and `imageUrl` stay empty because no source states them,
+  // and a guessed number of years in practice or a stock photograph of someone
+  // else is exactly the failure this replacement exists to undo.
   {
-    id: 'sarah-jenkins',
-    name: 'Dr. Sarah Jenkins',
-    role: 'Lead Veterinary Physiotherapist',
-    credentials: 'DVM, CCRP (Certified Canine Rehabilitation Practitioner)',
-    bio: 'Over 10 years of experience specializing in neurological rehabilitation, post-operative orthopedic care, and complex spinal trauma recovery.',
-    specialties: ['Spinal IVDD Rehab', 'Post-TPLO Recovery', 'Gait Analysis & Biomechanics'],
-    experienceYears: 12,
-    imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBoGnZm95H7vDpXEPKdwARV9pR9Ky8qGocDZBM-JQWchWyCQ1NEQ3meUCKHyoajyYB8s_iAAwdRBEqi95fi5y_PCE8Q4a1v-Sk32jlC3keGdKj97KUsZE1LC3w6icl81fop_AaZ-KgcK-ENLtiqIGSzTeEk6FE1utFE4G3mZIIfEPC0xYh7FtMsZg2V1KiIvoYZVTswPkkvrSB1ar8t-b8w9vKZJqYOIDGuh_PvoLfyKrtClix0cR-v',
-    altText: 'Dr. Sarah Jenkins Lead Veterinary Physiotherapist'
+    id: 'dhanvi-patel',
+    name: 'Dr. Dhanvi Patel',
+    role: 'Veterinary Physiotherapist',
+    credentials: 'M.V.Sc.',
+    bio:
+      'Qualified veterinary physiotherapist (M.V.Sc.) treating mobility problems, '
+      + 'post-surgical recovery, arthritis and injury in dogs and cats, with '
+      + 'experience in avian and exotic patients. Sees patients at the Sola / '
+      + 'Science City Road clinic and on home visits across Ahmedabad.',
+    specialties: [
+      'Mobility and gait problems',
+      'Post-surgical recovery',
+      'Arthritis management',
+      'Injury rehabilitation',
+      'Avian and exotic patients',
+      'Home visits across Ahmedabad',
+    ],
+    experienceYears: 0,
+    imageUrl: '',
+    altText: 'Dr. Dhanvi Patel',
   },
-  {
-    id: 'mark-roberts',
-    name: 'Dr. Mark Roberts',
-    role: 'Senior Hydrotherapist',
-    credentials: 'BSc, CCRV (Certified Canine Rehabilitation Veterinary Specialist)',
-    bio: 'Expert in aquatic therapy protocols, weight management, senior mobility preservation, and osteoarthritis hydro-conditioning.',
-    specialties: ['Aquatic Treadmill Calibration', 'Geriatric Canine Wellness', 'Weight Management'],
-    experienceYears: 9,
-    imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCa3NX5oaWlRrJJjOvOpv-7K9LHkZTiSrZIG5-F7TRRggJcBKienyqFb-42t4WpIXxVILXz-wwYZL0lwlwp1B7JWTSdcFRSy1PSOFB4qwWM78rUcgGCAgfiLDHYONj8ZTmXXpQwxDioltaYrJ4VmDM5nlEUm86itiv1fEFfuQEKWxIm-3rEu2ltZfenRid28v7S_QlfXuGcIvHgKB8SCGUS9oizicfTgf1l0iRqz-NDtSi0CofiSR2n',
-    altText: 'Dr. Mark Roberts Senior Hydrotherapist'
-  },
-  {
-    id: 'emma-davies',
-    name: 'Emma Davies',
-    role: 'Rehabilitation Nurse',
-    credentials: 'RVN (Registered Veterinary Nurse), Dip. Vet. Physio',
-    bio: 'Dedicated to patient comfort, Class IV laser therapy application, myofascial trigger release, and owner education for home exercise routines.',
-    specialties: ['Laser Photobiomodulation', 'Myofascial Massage', 'Client Education'],
-    experienceYears: 7,
-    imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCUYssZ-rTJ_y-GScsNJfu0EzSDezxd98DyUK0hESlKG2GaqNK7rXuq9bjlWIvLflfHLUZ-zNbRN_GQjBvyQizgQMZQxBGloxsDI4453S4Odzx9TVXZ5NUfvjhYFqioAl4YqkfPTNX646uwHueP13Pj4YOj4yZvDRZr5m_Tuxl890wgVeJMJ3LHiOAq14SUPRRP5yMFqVyl8s6W1ObO35Y_zj33L6C2EOKsWDQjUBcYksvKAkgeg1S6',
-    altText: 'Emma Davies Rehabilitation Nurse'
-  }
 ];
 
 export const GALLERY_ITEMS: GalleryItem[] = [

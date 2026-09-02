@@ -169,9 +169,14 @@ export const SITE: SiteConfig = {
   indexable: true,
   allowAiTrainingCrawlers: true,
 
-  organizationNote: PLACEHOLDER(
-    'Board-certified veterinary rehabilitation practitioners. Referral-based care coordinated with your primary veterinarian.',
-  ),
+  // Rendered in the visible NAP block, used as the business `description` in
+  // the JSON-LD, and printed in llms.txt. It previously read "Board-certified
+  // veterinary rehabilitation practitioners" — plural, describing the three
+  // fabricated clinicians that used to be in clinicData, and asserting a
+  // board certification this site cannot substantiate. Replaced with what is
+  // verifiably true; restore a certification claim only with the certificate.
+  organizationNote:
+    'Veterinary physiotherapy and rehabilitation care in Ahmedabad, coordinated with your pet\u2019s primary veterinarian.',
 };
 
 /** Join an origin-relative path onto the configured origin. */
