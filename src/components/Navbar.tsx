@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, Calendar, Sparkles, ChevronRight } from 'lucide-react';
+import {Menu, X, Calendar, ChevronRight } from 'lucide-react';
 
 interface NavbarProps {
   onOpenBooking: () => void;
-  onOpenQuiz: () => void;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking, onOpenQuiz }) => {
+export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
@@ -82,14 +81,6 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking, onOpenQuiz }) => 
 
         {/* Trailing Actions */}
         <div className="hidden lg:flex items-center gap-2.5 xl:gap-3 shrink-0">
-          <button
-            onClick={onOpenQuiz}
-            className="hidden xl:inline-flex items-center gap-1.5 px-3 xl:px-4 py-2 xl:py-2.5 rounded-none bg-[#f2ede7] text-[#3C2117] hover:bg-[#e6e2dc] transition-colors border border-[#d4c3bd]/50 uppercase tracking-widest text-[10px] xl:text-[11px] font-medium whitespace-nowrap cursor-pointer"
-            title="Pet Mobility Quiz"
-          >
-            <Sparkles className="w-3.5 h-3.5 text-[#84523e]" />
-            <span>Mobility Checker</span>
-          </button>
           
           <button
             onClick={onOpenBooking}
@@ -102,13 +93,6 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking, onOpenQuiz }) => 
 
         {/* Mobile / Tablet Menu Toggle */}
         <div className="flex lg:hidden items-center gap-2 shrink-0">
-          <button
-            onClick={onOpenQuiz}
-            className="hidden sm:inline-flex items-center gap-1 bg-[#f2ede7] text-[#3C2117] px-2.5 py-1.5 text-[10px] font-medium uppercase tracking-wider rounded-none border border-[#d4c3bd]/50"
-          >
-            <Sparkles className="w-3 h-3 text-[#84523e]" />
-            <span>Mobility</span>
-          </button>
           <button
             onClick={onOpenBooking}
             className="bg-[#3C2117] text-[#ffffff] px-3 py-1.5 text-[11px] font-medium uppercase tracking-wider rounded-none cursor-pointer"
@@ -144,16 +128,6 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking, onOpenQuiz }) => 
             ))}
 
             <div className="pt-3 flex flex-col gap-2.5">
-              <button
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                  onOpenQuiz();
-                }}
-                className="w-full flex items-center justify-center gap-2 py-3 bg-[#f2ede7] border border-[#d4c3bd] text-[#3C2117] uppercase tracking-widest text-xs font-medium cursor-pointer"
-              >
-                <Sparkles className="w-4 h-4 text-[#84523e]" />
-                <span>Pet Mobility Checker</span>
-              </button>
 
               <button
                 onClick={() => {

@@ -53,6 +53,38 @@ function openingHoursSpecification(): Node[] {
 }
 
 /** The business node — the anchor of the whole entity graph. */
+
+/**
+ * Strip empty values from the graph before it is emitted.
+ *
+ * Schema.org properties are optional; an EMPTY one is not "no answer", it is a
+ * wrong answer. Before this, unknown business facts serialised as
+ * `"email": ""`, `"openingHoursSpecification": []` and — worst — an unknown
+ * founding year became `"foundingDate": "0"`, publishing the claim that the
+ * practice was established in year zero.
+ *
+ * Pruning centrally rather than guarding each field means the next unknown
+ * fact disappears instead of leaking. Zero is kept where it is a real number
+ * (a latitude, a count); only empty strings, empty arrays/objects, null and
+ * undefined are dropped.
+ */
+function prune<T>(value: T): T {
+  if (Array.isArray(value)) {
+    const arr = value.map(prune).filter((v) => v !== undefined);
+    return (arr.length ? arr : undefined) as unknown as T;
+  }
+  if (value && typeof value === 'object') {
+    const out: Record<string, unknown> = {};
+    for (const [k, v] of Object.entries(value as Record<string, unknown>)) {
+      const cleaned = prune(v);
+      if (cleaned !== undefined) out[k] = cleaned;
+    }
+    return (Object.keys(out).length ? out : undefined) as unknown as T;
+  }
+  if (value === '' || value === null || value === undefined) return undefined as unknown as T;
+  return value;
+}
+
 export function businessNode(): Node {
   const logo = SITE.images.logo ? absoluteUrl(SITE.images.logo) : undefined;
   return {
@@ -67,7 +99,9 @@ export function businessNode(): Node {
     email: SITE.contact.email,
     priceRange: SITE.priceRange,
     currenciesAccepted: SITE.currency,
-    foundingDate: String(SITE.foundingYear),
+    // 0 in siteConfig means "unknown" — emit an empty string so prune()
+    // drops it, rather than claiming the practice was founded in year zero.
+    foundingDate: SITE.foundingYear ? String(SITE.foundingYear) : '',
     image: absoluteUrl(SITE.images.ogImage || HERO_IMAGE),
     ...(logo ? { logo: { '@type': 'ImageObject', url: logo } } : {}),
     address: {
@@ -287,7 +321,7 @@ export function buildGraph(pathname: string): Node {
     graph.push(personNode(entity));
   }
 
-  return { '@context': 'https://schema.org', '@graph': graph };
+  return prune({ '@context': 'https://schema.org', '@graph': graph });
 }
 
 /** Serialise for a <script type="application/ld+json"> tag, XSS-safe. */

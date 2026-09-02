@@ -27,7 +27,6 @@ import { ConditionDetailModal } from '../components/ConditionDetailModal';
 import { ServiceDetailModal } from '../components/ServiceDetailModal';
 import { SpecialistDetailModal } from '../components/SpecialistDetailModal';
 import { LightboxModal } from '../components/LightboxModal';
-import { MobilityQuizModal } from '../components/MobilityQuizModal';
 import { BookingSuccessModal } from '../components/BookingSuccessModal';
 
 import { ConditionItem, ServiceItem, Specialist, GalleryItem, AppointmentData } from '../types';
@@ -38,7 +37,6 @@ export const HomePage: React.FC = () => {
   const [selectedSpecialist, setSelectedSpecialist] = useState<Specialist | null>(null);
   const [selectedGalleryImage, setSelectedGalleryImage] = useState<GalleryItem | null>(null);
 
-  const [isQuizOpen, setIsQuizOpen] = useState(false);
 
   // Form prefill props
   const [formSpecialist, setFormSpecialist] = useState<string>('');
@@ -70,10 +68,6 @@ export const HomePage: React.FC = () => {
     scrollToContact();
   };
 
-  const handleCompleteQuiz = (summary: string) => {
-    setFormCondition(summary);
-    scrollToContact();
-  };
 
   const handleFormSubmitSuccess = (data: AppointmentData, refId: string) => {
     setSuccessModalData(data);
@@ -85,14 +79,12 @@ export const HomePage: React.FC = () => {
       {/* Top Navigation Bar */}
       <Navbar
         onOpenBooking={scrollToContact}
-        onOpenQuiz={() => setIsQuizOpen(true)}
       />
 
       {/* Main Content */}
       <main className="flex-grow">
         <Hero
           onOpenBooking={scrollToContact}
-          onOpenQuiz={() => setIsQuizOpen(true)}
         />
 
         <TrustMetrics />
@@ -157,11 +149,6 @@ export const HomePage: React.FC = () => {
         onClose={() => setSelectedGalleryImage(null)}
       />
 
-      <MobilityQuizModal
-        isOpen={isQuizOpen}
-        onClose={() => setIsQuizOpen(false)}
-        onCompleteQuiz={handleCompleteQuiz}
-      />
 
       <BookingSuccessModal
         data={successModalData}

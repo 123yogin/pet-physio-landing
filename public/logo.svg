@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img"
+     aria-label="The Pet Physio Vet">
+  <title>The Pet Physio Vet</title>
+  <!--
+    Brand mark: a paw whose central pad is a stethoscope head, with the tubing
+    curling out as a motion arc. Physiotherapy for animals in one shape —
+    veterinary care (stethoscope) plus movement (the arc), which is what
+    separates this practice from a general vet.
+
+    Drawn as SVG rather than exported from the photo avatar on purpose: a logo
+    has to survive a 32px favicon and a 1200px social card, and it has to sit
+    on a dark header. A portrait illustration does neither. This is ~2 KB and
+    identical at every size.
+
+    Palette is the site's own: #3C2117 ink, #84523e clay accent, #f8f3ed cream.
+  -->
+  <rect width="512" height="512" rx="112" fill="#f8f3ed"/>
+  <rect x="8" y="8" width="496" height="496" rx="106" fill="none"
+        stroke="#3C2117" stroke-width="16"/>
+
+  <!-- toes -->
+  <g fill="#3C2117">
+    <ellipse cx="176" cy="168" rx="35" ry="46" transform="rotate(-18 176 168)"/>
+    <ellipse cx="256" cy="146" rx="36" ry="48"/>
+    <ellipse cx="336" cy="168" rx="35" ry="46" transform="rotate(18 336 168)"/>
+  </g>
+
+  <!-- main pad -->
+  <path d="M256 214c62 0 104 44 104 92 0 44-38 74-104 74s-104-30-104-74c0-48 42-92 104-92z"
+        fill="#3C2117"/>
+
+  <!-- stethoscope head sunk into the pad -->
+  <circle cx="256" cy="300" r="42" fill="#f8f3ed"/>
+  <circle cx="256" cy="300" r="28" fill="#84523e"/>
+
+  <!-- tubing sweeping out as a motion arc: care in movement -->
+  <path d="M298 300c46 6 74 34 74 74" fill="none" stroke="#84523e"
+        stroke-width="20" stroke-linecap="round"/>
+  <path d="M214 300c-46 6-74 34-74 74" fill="none" stroke="#84523e"
+        stroke-width="20" stroke-linecap="round" opacity="0.45"/>
+</svg>

@@ -1,13 +1,12 @@
 import React from 'react';
 import { HERO_IMAGE } from '../data/clinicData';
-import { Calendar, ChevronRight, Sparkles, Activity } from 'lucide-react';
+import {Calendar, ChevronRight, Activity } from 'lucide-react';
 
 interface HeroProps {
   onOpenBooking: () => void;
-  onOpenQuiz: () => void;
 }
 
-export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onOpenQuiz }) => {
+export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
   return (
     <section id="home" className="relative w-full min-h-[85vh] lg:min-h-[720px] flex items-center justify-center overflow-hidden bg-[#f8f3ed] pt-24 pb-16 lg:py-0">
       {/* Background Image Container */}
@@ -63,25 +62,6 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onOpenQuiz }) => {
             </a>
           </div>
 
-          {/* Quick Quiz Banner Callout */}
-          <div className="mt-4 pt-4 border-t border-[#d4c3bd]/30 flex items-center gap-3">
-            <button 
-              onClick={onOpenQuiz}
-              className="group flex items-center gap-3 text-left hover:opacity-90 transition-opacity"
-            >
-              <span className="p-2 bg-[#ffbda5]/40 text-[#3C2117] rounded-full group-hover:scale-110 transition-transform">
-                <Sparkles className="w-4 h-4 text-[#84523e]" />
-              </span>
-              <div>
-                <span className="block text-xs uppercase tracking-wider font-semibold text-[#3C2117] underline decoration-[#84523e]">
-                  Is your pet limping, stiff, or recovering from surgery?
-                </span>
-                <span className="text-xs text-[#504440] font-light">
-                  Take our 30-second Mobility Self-Checker →
-                </span>
-              </div>
-            </button>
-          </div>
 
         </div>
       </div>

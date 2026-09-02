@@ -23,7 +23,7 @@ export const PageShell: React.FC<{ children: React.ReactNode; napHeading?: strin
 
   return (
     <div className="min-h-screen bg-[#fef9f2] text-[#3C2117] font-['Inter'] selection:bg-[#3C2117] selection:text-white flex flex-col">
-      <Navbar onOpenBooking={() => navigate('/#contact')} onOpenQuiz={() => navigate('/#contact')} />
+      <Navbar onOpenBooking={() => navigate('/#contact')} />
       <Breadcrumbs trail={meta.breadcrumbs} />
       <main className="flex-grow">{children}</main>
       <NapBlock heading={napHeading} />

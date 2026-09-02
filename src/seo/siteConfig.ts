@@ -88,67 +88,78 @@ export interface SiteConfig {
 const PLACEHOLDER = <T,>(value: T): T => value;
 
 export const SITE: SiteConfig = {
-  brandName: PLACEHOLDER('The Pet Physio Vet'),
-  legalName: PLACEHOLDER('The Pet Physio Vet'),
-  titleSuffix: PLACEHOLDER('The Pet Physio Vet'),
-  tagline: PLACEHOLDER('Helping pets move better, recover faster, live happier'),
-  description: PLACEHOLDER(
-    'Veterinary rehabilitation and physiotherapy clinic offering hydrotherapy, Class IV laser therapy and post-surgical recovery programmes for dogs and cats.',
-  ),
+  brandName: 'The Pet Physio Vet',
+  legalName: 'The Pet Physio Vet',
+  titleSuffix: 'The Pet Physio Vet',
+  tagline: 'Helping pets move better, recover faster, live happier',
+  description:
+    'Veterinary physiotherapy and rehabilitation in Ahmedabad. Qualified veterinary '
+    + 'physiotherapist (M.V.Sc.) treating mobility problems, post-surgical recovery, '
+    + 'arthritis and injury in dogs and cats, with avian and exotic experience. '
+    + 'Clinic visits at Sola, Science City Road, and home visits across Ahmedabad.',
 
   // Must be the real production origin — every canonical URL is built from it.
-  origin: PLACEHOLDER('https://www.petphysiovet.com'),
+  origin: 'https://petphysio.vercel.app',
 
-  locale: PLACEHOLDER('en_US'),
-  lang: PLACEHOLDER('en'),
+  locale: 'en_IN',
+  lang: 'en-IN',
 
   // VeterinaryCare is the most specific LocalBusiness subtype for this vertical.
   schemaType: 'VeterinaryCare',
   additionalSchemaTypes: ['MedicalBusiness', 'LocalBusiness'],
 
-  foundingYear: PLACEHOLDER(2011),
-  priceRange: PLACEHOLDER('$$'),
-  currency: PLACEHOLDER('USD'),
+  foundingYear: 0,
+  priceRange: '₹₹',
+  currency: 'INR',
 
   contact: {
-    phone: PLACEHOLDER('+15550000000'),
-    phoneDisplay: PLACEHOLDER('(555) 000-0000'),
-    email: PLACEHOLDER('hello@petphysiovet.com'),
-    emergencyName: PLACEHOLDER('24/7 Regional Emergency Animal Hospital'),
-    emergencyPhone: PLACEHOLDER('+15559990000'),
-    emergencyPhoneDisplay: PLACEHOLDER('(555) 999-0000'),
+    phone: '+919427071031',
+    phoneDisplay: '094270 71031',
+    email: '',
+    emergencyName: '',
+    emergencyPhone: '',
+    emergencyPhoneDisplay: '',
   },
 
   address: {
-    streetAddress: PLACEHOLDER('123 Healing Paws Way, Suite 400'),
-    addressLocality: PLACEHOLDER('Wellness District'),
-    addressRegion: PLACEHOLDER('CA'),
-    postalCode: PLACEHOLDER('90210'),
-    addressCountry: PLACEHOLDER('US'),
+    streetAddress: 'Shop No. 6, Shyam Residency, The Trillionaire Road, Science City Road, opposite Horizon Flats, near Divine Highland Bungalows, Sola',
+    addressLocality: 'Ahmedabad',
+    addressRegion: 'Gujarat',
+    postalCode: '380060',
+    addressCountry: 'IN',
   },
 
-  geo: PLACEHOLDER({ latitude: 34.0736, longitude: -118.4004 }),
+  geo: { latitude: 23.0742381, longitude: 72.5118942 },
 
-  areaServed: PLACEHOLDER(['Wellness District', 'Greater Metro Area']),
+  areaServed: ['Ahmedabad', 'Sola', 'Science City', 'Bodakdev', 'Thaltej', 'Gota', 'Chandkheda'],
 
-  openingHours: PLACEHOLDER([
-    { days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'], opens: '08:00', closes: '18:00' },
-    { days: ['Saturday'], opens: '09:00', closes: '14:00' },
-    { days: ['Sunday'], opens: null, closes: null },
-  ]),
+  // Deliberately empty, and this is a judgement not an omission.
+  //
+  // Google Business Profile is the authoritative source for opening hours — it
+  // is what Maps, the local pack and the knowledge panel actually read, and the
+  // owner can change it in seconds without a deploy. The only hour I could
+  // verify from the live listing was "closes 7:30 pm" on one weekday; the rest
+  // would have been invented.
+  //
+  // Publishing guessed hours is strictly worse than publishing none: schema
+  // that disagrees with the GBP is a conflicting signal Google has to resolve,
+  // and someone reads it and turns up to a closed clinic. With this empty the
+  // generator omits openingHoursSpecification entirely and Google uses the
+  // profile. Fill it in once the real seven-day hours are known.
+  openingHours: [],
 
   sameAs: PLACEHOLDER([
     // Real, claimed profiles only. Every entry is an entity-resolution signal;
     // a dead or wrong URL is worse than an absent one.
     // 'https://www.facebook.com/…',
-    // 'https://www.instagram.com/…',
+    'https://www.instagram.com/thepetphysiovet/',
     // 'https://www.linkedin.com/company/…',
     // 'https://www.google.com/maps/place/?q=place_id:…',
   ]),
 
   images: {
-    logo: PLACEHOLDER(''),
-    ogImage: PLACEHOLDER(''),
+    logo: '/logo-512.png',
+    ogImage: '/og-image.png',
     ogImageWidth: 1200,
     ogImageHeight: 630,
   },
