@@ -158,7 +158,7 @@ export const SITE: SiteConfig = {
   ]),
 
   images: {
-    logo: '/logo-512.png',
+    logo: '/logo.png',
     ogImage: '/og-image.png',
     ogImageWidth: 1200,
     ogImageHeight: 630,

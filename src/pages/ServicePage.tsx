@@ -40,7 +40,7 @@ export const ServicePage: React.FC<{ service: ServiceItem }> = ({ service }) => 
         </header>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-16 mb-16">
-          <FactList title="Benefits" items={service.benefits} />
+          <FactList title="What&rsquo;s included" items={service.benefits} />
           <FactList title="Suitable for" items={service.suitableFor} />
         </div>
 

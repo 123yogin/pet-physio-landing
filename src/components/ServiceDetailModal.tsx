@@ -44,37 +44,48 @@ export const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({
         </p>
 
         <div className="space-y-6">
-          {/* Key Benefits */}
-          <div>
-            <h3 className="text-xs uppercase tracking-wider font-semibold text-[#84523e] mb-3">
-              Clinical Benefits
-            </h3>
-            <div className="space-y-2">
-              {service.benefits.map((benefit, idx) => (
-                <div key={idx} className="flex items-start gap-2.5 text-xs sm:text-sm text-[#504440]">
-                  <CheckCircle2 className="w-4 h-4 text-[#84523e] shrink-0 mt-0.5" />
-                  <span>{benefit}</span>
-                </div>
-              ))}
+          {/* What the service includes.
+              Headed "Clinical Benefits" until the clinic's own service list
+              went in, at which point it sat above "Massage" and "Acupressure"
+              -- those are the therapies in the group, not claims about what
+              they achieve. "What's included" describes both that list and the
+              outcome-style copy it replaced, so neither reading is wrong. */}
+          {service.benefits.length > 0 && (
+            <div>
+              <h3 className="text-xs uppercase tracking-wider font-semibold text-[#84523e] mb-3">
+                What&rsquo;s included
+              </h3>
+              <div className="space-y-2">
+                {service.benefits.map((benefit, idx) => (
+                  <div key={idx} className="flex items-start gap-2.5 text-xs sm:text-sm text-[#504440]">
+                    <CheckCircle2 className="w-4 h-4 text-[#84523e] shrink-0 mt-0.5" />
+                    <span>{benefit}</span>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
-          {/* Suitable For */}
-          <div>
-            <h3 className="text-xs uppercase tracking-wider font-semibold text-[#84523e] mb-3">
-              Ideal Indications
-            </h3>
-            <div className="flex flex-wrap gap-2">
-              {service.suitableFor.map((item, idx) => (
-                <span
-                  key={idx}
-                  className="bg-[#f8f3ed] border border-[#d4c3bd]/50 text-[#3C2117] text-xs px-3 py-1 uppercase tracking-wider font-medium"
-                >
-                  {item}
-                </span>
-              ))}
+          {/* Suitable For -- hidden when empty rather than rendering a bare
+              heading over nothing. Which pets a therapy suits is a clinical
+              judgement, so this stays blank until the clinic supplies it. */}
+          {service.suitableFor.length > 0 && (
+            <div>
+              <h3 className="text-xs uppercase tracking-wider font-semibold text-[#84523e] mb-3">
+                Ideal Indications
+              </h3>
+              <div className="flex flex-wrap gap-2">
+                {service.suitableFor.map((item, idx) => (
+                  <span
+                    key={idx}
+                    className="bg-[#f8f3ed] border border-[#d4c3bd]/50 text-[#3C2117] text-xs px-3 py-1 uppercase tracking-wider font-medium"
+                  >
+                    {item}
+                  </span>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Duration & Protocol */}
           <div className="bg-[#f8f3ed] p-4 border border-[#d4c3bd]/40 flex items-center justify-between text-xs text-[#504440]">

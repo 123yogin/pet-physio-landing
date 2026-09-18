@@ -16,6 +16,28 @@
     <meta name="theme-color" content="#fef9f2" />
 
     <!--
+      Icons. These files existed in public/ but nothing ever linked to them, so
+      the browser tab fell back to a blank default.
+
+      Same mark, and the same wiring, as the clinic app (frontend/index.html):
+      an SVG icon the browser scales to any density, and a 1024px PNG for the
+      iOS home screen. Keeping the two products on one icon means a user who
+      has both open sees one brand, not two.
+
+      favicon-32.png and apple-touch-icon.png are deliberately NOT linked: they
+      still hold the older paw mark, and a fallback that shows a different logo
+      is worse than no fallback.
+
+      The ?v= is not decoration. Vite fingerprints what it bundles, but files in
+      public/ are copied verbatim, so the icon URL never changes when the art
+      does -- and a browser caches a favicon far more stubbornly than a page.
+      This origin kept serving the previous paw from cache after the file itself
+      had been replaced. Bump the number whenever the mark changes.
+    -->
+    <link rel="icon" type="image/svg+xml" href="/logo.svg?v=2" />
+    <link rel="apple-touch-icon" href="/logo.png?v=2" />
+
+    <!--
       Fonts: preconnect saves a round trip on the render-blocking stylesheet, and
       display=swap keeps text painting immediately instead of blocking LCP on the
       font file. Both stylesheets are Google Fonts, the one external host allowed here.

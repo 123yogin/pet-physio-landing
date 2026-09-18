@@ -15,7 +15,9 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
 
-      const sections = ['home', 'conditions', 'services', 'journey', 'success', 'about', 'gallery', 'faqs', 'contact'];
+      // Document order, not menu order -- the loop breaks on the first
+      // section containing the scroll position, so this has to track the page.
+      const sections = ['home', 'services', 'conditions', 'journey', 'success', 'about', 'gallery', 'faqs', 'contact'];
       const scrollPosition = window.scrollY + 120;
 
       for (const section of sections) {
@@ -41,8 +43,8 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
   // back on its own as soon as SUCCESS_STORIES has an entry.
   const navLinks = [
     { label: 'Home', href: '/#home', id: 'home' },
-    { label: 'Conditions', href: '/#conditions', id: 'conditions' },
     { label: 'Services', href: '/#services', id: 'services' },
+    { label: 'Conditions', href: '/#conditions', id: 'conditions' },
     ...(SUCCESS_STORIES.length > 0
       ? [{ label: 'Stories', href: '/#success', id: 'success' }]
       : []),

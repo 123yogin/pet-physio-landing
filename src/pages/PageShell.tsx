@@ -58,7 +58,12 @@ export const DetailCta: React.FC<{ label: string; prefill?: string }> = ({ label
 };
 
 /** Consistent bulleted list block used across detail templates. */
+/** A titled list. Renders nothing at all when there is nothing to list --
+ *  an empty array previously still drew the heading, leaving a section label
+ *  floating above blank space. Handled here rather than at each call site so
+ *  the condition and specialist pages get it too. */
 export const FactList: React.FC<{ title: string; items: string[] }> = ({ title, items }) => (
+  items.length === 0 ? null :
   <div>
     <h2 className="text-xs uppercase tracking-widest text-[#84523e] font-semibold mb-4">{title}</h2>
     <ul className="space-y-2.5">

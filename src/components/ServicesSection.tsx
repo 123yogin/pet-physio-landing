@@ -1,7 +1,7 @@
 import React from 'react';
 import { SERVICES } from '../data/clinicData';
 import { ServiceItem } from '../types';
-import { ArrowUpRight, Activity, Waves, Zap, Hand, Dumbbell, Home } from 'lucide-react';
+import { ArrowUpRight, Activity, Waves, Zap, Hand, Dumbbell, Home, Sparkles, BedDouble } from 'lucide-react';
 import { EntityCardLink } from './EntityCardLink';
 import { servicePath } from '../seo/routes';
 
@@ -23,7 +23,19 @@ const renderServiceIcon = (iconName: string) => {
       return <Dumbbell className="w-9 h-9 text-[#3C2117]" />;
     case 'home':
       return <Home className="w-9 h-9 text-[#3C2117]" />;
+    case 'bolt':
+      return <Zap className="w-9 h-9 text-[#3C2117]" />;
+    case 'star':
+      return <Waves className="w-9 h-9 text-[#3C2117]" />;
+    case 'night_shelter':
+      return <BedDouble className="w-9 h-9 text-[#3C2117]" />;
+    case 'sparkles':
+      return <Sparkles className="w-9 h-9 text-[#3C2117]" />;
     default:
+      // An unmapped name lands here, which is how three services silently
+      // shared one icon after the service list was rewritten -- the fallback
+      // hid the miss instead of surfacing it. Every `icon` in clinicData
+      // should be matched by a case above.
       return <Activity className="w-9 h-9 text-[#3C2117]" />;
   }
 };
@@ -51,14 +63,25 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectServic
         </div>
 
         {/* Modalities Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-[#d4c3bd]/30 border border-[#d4c3bd]/30">
+        <div className="flex flex-wrap justify-center gap-px">
+          {/* Three per row, and a short final row centres under them.
+
+              This was a 3-column grid whose hairlines came from a container
+              background showing through 1px gaps. That works only while every
+              cell is filled: five services left the sixth cell uncovered, and
+              the divider colour showed through it as a solid block. Centring a
+              short row the same way would just split that block to both ends.
+
+              So the border moved onto the cards and the container became a
+              centred flex-wrap. Any count now closes tidily, with the remainder
+              centred rather than left-aligned against an empty gap. */}
           {SERVICES.map((service) => (
             <EntityCardLink
               key={service.id}
               href={servicePath(service.id)}
               onActivate={() => onSelectService(service)}
               aria-label={`${service.title} treatment details`}
-              className="bg-[#f8f3ed] p-8 sm:p-12 hover:bg-[#ffffff] transition-all duration-500 group cursor-pointer flex flex-col justify-between"
+              className="bg-[#f8f3ed] border border-[#d4c3bd]/30 p-8 sm:p-12 hover:bg-[#ffffff] transition-all duration-500 group cursor-pointer flex flex-col justify-between grow-0 shrink-0 basis-full md:basis-[calc(50%-1px)] lg:basis-[calc(33.333%-1px)]"
             >
               <div>
                 <div className="flex items-center justify-between mb-8">
@@ -79,9 +102,12 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectServic
                 </p>
               </div>
 
-              <div className="pt-4 border-t border-[#d4c3bd]/20 flex items-center justify-between text-xs font-['Inter'] uppercase tracking-widest text-[#504440]">
+              {/* flex-wrap and a real gap: `justify-between` alone let the two
+                  labels butt straight into each other once a duration was
+                  longer than the old "45-60 min". */}
+              <div className="pt-4 border-t border-[#d4c3bd]/20 flex flex-wrap items-center justify-between gap-x-6 gap-y-2 text-xs font-['Inter'] uppercase tracking-widest text-[#504440]">
                 <span>Typical Session: {service.duration}</span>
-                <span className="text-[#84523e] font-semibold group-hover:underline">View Modality →</span>
+                <span className="text-[#84523e] font-semibold group-hover:underline whitespace-nowrap">View Modality →</span>
               </div>
             </EntityCardLink>
           ))}

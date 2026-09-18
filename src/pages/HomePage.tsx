@@ -20,7 +20,6 @@ import { GallerySection } from '../components/GallerySection';
 import { FaqSection } from '../components/FaqSection';
 import { BookingForm } from '../components/BookingForm';
 import { Footer } from '../components/Footer';
-import { NapBlock } from '../components/NapBlock';
 
 // Modals
 import { ConditionDetailModal } from '../components/ConditionDetailModal';
@@ -89,15 +88,20 @@ export const HomePage: React.FC = () => {
 
         <TrustMetrics />
 
+        {/* Services before Conditions: lead with what the clinic offers, then
+            what it treats, and let the journey explain how a course of it runs.
+            TreatmentJourney moved down with them rather than staying put --
+            it describes the process that follows both, so sitting between them
+            would have split "what we do" from "what we treat". */}
+        <ServicesSection
+          onSelectService={(service) => setSelectedService(service)}
+        />
+
         <ConditionsSection
           onSelectCondition={(condition) => setSelectedCondition(condition)}
         />
 
         <TreatmentJourney />
-
-        <ServicesSection
-          onSelectService={(service) => setSelectedService(service)}
-        />
 
         <SuccessStories />
 
@@ -119,8 +123,17 @@ export const HomePage: React.FC = () => {
         />
       </main>
 
-      {/* Crawlable name / address / phone — see NapBlock for why this is in the HTML */}
-      <NapBlock />
+      {/* No <NapBlock /> here, deliberately.
+
+          It exists to put name/address/phone in crawlable text, and on the
+          detail pages (via PageShell) it is the only thing that does. The home
+          page already carries the same three facts in the contact section above
+          -- BookingForm renders formattedAddress(), the phone and
+          openingHoursSummary() from the same siteConfig source -- so rendering
+          NapBlock here showed the visitor the clinic's address, phone, email and
+          hours twice within one screen, immediately before the footer repeated
+          the hours a third time. */
+      }
 
       {/* Footer */}
       <Footer />
