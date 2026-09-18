@@ -44,7 +44,7 @@ export const SpecialistDetailModal: React.FC<SpecialistDetailModalProps> = ({
               {specialist.role}
             </p>
             <p className="text-xs text-[#504440] italic mb-3">
-              {specialist.credentials}
+              {specialist.credentialsShort || specialist.credentials}
             </p>
             <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-[#f8f3ed] border border-[#d4c3bd]/40 text-xs text-[#3C2117] font-medium">
               <Award className="w-3.5 h-3.5 text-[#84523e]" />

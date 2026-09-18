@@ -18,7 +18,7 @@ import { SITE } from '../seo/siteConfig';
 export const SpecialistPage: React.FC<{ specialist: Specialist }> = ({ specialist }) => {
   const colleagues = SPECIALISTS.filter((person) => person.id !== specialist.id);
   const credentials = specialist.credentials
-    .split(',')
+    .split(';')
     .map((value) => value.trim())
     .filter(Boolean);
 

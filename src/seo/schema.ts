@@ -269,8 +269,12 @@ export function personNode(person: Specialist): Node {
     image: person.imageUrl ? absoluteUrl(person.imageUrl) : '',
     worksFor: { '@id': ID.business() },
     knowsAbout: person.specialties,
+    // Split on ';', not ','. Real qualifications contain commas -- "M.V.Sc. in
+    // Veterinary Clinical Medicine, Ethics and Jurisprudence" is one credential,
+    // and comma-splitting published its halves to Google as two separate
+    // EducationalOccupationalCredential claims about a named clinician.
     hasCredential: person.credentials
-      .split(',')
+      .split(';')
       .map((c) => c.trim())
       .filter(Boolean)
       .map((credential) => ({

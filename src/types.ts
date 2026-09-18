@@ -48,6 +48,11 @@ export interface Specialist {
   name: string;
   role: string;
   credentials: string;
+  /** Post-nominals for the card and modal. The full `credentials` list is
+   *  long enough to crowd a summary card, so the short form leads and the
+   *  profile page carries every qualification. Falls back to `credentials`
+   *  when unset. */
+  credentialsShort?: string;
   bio: string;
   specialties: string[];
   experienceYears: number;
@@ -79,6 +84,10 @@ export interface AppointmentData {
   phone: string;
   preferredDate?: string;
   preferredSpecialist?: string;
+  /** An Appointment.VISIT_TYPES *code*, fetched from the clinic API rather
+   *  than hardcoded here -- the site must not be able to offer a service the
+   *  booking form would then reject. */
+  service?: string;
   reason: string;
   conditionId?: string;
 }

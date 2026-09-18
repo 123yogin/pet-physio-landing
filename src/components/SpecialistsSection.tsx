@@ -82,9 +82,9 @@ export const SpecialistsSection: React.FC<SpecialistsSectionProps> = ({
                   </p>
                 )}
 
-                {spec.credentials && (
+                {(spec.credentialsShort || spec.credentials) && (
                   <p className="font-['Inter'] text-xs text-[#504440] mb-4 italic border-b border-[#d4c3bd]/20 pb-3">
-                    {spec.credentials}
+                    {spec.credentialsShort || spec.credentials}
                   </p>
                 )}
 

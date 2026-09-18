@@ -2,9 +2,9 @@ import React from 'react';
 
 export const TrustMetrics: React.FC = () => {
   const metrics = [
-    { number: '5k+', label: 'Happy Pets Restored' },
-    { number: '12k', label: 'Therapy Sessions Completed' },
-    { number: '15+', label: 'Years Clinical Experience' },
+    { number: '500+', label: 'Happy Pets Restored' },
+    { number: '10k', label: 'Therapy Sessions Completed' },
+    { number: '2+', label: 'Years Clinical Experience' },
     { number: '98%', label: 'Patient Success Rate' },
   ];
 

@@ -10,7 +10,7 @@ export const CONDITIONS: ConditionItem[] = [
     shortDesc: 'Managing pain and improving joint mobility for aging companions.',
     fullDesc: 'Osteoarthritis is a progressive joint disease affecting cartilage and surrounding bones. Our multi-modal rehabilitation targets stiffness, restores range of motion, and rebuilds muscular support without heavy pharmacological side effects.',
     symptoms: ['Difficulty rising from bed', 'Reluctance to climb stairs or jump', 'Limping or stiffness after rest', 'Licking specific joints'],
-    recommendedTherapies: ['Laser Therapy', 'Hydrotherapy', 'Targeted Massage', 'Joint Supplements Plan'],
+    recommendedTherapies: ['Laser Therapy', 'Hydrotherapy', 'Targeted Massage', 'Joint Supplements Plan', 'Pulsed electro-magnetic field (PEMF)', 'Acupuncture', 'Electro-acupuncture', 'TENS'],
     expectedRecoveryTime: 'Ongoing maintenance & visible improvement within 3-4 weeks',
     imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDOgNL-gjqnC0wBg_bOL5-VaA7riWGDt8yinitZd_YHae2a9WFIGm6LjKsow3T5dYNWIu9v3habEmwWEDPBPM8th1pZACvXV3zqfx88GgpkQ_1ibFsEQ0pJk4ExB2lE0Ojy6jWSMO-M3jSASuw8mC5RcC3uaFB1jyGWf1-O8vgaLkWjohxXTWirFY3ls9HJXhIA8TjUOwl9lenAWnCxmjrCSLG64n1xUUAcsxlz_Tepyk2y97iDj3Gx',
     altText: 'Dog receiving gentle joint massage therapy for arthritis'
@@ -20,12 +20,12 @@ export const CONDITIONS: ConditionItem[] = [
     title: 'IVDD',
     category: 'neurological',
     shortDesc: 'Specialized neurological rehabilitation for spinal conditions.',
-    fullDesc: 'Intervertebral Disc Disease affects the spinal column, leading to pain, weakness, or paralysis. Our conservative and post-op spinal protocol focuses on neural stimulation, spinal alignment, proprioceptive re-education, and underwater treadmill walking.',
+    fullDesc: 'Intervertebral Disc Disease affects the spinal column, leading to pain, weakness, or paralysis. Our conservative and post-op spinal protocol focuses on neural stimulation, spinal alignment, proprioceptive re-education, and supported swimming in our indoor pool.',
     symptoms: ['Back pain or arched spine', 'Hind leg weakness or knuckling', 'Incontinence or difficulty standing', 'Shaking or reluctance to move head'],
-    recommendedTherapies: ['Electro-acupuncture & TENS', 'Hydrotherapy Underwater Treadmill', 'Class IV Laser', 'Neuromuscular Electrical Stimulation'],
+    recommendedTherapies: ['Electro-acupuncture', 'TENS', 'Hydrotherapy — Indoor Swimming Pool', 'Class IV Laser', 'Neuromuscular Electrical Stimulation', 'Pulsed electro-magnetic field (PEMF)', 'Acupuncture'],
     expectedRecoveryTime: '6 to 16 weeks based on severity (Grade I to V)',
     imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBpcya24ze5l5IDEtrIV1cA9IpgXIqozowsHHO8l6D89ttYFqye-buMv3Zfo3MoJmSjUWeecGKcjpSXrp7EGEth-Qcm555uOp19mQ2HqvzR-VHI_8i6MxSZkvWYCMskb5aLKi3knBWn1moldd0XB58ooCqN4x17NgQq1E1saCULCwxjjjXo4oLvdCPX9XbBYKxljXTgiWqpoI3O-ySifnIvT0nBeSenhtH8TIXBlVotIDeQ6CXm0SVR',
-    altText: 'Dachshund supported on underwater treadmill for IVDD spinal recovery'
+    altText: 'Dachshund supported in the indoor hydrotherapy pool for IVDD spinal recovery'
   },
   {
     id: 'hip-dysplasia',
@@ -34,7 +34,7 @@ export const CONDITIONS: ConditionItem[] = [
     shortDesc: 'Strengthening musculature to support and stabilize the hip joints.',
     fullDesc: 'A congenital condition where the hip socket fails to fully cover the ball portion of the upper thighbone. Specialized targeted exercise regimens build gluteal and pelvic stabilization muscles, drastically reducing bone-on-bone friction.',
     symptoms: ['Bunny-hopping gait when running', 'Narrow stance in hind legs', 'Decreased hip joint flexibility', 'Loss of thigh muscle mass'],
-    recommendedTherapies: ['Physiotherapy', 'Therapeutic Exercise (Peanut Ball)', 'Underwater Treadmill', 'Cryotherapy & Heat Modalities'],
+    recommendedTherapies: ['Physiotherapy', 'Therapeutic Exercise (Peanut Ball)', 'Indoor Swimming Pool', 'Cryotherapy & Heat Modalities', 'Pulsed electro-magnetic field (PEMF)', 'Acupuncture', 'Electro-acupuncture', 'TENS'],
     expectedRecoveryTime: '6 to 8 weeks for baseline stabilization',
     imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCWOALUCpPzB5Y48NeeAIMH1krV-26VzLU8CBjGtyCfSCsGVwNbQxlr4cpMbTK7jpQEGpgrgvhghtk_NSM9ysyH0tIvZHm4l7TR25RxG6dzG5DxBZawa37qGWu9G3rs3uLlIDHEy251XixCQs8R61E6sSOYMiT7PX1AozXa7K-NMA0rWEZ7W99P8gf-o7AZLJBT8AYyZX822P_PI0jPyCppt9M4qJDXlb_Z8zKfhIwNskreTHLNrYuj',
     altText: 'Golden Retriever doing core stabilization on a peanut ball'
@@ -46,7 +46,7 @@ export const CONDITIONS: ConditionItem[] = [
     shortDesc: 'Accelerated and safe recovery protocols following orthopedic procedures.',
     fullDesc: 'Essential care post-TPLO, CCL repair, FHO, or fracture repair. We work closely with your surgeon to control post-op edema, promote surgical site incisional healing, prevent muscle atrophy, and re-establish a natural symmetrical gait.',
     symptoms: ['Surgical site swelling', 'Non-weight bearing limb stance', 'Stiffness after cage rest', 'Loss of range of motion'],
-    recommendedTherapies: ['Class IV Laser Therapy', 'Passive Range of Motion (PROM)', 'Controlled Aquatic Gait Retraining', 'Home Cryotherapy Protocol'],
+    recommendedTherapies: ['Class IV Laser Therapy', 'Passive Range of Motion (PROM)', 'Controlled Aquatic Gait Retraining', 'Home Cryotherapy Protocol', 'Pulsed electro-magnetic field (PEMF)', 'Acupuncture', 'Electro-acupuncture', 'TENS'],
     expectedRecoveryTime: '8 to 12 weeks guided post-op milestones',
     imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAvI-3WE-lGQXdcDD20B1xiQ2Lhi0bDwyT675vXAGmNsMtx1xrKI-kRU9rokOTsCv8SJg30BqpHc2IVtTighJP_HRFNYq5K-lqqkjygLHTEKlwZR_votGvlUT7nLcjN-WlKHbxbbGJaJKZlBbO0mOne32osndTrNmIcF7mqX9aBB6TepzRQ2fxo0YJoF-UxlORjeJA1OFa5Vy2gPSSNSH9pfo7BU_rMnFzQJc3Dcgr-tbAw4RiRTTSn',
     altText: 'Veterinarian gently examining dog post knee surgery'
@@ -58,7 +58,7 @@ export const CONDITIONS: ConditionItem[] = [
     shortDesc: 'Retraining pathways to restore balance, coordination, and mobility.',
     fullDesc: 'Targeted neurological rehab for spinal stroke (FCE), degenerative myelopathy (DM), cerebellar ataxia, and nerve trauma. We stimulate neuroplasticity using proprioceptive tracks, wobble boards, and aquatic buoyancy.',
     symptoms: ['Loss of paw position awareness', 'Unsteady, wobbling gait', 'Weakness in all limbs', 'Difficulty keeping balance'],
-    recommendedTherapies: ['Proprioceptive Circuit Exercises', 'Electrical Muscle Stimulation', 'Hydrotherapy', 'Laser Therapy'],
+    recommendedTherapies: ['Proprioceptive Circuit Exercises', 'Electrical Muscle Stimulation', 'Hydrotherapy', 'Laser Therapy', 'Pulsed electro-magnetic field (PEMF)', 'Acupuncture', 'Electro-acupuncture', 'TENS'],
     expectedRecoveryTime: '8 to 20 weeks individualized neural program',
     imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuB5UeByUqIKRa0dshbpNaG5TpQ0vFKLn-IocfE8_XwSM_q-nH5yrd4zWYsEepp00mLboqJQQQ6cspzH_NfHibdJne0cSYC2jMZ-fyKp7ltTQ-qAq1hEaC4rW0yLPclwH1-tSFku-wJVw1tvTkWjKkxlTRlIM23qc0Y105YQJaVcz2RntNixEPu5PrAvCuhj0zaMT-5AZIvPKdEY9NldGb_bFAc3w22kilSF7hEy3-XFco-l8v8VGjv3',
     altText: 'Dog undergoing neurological balance and coordination training'
@@ -70,7 +70,7 @@ export const CONDITIONS: ConditionItem[] = [
     shortDesc: 'Targeted recovery plans to get your active dog back to peak performance.',
     fullDesc: 'Agility, flyball, working dogs, and energetic companions frequently suffer tendonitis, iliopsoas strains, and ligament sprains. Our biomechanical evaluation isolates subtle compensations and repairs tissue integrity.',
     symptoms: ['Shortened stride length', 'Reluctance to jump obstacles', 'Intermittent lameness after exercise', 'Local muscle twitching or soreness'],
-    recommendedTherapies: ['High-Power Laser', 'Myofascial Trigger Point Release', 'Aquatic Conditioning', 'Plyometric Strength Building'],
+    recommendedTherapies: ['High-Power Laser', 'Myofascial Trigger Point Release', 'Aquatic Conditioning', 'Plyometric Strength Building', 'Pulsed electro-magnetic field (PEMF)', 'Acupuncture', 'Electro-acupuncture', 'TENS'],
     expectedRecoveryTime: '4 to 10 weeks to return to agility & outdoor sports',
     imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBtr-022SXsB1NTBRLaXQRGaW7oir_XGpluV1e2iB7vsWYKAaKjYVUIbJH9h4D1SfHb0ip1XzWp_O1wrnKVxvIf8R6lLS28qeLBlhGSQyb-97-HOzcgXIOaA00mPnNytYgzQP6ujWDsk9ywdvWtnhTkCtROhjYS5hWQOKpPSmn7ZsYzIpP6L-YbtcWGHWVyuvxvYc6N9CNRq41IRDecnDU3MlbPcSU8xttqjgpEcB-amjmxckgXCCs8',
     altText: 'Athletic agility dog training and undergoing injury conditioning'
@@ -82,7 +82,7 @@ export const CONDITIONS: ConditionItem[] = [
     shortDesc: 'Gentle therapies designed to maintain independence and comfort in older age.',
     fullDesc: 'Aging pets deserve dignity, comfort, and vital motion. Our senior care plans safely boost endurance, maintain core muscle tone, ease stiff spinal joints, and enhance mental engagement in a low-stress environment.',
     symptoms: ['Slipping on hardwood floors', 'Slower walk speed', 'Muscle wasting in hips', 'Vocalizing when standing'],
-    recommendedTherapies: ['Gentle Massage', 'Warm Water Hydrotherapy Walk', 'Low-Impact Balance Matting', 'Nonslip Assistive Gear Consultation'],
+    recommendedTherapies: ['Gentle Massage', 'Warm Water Hydrotherapy Walk', 'Low-Impact Balance Matting', 'Nonslip Assistive Gear Consultation', 'Pulsed electro-magnetic field (PEMF)', 'Acupuncture', 'Electro-acupuncture', 'TENS'],
     expectedRecoveryTime: 'Continuous weekly or bi-weekly comfort care program',
     imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBKF6FGM81GUAtKVIRXHExNqGYjoBmY1_dX3XI9ywDCPlO6OTk-_xo-ysi6LHjXx9f3BGBU9ZAd_y-eewRU_wVWAt5PGf48yFZO_PJsXsgmdUmiHsBjYoOZSx68zuKATGHpJqfO9JYxKE_Zk9s02qUzelrLdYME86vhydM-DOO_0P6l82WlWKJixoe_6KestRf_W80gEt9XaWgIX2GK7JAB7d8MfbyJ172-wMMXgQjVCOGwuCurClCf',
     altText: 'Senior dog comfortably resting in a warm rehabilitation clinic'
@@ -92,75 +92,85 @@ export const CONDITIONS: ConditionItem[] = [
     title: 'Obesity Rehab',
     category: 'lifestyle',
     shortDesc: 'Safe, structured exercise programs for healthy weight management.',
-    fullDesc: 'Excess weight severely compounds joint stress, heart strain, and diabetes risk. Underwater treadmill exercise burns up to 3x more calories than land walking while eliminating joint impact thanks to aquatic buoyancy.',
+    fullDesc: 'Excess weight severely compounds joint stress, heart strain, and diabetes risk. Swimming in our indoor pool lets your pet work without the joint impact of walking on hard ground, thanks to the buoyancy of the water.',
     symptoms: ['Inability to feel ribcage easily', 'Excessive panting during short walks', 'Lethargy and low stamina', 'Difficulty grooming'],
-    recommendedTherapies: ['Underwater Treadmill Fat Burn', 'Targeted Metabolic Caloric Plan', 'Land Resistance Walks', 'Progressive Weight Milestones'],
+    recommendedTherapies: ['Indoor Pool Swimming Sessions', 'Targeted Metabolic Caloric Plan', 'Land Resistance Walks', 'Progressive Weight Milestones', 'Pulsed electro-magnetic field (PEMF)', 'Acupuncture', 'Electro-acupuncture', 'TENS'],
     expectedRecoveryTime: '8 to 16 weeks target body condition restoration',
     imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAmDWgI1fS9Ph9ngrwa3L9PHwN7DzI3mZPsCTEiQO_-9yP6lAPBlmU6muhXOSQ0zpEmw8rR0watnXCvI31JOoyPBeYciqUA3x1eapZE6h5E1XCxrUWM5uDitc5G2Jj_K57z7Dly70y3co2fBZyFTpU5YtQlBVZgSOwnUkRC5XsqGnXRurn3qa8r-hZAPxTy_nZlIg3yKW01Qf1z0EbUr1xuUOu5pPz_JBpuTT0t65K9HDSHh5B_h108',
-    altText: 'Dog undergoing underwater treadmill weight management rehabilitation'
+    altText: 'Dog swimming in the indoor hydrotherapy pool during weight management rehabilitation'
   }
 ];
 
 export const SERVICES: ServiceItem[] = [
   {
-    id: 'physiotherapy',
-    title: 'Physiotherapy',
-    icon: 'healing',
-    shortDesc: 'Expert manual assessment and treatment to restore joint mechanics and muscle function.',
-    fullDesc: 'Comprehensive veterinary physiotherapy incorporates biomechanical gait analysis, goniometry, reflex mapping, and targeted manual manipulation to correct muscular imbalances and restore joint mechanics.',
-    benefits: ['Restores natural joint range of motion', 'Decreases acute & chronic pain', 'Prevents compensatory muscle strain'],
-    suitableFor: ['Post-surgical dogs', 'Arthritic seniors', 'Spinal cord injury patients'],
-    duration: '45-60 min'
-  },
-  {
-    id: 'hydrotherapy',
-    title: 'Hydrotherapy',
-    icon: 'pool',
-    shortDesc: 'Low-impact underwater treadmill therapy for safe strengthening and cardiovascular fitness.',
-    fullDesc: 'Utilizing warm water buoyancy, adjustable water depth, and calibrated treadmill speeds, pets build limb strength with up to 60% less joint load than on hard surfaces.',
-    benefits: ['Low-impact cardiovascular conditioning', 'Re-builds lost muscle mass rapidly', 'Hydrostatic pressure reduces limb edema'],
-    suitableFor: ['CCL / TPLO post-op', 'Hip dysplasia', 'Overweight or senior pets'],
-    duration: '30-45 min'
-  },
-  {
-    id: 'laser-therapy',
-    title: 'Laser Therapy',
-    icon: 'flashlight_on',
-    shortDesc: 'Class IV laser treatments to accelerate tissue healing, reduce inflammation, and alleviate pain.',
-    fullDesc: 'Photobiomodulation delivers targeted light wavelengths deep into cells, stimulating ATP cellular energy production, increasing local microcirculation, and relieving localized nerve pain.',
-    benefits: ['Non-invasive, drug-free pain relief', 'Dramatically speeds wound & tendon healing', 'Calms nerve hypersensitivity'],
-    suitableFor: ['Lick granulomas', 'Acute surgical incisions', 'Tendonitis and arthritis'],
-    duration: '20-30 min'
+    id: 'indoor-physiotherapy',
+    title: 'Indoor Physiotherapy',
+    icon: 'night_shelter',
+    shortDesc: 'Residential care for patients travelling from outside the city.',
+    fullDesc: 'For patients coming from out of the city: your pet stays at the clinic for their course of physiotherapy.',
+    benefits: [
+      'For patients from outside the city',
+      'Special care — food and hygiene',
+      '24x7 supervision',
+      'Stay with pet-pond'
+    ],
+    suitableFor: [],
+    duration: 'By arrangement'
   },
   {
     id: 'manual-therapy',
     title: 'Manual Therapy',
     icon: 'front_hand',
-    shortDesc: 'Hands-on techniques including massage and joint mobilization for pain relief.',
-    fullDesc: 'Hands-on myofascial decompression, trigger point therapy, passive stretching, and gentle joint oscillations reduce scar tissue adhesions and promote deep relaxation.',
-    benefits: ['Releases tight muscle knots', 'Improves lymphatic fluid circulation', 'Reduces anxiety and tension'],
-    suitableFor: ['Chronic stiffness', 'Post-exercise soreness', 'Anxious or nervous pets'],
-    duration: '30-45 min'
+    shortDesc: 'Hands-on treatment delivered directly by a clinician.',
+    fullDesc: 'Hands-on treatment delivered directly by a clinician, selected and adjusted for each animal during the session.',
+    benefits: ['Massage', 'Therapeutic exercise', 'Strength training', 'Acupressure'],
+    suitableFor: [],
+    duration: 'Assessed per pet'
   },
   {
-    id: 'therapeutic-exercise',
-    title: 'Therapeutic Exercise',
-    icon: 'fitness_center',
-    shortDesc: 'Targeted exercises using specialized equipment to build strength, balance, and proprioception.',
-    fullDesc: 'Custom obstacle courses, cavaletti rails, wobble cushions, and balance peanut balls re-educate the nervous system and build core stabilization.',
-    benefits: ['Enhances core core stability', 'Sharpen balance & spatial coordination', 'Builds confidence in movement'],
-    suitableFor: ['Agility athletes', 'Neurological patients', 'Pre-hab before surgery'],
-    duration: '30-45 min'
+    id: 'electrophysical',
+    title: 'Electro-physical Therapy',
+    icon: 'bolt',
+    shortDesc: 'Equipment-assisted therapies applied under clinical supervision.',
+    fullDesc: 'Equipment-assisted therapies applied under clinical supervision, chosen to suit the animal and the stage of their recovery.',
+    benefits: [
+      'Pulsed electro-magnetic field (PEMF)',
+      'Class IV laser therapy',
+      'Ultrasound therapy',
+      'TENS',
+      'NMES',
+      'Electro-acupuncture'
+    ],
+    suitableFor: [],
+    duration: 'Assessed per pet'
   },
   {
-    id: 'home-exercise',
-    title: 'Home Exercise Programs',
+    id: 'specialised',
+    title: 'Specialised',
+    icon: 'star',
+    shortDesc: 'Acupuncture and our indoor hydrotherapy pool.',
+    fullDesc: 'Acupuncture, and hydrotherapy in an indoor swimming pool kept at lukewarm temperature.',
+    benefits: ['Acupuncture', 'Hydrotherapy — indoor swimming pool (lukewarm water)'],
+    suitableFor: [],
+    duration: 'Assessed per pet'
+  },
+  {
+    id: 'home-care',
+    title: 'Home Care',
     icon: 'home',
-    shortDesc: 'Customized plans for owners to continue their pet\'s rehabilitation safely at home.',
-    fullDesc: 'Every patient receives a personalized digital home exercise plan complete with step-by-step video instructions, repetition counts, and progress tracking tools.',
-    benefits: ['Continuity of care between clinic visits', 'Empowers pet parents with safe techniques', 'Faster overall recovery timeline'],
-    suitableFor: ['All active patients', 'Owners seeking guided home routines'],
-    duration: 'Included with Assessment'
+    shortDesc: 'A programme to continue your pet\'s care at home.',
+    fullDesc: 'A home exercise programme and supporting guidance, so care continues between visits to the clinic.',
+    benefits: [
+      'Home exercise programme',
+      'Exercise at home',
+      'Massage',
+      'Food',
+      'Supplements',
+      'Basic & special care',
+      'Surface guidance'
+    ],
+    suitableFor: [],
+    duration: 'Ongoing'
   }
 ];
 
@@ -183,7 +193,7 @@ export const JOURNEY_STEPS: JourneyStep[] = [
     number: '03',
     title: 'Personalized Therapy',
     desc: 'A tailored plan utilizing various modalities.',
-    details: 'Crafting a dedicated multi-week therapy schedule blending underwater treadmill, Class IV laser, manual joint mobilization, and acupuncture as needed.',
+    details: 'Crafting a dedicated multi-week therapy schedule blending indoor pool hydrotherapy, Class IV laser, manual joint mobilization, and acupuncture as needed.',
     whatToExpect: ['Hands-on therapeutic sessions', 'Gentle, zero-fear approach', 'Immediate post-treatment icing/heat', 'Customized treatment frequency (1-3x/week)']
   },
   {
@@ -266,13 +276,26 @@ export const SPECIALISTS: Specialist[] = [
     id: 'dhanvi-patel',
     name: 'Dr. Dhanvi Patel',
     role: 'Veterinary Physiotherapist',
-    credentials: 'M.V.Sc.',
+    // Supplied by the clinic, 2026-09-18. Separated by ';' because two of
+    // these contain commas of their own.
+    //
+    // `credentialsShort` is what the card and modal show -- the full list
+    // below runs to four qualifications with awarding bodies and countries,
+    // which buries the name it is meant to support. The profile page shows
+    // all of them.
+    credentialsShort: 'B.V.Sc. & A.H. · M.V.Sc.',
+    credentials:
+      'B.V.Sc. & A.H.'
+      + '; M.V.Sc. in Veterinary Clinical Medicine, Ethics and Jurisprudence'
+      + '; Certified Veterinary Physiotherapy — Animal Rehabilitation and Health Care, U.K.'
+      + '; CVA, Certified Veterinary Acupuncturist — Chi University, U.S.A.',
     bio:
       'Qualified veterinary physiotherapist (M.V.Sc.) treating mobility problems, '
       + 'post-surgical recovery, arthritis and injury in dogs and cats, with '
       + 'experience in avian and exotic patients. Sees patients at the Sola / '
       + 'Science City Road clinic and on home visits across Ahmedabad.',
     specialties: [
+      'Veterinary acupuncture',
       'Mobility and gait problems',
       'Post-surgical recovery',
       'Arthritis management',
@@ -296,10 +319,10 @@ export const GALLERY_ITEMS: GalleryItem[] = [
   },
   {
     id: 'g2',
-    title: 'Hydrotherapy Suite & Underwater Treadmill',
+    title: 'Hydrotherapy Suite & Indoor Swimming Pool',
     category: 'Hydrotherapy',
     imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCzxT9AWdUNq3KyYBDyNayOMTg3SZwM0257gDy2fnGxlPb-EppUECbYXuABXMgmbMHm-3ZpHF_WCEAIg1t61--PYHo-YpVt4H4GJ8GvN3apDclLRW3EoriG-uCkzh6S0oYE_cg0dEsEsu0rG6SEglDSxpMDXU4-NnWjulpRhLFGZtszQqPD5c_BJmfYVrGzX1cPxW6MN1GwiwVN5aNeBYjlNjC3krglOEWA-eMdZbRmvbBOkTgA3EzU',
-    altText: 'Clean state-of-the-art hydrotherapy treadmill tank'
+    altText: 'Clean state-of-the-art indoor hydrotherapy swimming pool'
   },
   {
     id: 'g3',
@@ -366,6 +389,6 @@ export const FAQS: FAQItem[] = [
     id: 'faq6',
     category: 'General',
     question: 'What if my dog is nervous around water?',
-    answer: 'Our underwater treadmill is filled slowly from the bottom after your pet is already calmly positioned inside with a dedicated hydrotherapist by their side. Water temperature is kept at a soothing 29-31°C (84-88°F), and treats/praise are used throughout.'
+    answer: 'Your pet is introduced to our indoor pool gradually, never rushed, with a dedicated hydrotherapist in the water alongside them and a flotation aid where it helps. Water temperature is kept at a soothing 29-31°C (84-88°F), and treats/praise are used throughout.'
   }
 ];

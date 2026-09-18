@@ -37,11 +37,11 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
           {/* Badge */}
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-[#f2ede7] border border-[#d4c3bd]/60 w-fit text-xs font-['Inter'] uppercase tracking-widest text-[#504440]">
             <Activity className="w-3.5 h-3.5 text-[#84523e]" />
-            <span>Certified Veterinary Rehabilitation Center</span>
+            <span>India&rsquo;s first pet rehabilitation center</span>
           </div>
 
           <h1 className="font-['Plus_Jakarta_Sans'] text-4xl sm:text-5xl lg:text-6xl text-[#3C2117] font-light leading-[1.12] tracking-tight">
-            Helping Pets Move Better, Recover Faster, Live Happier.
+            Life is movement, movement is life.
           </h1>
 
           <p className="font-['Inter'] text-lg sm:text-xl text-[#504440] max-w-xl font-light leading-relaxed">
