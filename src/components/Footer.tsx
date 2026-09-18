@@ -1,10 +1,10 @@
 import React from 'react';
-import { Share2, ThumbsUp, Camera } from 'lucide-react';
-import { SITE } from '../seo/siteConfig';
+import { Share2, ThumbsUp, Camera, MapPin, Phone, Mail } from 'lucide-react';
+import { SITE, formattedAddress } from '../seo/siteConfig';
 
 export const Footer: React.FC = () => {
   return (
-    <footer className="bg-[#f8f3ed] text-[#3C2117] font-['Inter'] w-full border-t border-[#d4c3bd]/30 mt-auto">
+    <footer id="contact" className="bg-[#f8f3ed] text-[#3C2117] font-['Inter'] w-full border-t border-[#d4c3bd]/30 mt-auto">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 sm:gap-16 px-4 sm:px-8 py-16 sm:py-24 max-w-[1280px] mx-auto">
         
         {/* Column 1: Brand */}
@@ -15,6 +15,48 @@ export const Footer: React.FC = () => {
           <p className="text-[#504440] mb-8 max-w-sm font-light leading-relaxed text-sm">
             Premium rehabilitation, hydrotherapy, and restorative care for your beloved companions.
           </p>
+
+          {/* Address and phone live here now.
+
+              They used to sit in a standalone contact block on the home page.
+              Once the booking form moved into the service cards, that block was
+              a lone narrow column under a full section's padding -- a lot of
+              empty page holding four lines of text.
+
+              This is not only tidying: it is the page's only crawlable
+              name/address/phone, since NapBlock was removed from the home page
+              as a duplicate. Moving it had to mean moving it somewhere, not
+              deleting it, and a footer is where a visitor looks for an address
+              anyway. */}
+          <address className="not-italic space-y-4 mb-8 text-sm">
+            <div className="flex gap-3">
+              <MapPin className="w-4 h-4 text-[#84523e] shrink-0 mt-0.5" aria-hidden="true" />
+              <span className="text-[#504440] font-light leading-relaxed">
+                {formattedAddress()}
+              </span>
+            </div>
+            <div className="flex gap-3">
+              <Phone className="w-4 h-4 text-[#84523e] shrink-0 mt-0.5" aria-hidden="true" />
+              <a
+                href={`tel:${SITE.contact.phone}`}
+                className="text-[#3C2117] hover:text-[#84523e] transition-colors"
+              >
+                {SITE.contact.phoneDisplay}
+              </a>
+            </div>
+            {SITE.contact.email && (
+              <div className="flex gap-3">
+                <Mail className="w-4 h-4 text-[#84523e] shrink-0 mt-0.5" aria-hidden="true" />
+                <a
+                  href={`mailto:${SITE.contact.email}`}
+                  className="text-[#3C2117] hover:text-[#84523e] transition-colors break-all"
+                >
+                  {SITE.contact.email}
+                </a>
+              </div>
+            )}
+          </address>
+
           <div className="flex gap-4">
             <a href="#" className="p-2 border border-[#d4c3bd] text-[#3C2117] hover:bg-[#3C2117] hover:text-white transition-colors" aria-label="Share">
               <Share2 className="w-4 h-4" />

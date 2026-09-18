@@ -132,7 +132,9 @@ export function businessNode(): Node {
       '@type': 'ReserveAction',
       target: {
         '@type': 'EntryPoint',
-        urlTemplate: `${SITE.origin}/#contact`,
+        // The reserve action points at the service tiles, which is where a
+        // visitor can actually book; #contact is the address and phone.
+        urlTemplate: `${SITE.origin}/#book`,
         actionPlatform: [
           'https://schema.org/DesktopWebPlatform',
           'https://schema.org/MobileWebPlatform',

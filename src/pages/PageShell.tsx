@@ -23,7 +23,7 @@ export const PageShell: React.FC<{ children: React.ReactNode; napHeading?: strin
 
   return (
     <div className="min-h-screen bg-[#fef9f2] text-[#3C2117] font-['Inter'] selection:bg-[#3C2117] selection:text-white flex flex-col">
-      <Navbar onOpenBooking={() => navigate('/#contact')} />
+      <Navbar onOpenBooking={() => navigate('/#book')} />
       <Breadcrumbs trail={meta.breadcrumbs} />
       <main className="flex-grow">{children}</main>
       <NapBlock heading={napHeading} />
@@ -38,10 +38,10 @@ export const DetailCta: React.FC<{ label: string; prefill?: string }> = ({ label
   return (
     <div className="mt-12 flex flex-col sm:flex-row gap-4">
       <a
-        href={`/#contact${prefill ? `?reason=${encodeURIComponent(prefill)}` : ''}`}
+        href={`/#book${prefill ? `?reason=${encodeURIComponent(prefill)}` : ''}`}
         onClick={(event) => {
           event.preventDefault();
-          navigate('/#contact');
+          navigate('/#book');
         }}
         className="inline-flex items-center justify-center gap-2 px-7 py-3.5 bg-[#3C2117] text-white text-xs uppercase tracking-widest font-medium hover:bg-[#84523e] transition-colors"
       >
