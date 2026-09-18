@@ -2,26 +2,29 @@ import React from 'react';
 import { HERO_IMAGE } from '../data/clinicData';
 
 /**
- * Hero background clip. Empty = the still image below carries the hero.
+ * Hero background clip. Set to '' to fall back to the still image below.
  *
- * The video machinery is wired and working; it is off because there is no clip
- * that can go live yet, not because it does not run. Two reasons, both real:
+ * ENCODING MATTERS HERE. The source was 1920x1080, 30s, ~5Mbps -- 18MB, fetched
+ * before anyone has scrolled, on a site whose visitors are mostly on Indian
+ * mobile data. What ships is 1280x720, 12s, CRF 28, 25fps, audio stripped:
+ * 0.95MB, about a nineteenth of the original, and indistinguishable here
+ * because it sits behind a gradient under a 15% desaturation.
  *
- *  - The clip used to preview this was Pexels stock showing a veterinary team
- *    who do not work here. Pexels' licence permits commercial use but says
- *    plainly: "Don't imply endorsement of your product by people or brands on
- *    the imagery." Identifiable strangers behind "India's first pet
- *    rehabilitation center" is exactly that implication.
- *  - That file was 18MB -- about ninety times the still it replaced, fetched
- *    before anyone has scrolled, on a site whose visitors are largely on Indian
- *    mobile data.
+ * Re-encode any replacement the same way rather than dropping a camera file in:
+ *   ffmpeg -ss 2 -t 12 -i source.mp4 -vf "scale=1280:-2,fps=25" \
+ *     -c:v libx264 -profile:v high -preset slow -crf 28 -pix_fmt yuv420p \
+ *     -an -movflags +faststart public/hero-loop.mp4
  *
- * To turn it on: drop the clinic's own footage in public/, put its path here,
- * and the still becomes the poster automatically. Keep it a few seconds long
- * and around 1280px wide -- it sits behind a gradient, so detail past that is
- * bytes nobody sees. Target a couple of MB, not eighteen.
+ * `-an` is not an oversight -- the element is muted, so an audio track is bytes
+ * that can never be heard. `+faststart` puts the index at the front of the file
+ * so it begins playing before the whole thing has arrived.
+ *
+ * On provenance: this clip is Pexels stock showing people who do not work at
+ * this clinic. The licence permits commercial use; it also asks that imagery
+ * not imply endorsement by the people in it. Swap it for the clinic's own
+ * footage when there is any.
  */
-const HERO_VIDEO = '';
+const HERO_VIDEO = '/hero-loop.mp4';
 import { Calendar, ChevronRight, Activity } from 'lucide-react';
 
 interface HeroProps {
