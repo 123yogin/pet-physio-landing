@@ -8,3 +8,6 @@ coverage/
 *.log
 .env*
 !.env.example
+
+# Local hero video previews -- never commit stock footage or large clips
+public/hero-preview.*

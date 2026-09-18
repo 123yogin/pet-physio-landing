@@ -1,6 +1,20 @@
 @import "tailwindcss";
 
+/* Continuous horizontal drift for the gallery rows.
+
+   The row renders its items twice and shifts by half its own width, so the
+   second copy sits exactly where the first began and the loop has no seam.
+
+   The `- 0.75rem` is not a fudge: the row uses gap-6 (1.5rem), and a plain
+   -50% lands half a gap out, which shows up as a visible stutter once per
+   cycle. Change the gap and this has to change with it. */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(calc(-50% - 0.75rem)); }
+}
+
 @theme {
+  --animate-marquee: marquee 38s linear infinite;
   --color-primary: #3C2117;
   --color-on-primary: #ffffff;
   --color-primary-container: #3c2117;
