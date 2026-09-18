@@ -73,11 +73,11 @@ export const Footer: React.FC = () => {
           <h4 className="text-xs tracking-widest text-[#84523e] mb-3 uppercase font-semibold">
             Information
           </h4>
-          <a href="/#conditions" className="text-[#3C2117] hover:text-[#84523e] transition-colors font-light text-sm">Conditions We Treat</a>
           <a href="/#services" className="text-[#3C2117] hover:text-[#84523e] transition-colors font-light text-sm">Treatment Modalities</a>
+          <a href="/#conditions" className="text-[#3C2117] hover:text-[#84523e] transition-colors font-light text-sm">Conditions We Treat</a>
           <a href="/#about" className="text-[#3C2117] hover:text-[#84523e] transition-colors font-light text-sm">Our Specialists</a>
-          <a href="#" className="text-[#3C2117] hover:text-[#84523e] transition-colors font-light text-sm">Privacy Policy</a>
-          <a href="#" className="text-[#3C2117] hover:text-[#84523e] transition-colors font-light text-sm">Terms of Service</a>
+          <a href="/privacy" className="text-[#3C2117] hover:text-[#84523e] transition-colors font-light text-sm">Privacy Policy</a>
+          <a href="/terms" className="text-[#3C2117] hover:text-[#84523e] transition-colors font-light text-sm">Terms of Service</a>
         </div>
 
       </div>

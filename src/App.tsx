@@ -6,6 +6,8 @@ import { ConditionPage } from './pages/ConditionPage';
 import { ServicePage } from './pages/ServicePage';
 import { SpecialistPage } from './pages/SpecialistPage';
 import { NotFoundPage } from './pages/NotFoundPage';
+import { LegalPage } from './pages/LegalPage';
+import { PRIVACY, TERMS } from './data/legalContent';
 import type { ConditionItem, ServiceItem, Specialist } from './types';
 
 /** Resolve the active route to a page component. */
@@ -20,6 +22,10 @@ const RouteView: React.FC = () => {
       return entity ? <ServicePage service={entity as ServiceItem} /> : <NotFoundPage />;
     case 'specialist':
       return entity ? <SpecialistPage specialist={entity as Specialist} /> : <NotFoundPage />;
+    case 'privacy':
+      return <LegalPage doc={PRIVACY} />;
+    case 'terms':
+      return <LegalPage doc={TERMS} />;
     case 'home':
       return <HomePage />;
     default:

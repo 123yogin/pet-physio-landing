@@ -15,7 +15,7 @@
 import { CONDITIONS, SERVICES, SPECIALISTS } from '../data/clinicData';
 import type { ConditionItem, ServiceItem, Specialist } from '../types';
 
-export type RouteKind = 'home' | 'condition' | 'service' | 'specialist' | 'notfound';
+export type RouteKind = 'home' | 'condition' | 'service' | 'specialist' | 'privacy' | 'terms' | 'notfound';
 
 export interface RouteDef {
   /** Origin-relative path, no trailing slash (except "/"). */
@@ -67,6 +67,12 @@ export const ROUTES: RouteDef[] = [
     priority: 0.6,
     changefreq: 'yearly',
   })),
+
+  // Indexable but low priority. These exist so the footer links resolve -- both
+  // pointed at "#" -- and so a visitor can find out what the booking form does
+  // with their details before they fill it in.
+  { path: '/privacy', kind: 'privacy', priority: 0.3, changefreq: 'yearly' },
+  { path: '/terms', kind: 'terms', priority: 0.3, changefreq: 'yearly' },
 ];
 
 /** Routes eligible for prerendering and the sitemap. */

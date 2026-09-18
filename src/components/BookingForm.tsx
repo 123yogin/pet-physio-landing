@@ -29,8 +29,39 @@ export const BookingForm: React.FC<BookingFormProps> = ({
     email: '',
     phone: '',
     preferredSpecialist: initialSpecialist || '',
+    service: '',
     reason: initialCondition ? `Seeking rehabilitation for ${initialCondition}.` : '',
   });
+
+  // The clinic's bookable services, read from the API that the booking forms
+  // themselves use. Hardcoding this list here is what once made every booking
+  // return 400: three forms each invented their own wording for the same
+  // service. If the request fails the field simply does not render -- an
+  // enquiry is still perfectly valid without it.
+  // Honeypot. No person reaches this field, so anything in it came from a
+  // bot filling every input it could find. The server decides what to do
+  // with that -- this side only has to offer the bait and report it.
+  const [honeypot, setHoneypot] = useState('');
+
+  const [services, setServices] = useState<{ value: string; label: string }[]>([]);
+  useEffect(() => {
+    let cancelled = false;
+    fetch(`${CLINIC_API}/appointment-options`)
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => {
+        if (cancelled || !d?.visit_types) return;
+        // Only the ones the clinic marks public. Initial Consultation,
+        // Follow-up and Re-assessment are stages of a course of care, not
+        // things a first-time visitor can sensibly ask for -- the server
+        // decides which is which so this list cannot drift from the bookable
+        // one.
+        setServices(d.visit_types.filter((v: { public?: boolean }) => v.public));
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   useEffect(() => {
     if (initialSpecialist) {
@@ -89,6 +120,8 @@ export const BookingForm: React.FC<BookingFormProps> = ({
           email: formData.email,
           phone: formData.phone,
           reason: formData.reason,
+          website: honeypot,
+          service: formData.service || undefined,
           preferredDate: formData.preferredDate || undefined,
           preferredSpecialist: formData.preferredSpecialist || undefined,
         }),
@@ -289,6 +322,48 @@ export const BookingForm: React.FC<BookingFormProps> = ({
                 should not be asked to make. It previously listed three people
                 who do not work here at all, and those names travelled into the
                 clinic's enquiry inbox as a routing preference. */}
+            {/* Honeypot: hidden from sight, from the tab order and from the
+                accessibility tree, so only automation finds it. Not `display:
+                none` -- some bots skip those -- and labelled anyway for any
+                agent that ignores aria-hidden. */}
+            <div
+              aria-hidden="true"
+              className="absolute w-px h-px -left-[9999px] overflow-hidden"
+            >
+              <label htmlFor="website">Leave this field empty</label>
+              <input
+                id="website"
+                name="website"
+                type="text"
+                tabIndex={-1}
+                autoComplete="off"
+                value={honeypot}
+                onChange={(e) => setHoneypot(e.target.value)}
+              />
+            </div>
+
+            {services.length > 0 && (
+              <div>
+                <label className="block text-xs tracking-widest text-[#504440] uppercase mb-2 font-medium" htmlFor="service">
+                  Service Required
+                </label>
+                <select
+                  id="service"
+                  name="service"
+                  value={formData.service}
+                  onChange={handleChange}
+                  className="w-full border-b border-[#3C2117]/40 focus:border-[#3C2117] bg-transparent px-0 py-2.5 text-sm text-[#3C2117] focus:outline-none cursor-pointer"
+                >
+                  <option value="">Not sure / please advise</option>
+                  {services.map((s) => (
+                    <option key={s.value} value={s.value}>
+                      {s.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
+
             {SPECIALISTS.length > 1 && (
               <div>
                 <label className="block text-xs tracking-widest text-[#504440] uppercase mb-2 font-medium" htmlFor="preferredSpecialist">
