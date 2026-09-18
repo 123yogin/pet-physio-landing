@@ -30,52 +30,68 @@ export const SpecialistDetailModal: React.FC<SpecialistDetailModalProps> = ({
           Clinician Profile
         </span>
 
-        <div className="flex flex-col sm:flex-row gap-6 mb-6 items-start">
-          <img
-            src={specialist.imageUrl}
-            alt={specialist.altText}
-            className="w-28 h-36 object-cover border border-[#d4c3bd]/50 shrink-0"
-          />
-          <div>
-            <h2 className="font-['Plus_Jakarta_Sans'] text-2xl text-[#3C2117] font-medium mb-1">
-              {specialist.name}
-            </h2>
+        {/* No portrait here.
+
+            This modal only ever opens from the clinician card, which shows the
+            portrait directly above it at full size. Repeating it as a 112px
+            thumbnail a second later adds nothing and pushes the bio -- the
+            thing the visitor actually clicked for -- further down. With the
+            placeholder in place it was worse still: "Portrait to come" read
+            twice within two seconds looks like a fault, not a pending photo.
+
+            SpecialistPage keeps its portrait, and should: that route is
+            reachable directly from a link or a search result, so there the
+            photograph is the visitor's first sight of the clinician. */}
+        <div className="mb-6">
+          <h2 className="font-['Plus_Jakarta_Sans'] text-2xl text-[#3C2117] font-medium mb-1">
+            {specialist.name}
+          </h2>
+          {specialist.role && (
             <p className="text-xs uppercase tracking-widest text-[#84523e] font-semibold mb-2">
               {specialist.role}
             </p>
+          )}
+          {(specialist.credentialsShort || specialist.credentials) && (
             <p className="text-xs text-[#504440] italic mb-3">
               {specialist.credentialsShort || specialist.credentials}
             </p>
+          )}
+          {/* "0+ Years Specialty Care" is worse than saying nothing -- it
+              reads as a claim the clinic never made. experienceYears is 0
+              because no source states it, not because she is newly qualified. */}
+          {specialist.experienceYears > 0 && (
             <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-[#f8f3ed] border border-[#d4c3bd]/40 text-xs text-[#3C2117] font-medium">
               <Award className="w-3.5 h-3.5 text-[#84523e]" />
               <span>{specialist.experienceYears}+ Years Specialty Care</span>
             </div>
-          </div>
+          )}
         </div>
 
         <div className="space-y-6">
-          <div>
-            <h3 className="text-xs uppercase tracking-wider font-semibold text-[#84523e] mb-2">
-              Background & Biography
-            </h3>
-            <p className="text-sm text-[#504440] font-light leading-relaxed">
-              {specialist.bio}
-            </p>
-          </div>
-
-          <div>
-            <h3 className="text-xs uppercase tracking-wider font-semibold text-[#84523e] mb-3">
-              Specialized Clinical Focus
-            </h3>
-            <div className="space-y-2">
-              {specialist.specialties.map((spec, idx) => (
-                <div key={idx} className="flex items-center gap-2 text-xs text-[#504440]">
-                  <CheckCircle2 className="w-4 h-4 text-[#84523e]" />
-                  <span>{spec}</span>
-                </div>
-              ))}
+          {specialist.bio && (
+            <div>
+              <h3 className="text-xs uppercase tracking-wider font-semibold text-[#84523e] mb-2">
+                Background & Biography
+              </h3>
+              <p className="text-sm text-[#504440] font-light leading-relaxed">{specialist.bio}</p>
             </div>
-          </div>
+          )}
+
+          {specialist.specialties.length > 0 && (
+            <div>
+              <h3 className="text-xs uppercase tracking-wider font-semibold text-[#84523e] mb-3">
+                Specialized Clinical Focus
+              </h3>
+              <div className="space-y-2">
+                {specialist.specialties.map((spec, idx) => (
+                  <div key={idx} className="flex items-center gap-2 text-xs text-[#504440]">
+                    <CheckCircle2 className="w-4 h-4 text-[#84523e]" />
+                    <span>{spec}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
           <div className="pt-4 border-t border-[#d4c3bd]/40 flex gap-3">
             <button
