@@ -17,7 +17,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
 
       // Document order, not menu order -- the loop breaks on the first
       // section containing the scroll position, so this has to track the page.
-      const sections = ['home', 'services', 'conditions', 'journey', 'success', 'about', 'gallery', 'faqs', 'contact'];
+      const sections = ['home', 'services', 'conditions', 'journey', 'success', 'about', 'gallery', 'book', 'faqs', 'contact'];
       const scrollPosition = window.scrollY + 120;
 
       for (const section of sections) {
@@ -122,14 +122,19 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
             className="inline-flex items-center gap-1.5 xl:gap-2 bg-[#3C2117] text-[#ffffff] px-4 xl:px-6 py-2 xl:py-2.5 rounded-none hover:bg-[#504440] transition-colors duration-300 uppercase tracking-widest text-[11px] xl:text-xs font-medium cursor-pointer whitespace-nowrap"
           >
             <Calendar className="w-3.5 h-3.5" />
-            <span>Book</span>
+            <span>Book Appointment</span>
           </button>
         </div>
 
         {/* Mobile / Tablet Menu Toggle */}
         <div className="flex lg:hidden items-center gap-2 shrink-0">
+          {/* Stays "Book" at phone width. "Book Appointment" measures ~158px
+              here and the nav row has ~100px to spare, so the full label would
+              push the row into the logo. The accessible name carries the whole
+              phrase regardless, so a screen reader is not left with a bare verb. */}
           <button
             onClick={onOpenBooking}
+            aria-label="Book Appointment"
             className="bg-[#3C2117] text-[#ffffff] px-3 py-1.5 text-[11px] font-medium uppercase tracking-wider rounded-none cursor-pointer"
           >
             Book

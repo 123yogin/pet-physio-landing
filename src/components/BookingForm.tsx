@@ -13,14 +13,25 @@ const CLINIC_API =
 interface BookingFormProps {
   initialSpecialist?: string;
   initialCondition?: string;
+  /** An Appointment.VISIT_TYPES code to pre-select, set when the visitor
+   *  presses Book on a service card. */
+  initialService?: string;
+  /** "section" is the full contact block on the home page. "panel" is just the
+   *  fields, for rendering inside a service card's own dialog -- there the
+   *  service is already chosen by the card that opened it, so the selector is
+   *  hidden and the contact column and section chrome are dropped. */
+  variant?: 'section' | 'panel';
   onSubmitSuccess: (data: AppointmentData, refId: string) => void;
 }
 
 export const BookingForm: React.FC<BookingFormProps> = ({
   initialSpecialist,
   initialCondition,
+  initialService,
+  variant = 'section',
   onSubmitSuccess,
 }) => {
+  const isPanel = variant === 'panel';
   const [formData, setFormData] = useState<AppointmentData>({
     firstName: '',
     lastName: '',
@@ -29,7 +40,7 @@ export const BookingForm: React.FC<BookingFormProps> = ({
     email: '',
     phone: '',
     preferredSpecialist: initialSpecialist || '',
-    service: '',
+    service: initialService || '',
     reason: initialCondition ? `Seeking rehabilitation for ${initialCondition}.` : '',
   });
 
@@ -62,6 +73,14 @@ export const BookingForm: React.FC<BookingFormProps> = ({
       cancelled = true;
     };
   }, []);
+
+  // Pressing Book on another card while the form is already on screen has to
+  // move the dropdown, so this follows the prop rather than only seeding state.
+  useEffect(() => {
+    if (initialService) {
+      setFormData((prev) => ({ ...prev, service: initialService }));
+    }
+  }, [initialService]);
 
   useEffect(() => {
     if (initialSpecialist) {
@@ -143,83 +162,22 @@ export const BookingForm: React.FC<BookingFormProps> = ({
     }
   };
 
-  return (
-    <section id="contact" className="py-20 sm:py-28 bg-[#ffffff] border-t border-[#d4c3bd]/30">
-      <div className="max-w-[1280px] mx-auto px-4 sm:px-8 grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-start">
-        
-        {/* Left Column: Info & Contact Details */}
-        <div>
-          <span className="text-xs uppercase tracking-widest text-[#84523e] font-semibold mb-2 block font-['Inter']">
-            Initial Consultation
-          </span>
-          <h2 className="font-['Plus_Jakarta_Sans'] text-3xl sm:text-4xl lg:text-5xl text-[#3C2117] mb-6 font-light leading-tight">
-            Ready to start your pet's recovery journey?
-          </h2>
-
-          <p className="font-['Inter'] text-base sm:text-lg text-[#504440] mb-10 font-light leading-relaxed">
-            Book an initial assessment today. Our board-certified specialists will conduct a thorough 60-minute intake evaluation and craft a personalized therapy plan.
-          </p>
-
-          <div className="space-y-6 mb-10">
-            <div className="flex items-start gap-5 border-l-2 border-[#3C2117]/30 pl-5">
-              <MapPin className="w-5 h-5 text-[#3C2117] mt-0.5 shrink-0" />
-              <div>
-                <h4 className="font-['Inter'] text-xs tracking-widest text-[#84523e] uppercase mb-1 font-semibold">
-                  Clinic Location
-                </h4>
-                <p className="font-['Inter'] text-sm sm:text-base text-[#3C2117] font-medium">
-                  {formattedAddress()}
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-5 border-l-2 border-[#3C2117]/30 pl-5">
-              <Phone className="w-5 h-5 text-[#3C2117] mt-0.5 shrink-0" />
-              <div>
-                <h4 className="font-['Inter'] text-xs tracking-widest text-[#84523e] uppercase mb-1 font-semibold">
-                  Telephone Intake
-                </h4>
-                <p className="font-['Inter'] text-sm sm:text-base text-[#3C2117] font-medium">
-                  <a href={`tel:${SITE.contact.phone}`} className="hover:text-[#84523e] transition-colors">
-                    {SITE.contact.phoneDisplay}
-                  </a>
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-5 border-l-2 border-[#3C2117]/30 pl-5">
-              <Mail className="w-5 h-5 text-[#3C2117] mt-0.5 shrink-0" />
-              <div>
-                <h4 className="font-['Inter'] text-xs tracking-widest text-[#84523e] uppercase mb-1 font-semibold">
-                  Email Inquiries
-                </h4>
-                <p className="font-['Inter'] text-sm sm:text-base text-[#3C2117] font-medium">
-                  <a href={`mailto:${SITE.contact.email}`} className="hover:text-[#84523e] transition-colors">
-                    {SITE.contact.email}
-                  </a>
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-5 border-l-2 border-[#3C2117]/30 pl-5">
-              <Clock className="w-5 h-5 text-[#3C2117] mt-0.5 shrink-0" />
-              <div>
-                <h4 className="font-['Inter'] text-xs tracking-widest text-[#84523e] uppercase mb-1 font-semibold">
-                  Hours Of Operation
-                </h4>
-                <p className="font-['Inter'] text-sm text-[#3C2117] font-medium">
-                  {openingHoursSummary()}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Right Column: Interactive Appointment Form */}
-        <div className="bg-[#f8f3ed] p-8 sm:p-12 border border-[#d4c3bd]/50 shadow-xs">
-          <h3 className="font-['Plus_Jakarta_Sans'] text-2xl text-[#3C2117] mb-8 font-medium border-b border-[#d4c3bd]/30 pb-4">
-            Request An Appointment
-          </h3>
+  // The form itself, without any surrounding page furniture, so the same markup
+  // and the same submit path serve both the standalone contact block and a
+  // service card's dialog.
+  const formPanel = (
+    <div className={isPanel
+      ? ''
+      : 'bg-[#f8f3ed] p-8 sm:p-12 border border-[#d4c3bd]/50 shadow-xs'}>
+          {/* No heading in a panel: the dialog already names the service and
+              says "Request <service>" directly above. Two headings for one
+              action is the thing this layout exists to remove. The card and
+              padding go too -- a bordered box inside a bordered dialog. */}
+          {!isPanel && (
+            <h3 className="font-['Plus_Jakarta_Sans'] text-2xl text-[#3C2117] mb-8 font-medium border-b border-[#d4c3bd]/30 pb-4">
+              Request An Appointment
+            </h3>
+          )}
 
           <form onSubmit={handleSubmit} className="space-y-6 font-['Inter']">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -342,7 +300,7 @@ export const BookingForm: React.FC<BookingFormProps> = ({
               />
             </div>
 
-            {services.length > 0 && (
+            {!isPanel && services.length > 0 && (
               <div>
                 <label className="block text-xs tracking-widest text-[#504440] uppercase mb-2 font-medium" htmlFor="service">
                   Service Required
@@ -419,6 +377,97 @@ export const BookingForm: React.FC<BookingFormProps> = ({
               </button>
           </form>
         </div>
+  );
+
+  // Inside a service card's dialog the card has already chosen the service and
+  // supplies its own heading, so the section chrome and the contact column --
+  // both of which exist for the standalone block on the home page -- would just
+  // be a second copy of what is already on screen.
+  if (isPanel) return formPanel;
+
+  return (
+    <section id="contact" className="py-20 sm:py-28 bg-[#ffffff] border-t border-[#d4c3bd]/30">
+      <div className="max-w-[1280px] mx-auto px-4 sm:px-8">
+
+        {/* Left Column: Contact Details.
+
+            The "Initial Consultation / Ready to start your pet's recovery
+            journey?" heading that used to open this column is gone. The section
+            directly above now asks "What would you like to book?" and explains
+            the choice, so this repeated the call to action one screen later --
+            and contradicted it, by naming Initial Consultation when five
+            services are bookable and that one is not even offered to the public.
+
+            The address, phone and hours below stay. They are the home page's
+            only crawlable name/address/phone since NapBlock was removed from
+            here as a duplicate, and they are useful beside the form regardless. */}
+        <div>
+          <div className="space-y-6 mb-10">
+            <div className="flex items-start gap-5 border-l-2 border-[#3C2117]/30 pl-5">
+              <MapPin className="w-5 h-5 text-[#3C2117] mt-0.5 shrink-0" />
+              <div>
+                <h4 className="font-['Inter'] text-xs tracking-widest text-[#84523e] uppercase mb-1 font-semibold">
+                  Clinic Location
+                </h4>
+                <p className="font-['Inter'] text-sm sm:text-base text-[#3C2117] font-medium">
+                  {formattedAddress()}
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-5 border-l-2 border-[#3C2117]/30 pl-5">
+              <Phone className="w-5 h-5 text-[#3C2117] mt-0.5 shrink-0" />
+              <div>
+                <h4 className="font-['Inter'] text-xs tracking-widest text-[#84523e] uppercase mb-1 font-semibold">
+                  Telephone Intake
+                </h4>
+                <p className="font-['Inter'] text-sm sm:text-base text-[#3C2117] font-medium">
+                  <a href={`tel:${SITE.contact.phone}`} className="hover:text-[#84523e] transition-colors">
+                    {SITE.contact.phoneDisplay}
+                  </a>
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-5 border-l-2 border-[#3C2117]/30 pl-5">
+              <Mail className="w-5 h-5 text-[#3C2117] mt-0.5 shrink-0" />
+              <div>
+                <h4 className="font-['Inter'] text-xs tracking-widest text-[#84523e] uppercase mb-1 font-semibold">
+                  Email Inquiries
+                </h4>
+                <p className="font-['Inter'] text-sm sm:text-base text-[#3C2117] font-medium">
+                  <a href={`mailto:${SITE.contact.email}`} className="hover:text-[#84523e] transition-colors">
+                    {SITE.contact.email}
+                  </a>
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-5 border-l-2 border-[#3C2117]/30 pl-5">
+              <Clock className="w-5 h-5 text-[#3C2117] mt-0.5 shrink-0" />
+              <div>
+                <h4 className="font-['Inter'] text-xs tracking-widest text-[#84523e] uppercase mb-1 font-semibold">
+                  Hours Of Operation
+                </h4>
+                <p className="font-['Inter'] text-sm text-[#3C2117] font-medium">
+                  {openingHoursSummary()}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* No form here any more.
+
+            Every service now books itself from its own card in #book, where
+            the service is already decided and the panel carries the fields.
+            Leaving a second, service-less form one screen below made two
+            competing ways to do one thing.
+
+            The section stays because it is not only a form: the address, phone
+            and hours below are the home page's only crawlable name/address/
+            phone since NapBlock was removed from here, and #contact is the
+            anchor the navbar's Contact link points at. */}
 
       </div>
     </section>
