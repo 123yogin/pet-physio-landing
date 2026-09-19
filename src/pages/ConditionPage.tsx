@@ -53,7 +53,8 @@ export const ConditionPage: React.FC<{ condition: ConditionItem }> = ({ conditio
           </div>
 
           <div className="lg:col-span-5">
-            <img
+            {condition.imageUrl && (
+              <img
               src={condition.imageUrl}
               alt={condition.altText}
               width={800}
@@ -63,6 +64,7 @@ export const ConditionPage: React.FC<{ condition: ConditionItem }> = ({ conditio
               decoding="async"
               className="w-full aspect-[4/3] object-cover bg-[#e6e2dc]"
             />
+            )}
           </div>
         </header>
 
