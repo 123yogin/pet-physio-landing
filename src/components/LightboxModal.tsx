@@ -16,18 +16,35 @@ export const LightboxModal: React.FC<LightboxModalProps> = ({ item, onClose }) =
         <button
           onClick={onClose}
           className="absolute top-4 right-4 z-10 p-2 bg-[#3C2117] text-white hover:bg-[#504440] transition-colors cursor-pointer"
-          aria-label="Close image"
+          aria-label="Close"
         >
           <X className="w-5 h-5" />
         </button>
 
-        <div className="aspect-[16/10] w-full overflow-hidden bg-[#e6e2dc] mb-4">
-          <img
-            src={item.imageUrl}
-            alt={item.altText}
-            className="w-full h-full object-cover"
-          />
-        </div>
+        {/* A reel is vertical 9:16. Forcing it into the photographs' 16:10
+            box would letterbox it into a stripe, so video gets its own height
+            cap and object-contain instead of a fixed aspect and object-cover. */}
+        {item.videoUrl ? (
+          <div className="w-full overflow-hidden bg-black mb-4 flex items-center justify-center">
+            <video
+              src={item.videoUrl}
+              controls
+              autoPlay
+              playsInline
+              preload="metadata"
+              aria-label={item.altText}
+              className="max-h-[70vh] w-auto max-w-full"
+            />
+          </div>
+        ) : (
+          <div className="aspect-[16/10] w-full overflow-hidden bg-[#e6e2dc] mb-4">
+            <img
+              src={item.imageUrl}
+              alt={item.altText}
+              className="w-full h-full object-cover"
+            />
+          </div>
+        )}
 
         <div className="flex justify-between items-center font-['Inter'] px-2">
           <div>

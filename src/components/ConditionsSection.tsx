@@ -67,20 +67,26 @@ export const ConditionsSection: React.FC = () => {
               className="group cursor-pointer flex flex-col justify-between h-full bg-[#ffffff] p-4 sm:p-5 border border-[#d4c3bd]/30 hover:border-[#3C2117] transition-all hover:shadow-md"
             >
               <div>
-                <div className="aspect-[4/3] relative overflow-hidden mb-5 bg-[#e6e2dc]">
-                  <img
-                    src={condition.imageUrl}
-                    alt={condition.altText}
-                    width={400}
-                    height={300}
-                    loading="lazy"
-                    decoding="async"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out grayscale-[10%]"
-                  />
-                  <div className="absolute top-3 right-3 bg-[#fef9f2]/90 backdrop-blur-xs p-1.5 rounded-full text-[#3C2117] opacity-0 group-hover:opacity-100 transition-opacity">
-                    <Info className="w-4 h-4" />
+                {/* The whole frame is conditional, not just the <img>.
+                    Guarding only the image leaves an empty 238x179 grey panel
+                    on every card -- eight blank rectangles that read as failed
+                    loads rather than as cards awaiting a photograph. */}
+                {condition.imageUrl && (
+                  <div className="aspect-[4/3] relative overflow-hidden mb-5 bg-[#e6e2dc]">
+                    <img
+                      src={condition.imageUrl}
+                      alt={condition.altText}
+                      width={400}
+                      height={300}
+                      loading="lazy"
+                      decoding="async"
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out grayscale-[10%]"
+                    />
+                    <div className="absolute top-3 right-3 bg-[#fef9f2]/90 backdrop-blur-xs p-1.5 rounded-full text-[#3C2117] opacity-0 group-hover:opacity-100 transition-opacity">
+                      <Info className="w-4 h-4" />
+                    </div>
                   </div>
-                </div>
+                )}
 
                 <span className="text-[10px] uppercase tracking-widest text-[#84523e] font-semibold mb-1 block">
                   {condition.category}

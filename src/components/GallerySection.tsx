@@ -1,13 +1,24 @@
 import React from 'react';
 import { GALLERY_ITEMS } from '../data/clinicData';
 import { GalleryItem } from '../types';
-import { Maximize2 } from 'lucide-react';
+import { Maximize2, Play } from 'lucide-react';
 
 interface GallerySectionProps {
   onSelectImage: (item: GalleryItem) => void;
 }
 
 export const GallerySection: React.FC<GallerySectionProps> = ({ onSelectImage }) => {
+  // Read once rather than per tile. matchMedia is unavailable during the
+  // server render, so this starts false and corrects on hydration.
+  const [prefersReducedMotion, setPrefersReducedMotion] = React.useState(false);
+  React.useEffect(() => {
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const apply = () => setPrefersReducedMotion(mq.matches);
+    apply();
+    mq.addEventListener('change', apply);
+    return () => mq.removeEventListener('change', apply);
+  }, []);
+
   return (
     <section id="gallery" className="py-20 sm:py-28 bg-[#ffffff]">
       <div className="max-w-[1280px] mx-auto px-4 sm:px-8">
@@ -61,15 +72,53 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ onSelectImage })
                     onClick={() => onSelectImage(item)}
                     className="relative group shrink-0 w-[300px] sm:w-[380px] overflow-hidden bg-[#e6e2dc] cursor-pointer border border-[#d4c3bd]/30 hover:border-[#3C2117] transition-all"
                   >
-                    <img
-                      src={item.imageUrl}
-                      alt={item.altText}
-                      width={600}
-                      height={450}
-                      loading="lazy"
-                      decoding="async"
-                      className="w-full h-[220px] sm:h-[260px] rounded-none object-cover grayscale-[25%] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 ease-out"
-                    />
+                    {/* A reel plays its own small loop, continuously.
+
+                        The loop is a separate, smaller rendition: 12 seconds,
+                        360px wide, no audio, about 1.9MB for all four. Playing
+                        the full reels here instead would have downloaded ~15MB
+                        and decoded four audio tracks before anyone asked to
+                        watch anything. The full reel, with sound, is fetched
+                        only when the tile is opened.
+
+                        autoPlay needs muted AND playsInline together or iOS and
+                        Chrome both refuse it and the tile sits on a frozen
+                        frame. Under prefers-reduced-motion it does not play at
+                        all -- permanent motion is a genuine problem for some
+                        people, and there is already a marquee moving. */}
+                    {item.videoUrl ? (
+                      <video
+                        src={item.previewUrl || item.videoUrl}
+                        autoPlay={!prefersReducedMotion}
+                        muted
+                        loop
+                        playsInline
+                        preload="metadata"
+                        aria-label={item.altText}
+                        className="w-full h-[220px] sm:h-[260px] object-cover grayscale-[25%] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 ease-out"
+                      />
+                    ) : (
+                      <img
+                        src={item.imageUrl}
+                        alt={item.altText}
+                        width={600}
+                        height={450}
+                        loading="lazy"
+                        decoding="async"
+                        className="w-full h-[220px] sm:h-[260px] rounded-none object-cover grayscale-[25%] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 ease-out"
+                      />
+                    )}
+
+                    {/* Without this a reel reads as a photograph, and the click
+                        that starts a video is a surprise. */}
+                    {item.videoUrl && (
+                      <span
+                        aria-hidden="true"
+                        className="absolute top-3 right-3 w-9 h-9 rounded-full bg-[#fef9f2]/90 backdrop-blur-xs flex items-center justify-center text-[#3C2117]"
+                      >
+                        <Play className="w-4 h-4 ml-0.5" fill="currentColor" />
+                      </span>
+                    )}
 
                     <div className="absolute inset-0 bg-gradient-to-t from-[#3C2117]/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6 text-white">
                       <span className="text-[10px] uppercase tracking-widest text-[#ffbda5] font-semibold mb-1">
