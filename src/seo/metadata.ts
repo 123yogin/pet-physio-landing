@@ -14,6 +14,7 @@
 import { SITE, absoluteUrl, primaryLocality } from './siteConfig';
 import { indexableRoutes, matchRoute, type RouteDef, type RouteEntity } from './routes';
 import { HERO_IMAGE } from '../data/clinicData';
+import { PRIVACY, TERMS } from '../data/legalContent';
 import type { ConditionItem, ServiceItem, Specialist } from '../types';
 
 export const TITLE_MAX = 60;
@@ -138,6 +139,29 @@ export function getPageMeta(pathname: string): PageMeta {
       imageAlt: entity.altText,
       ogType: 'profile',
       breadcrumbs: [...base.breadcrumbs, { name: 'Our Team', path: '/#about' }, { name: entity.name, path: route.path }],
+    };
+  }
+
+  // Privacy and Terms.
+  //
+  // These fell through to the Home branch, so three routes shipped the SAME
+  // <title> and the SAME description -- "Pet Physiotherapy & Rehabilitation in
+  // Ahmedabad" on all of them. Duplicate titles are one of the few things
+  // Google will rewrite for you, and the legal pages are exactly where a
+  // person scanning results needs the label to be literal.
+  //
+  // Title and intro come from the documents themselves, so the tab, the
+  // snippet and the <h1> cannot drift apart.
+  if (route.kind === 'privacy' || route.kind === 'terms') {
+    const doc = route.kind === 'privacy' ? PRIVACY : TERMS;
+    return {
+      ...base,
+      title: buildTitle(doc.title),
+      description: buildDescription(doc.intro),
+      image: socialImage(),
+      imageAlt: SITE.brandName,
+      ogType: 'website',
+      breadcrumbs: [...base.breadcrumbs, { name: doc.title, path: route.path }],
     };
   }
 

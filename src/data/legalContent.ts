@@ -39,11 +39,14 @@ export interface LegalSection {
 export interface LegalDoc {
   title: string;
   intro: string;
+  /** Human date shown on the page. Bump it whenever the text below changes. */
+  lastUpdated: string;
   sections: LegalSection[];
 }
 
 export const PRIVACY: LegalDoc = {
-  title: 'Privacy',
+  title: 'Privacy Policy',
+  lastUpdated: '19 September 2026',
   intro:
     'This page explains what this website collects, why, and who else sees it. '
     + 'It covers the website only — care your pet receives at the clinic is '
@@ -126,7 +129,8 @@ export const PRIVACY: LegalDoc = {
 };
 
 export const TERMS: LegalDoc = {
-  title: 'Terms',
+  title: 'Terms of Service',
+  lastUpdated: '19 September 2026',
   intro:
     'These terms cover use of this website. Treatment your pet receives is '
     + 'governed by what the clinic agrees with you directly.',

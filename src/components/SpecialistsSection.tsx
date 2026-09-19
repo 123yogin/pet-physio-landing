@@ -1,17 +1,14 @@
 import React from 'react';
 import { SPECIALISTS } from '../data/clinicData';
-import { Specialist } from '../types';
 import { Award, Calendar } from 'lucide-react';
 import { EntityCardLink } from './EntityCardLink';
 import { specialistPath } from '../seo/routes';
 
 interface SpecialistsSectionProps {
-  onSelectSpecialist: (specialist: Specialist) => void;
   onOpenBookingWithSpecialist: (specialistName: string) => void;
 }
 
 export const SpecialistsSection: React.FC<SpecialistsSectionProps> = ({
-  onSelectSpecialist,
   onOpenBookingWithSpecialist,
 }) => {
   return (
@@ -172,7 +169,6 @@ export const SpecialistsSection: React.FC<SpecialistsSectionProps> = ({
                   {(spec.bio || spec.credentials) && (
                     <EntityCardLink
                       href={specialistPath(spec.id)}
-                      onActivate={() => onSelectSpecialist(spec)}
                       className="w-full py-2 bg-[#f2ede7] hover:bg-[#e6e2dc] text-[#3C2117] font-['Inter'] text-xs uppercase tracking-widest font-medium border border-[#d4c3bd]/50 cursor-pointer text-center block"
                     >
                       View Full Bio &amp; Credentials

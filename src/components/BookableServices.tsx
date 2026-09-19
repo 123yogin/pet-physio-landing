@@ -1,8 +1,8 @@
 import React from 'react';
-import { Activity, Waves, BedDouble, Sparkles, Footprints, X, CalendarCheck } from 'lucide-react';
+import { Activity, Waves, BedDouble, Sparkles, Footprints } from 'lucide-react';
 import { BOOKABLE_SERVICES, BookableService } from '../data/bookableServices';
-import { BookingForm } from './BookingForm';
-import { AppointmentData } from '../types';
+import { useRouter } from '../seo/router';
+import { bookingHref } from './BookingPanel';
 
 /**
  * The bookable services as a bento grid.
@@ -34,7 +34,6 @@ import { AppointmentData } from '../types';
 interface BookableServicesProps {
   /** Codes the clinic currently offers publicly, from its own API. */
   availableCodes: string[];
-  onSubmitSuccess: (data: AppointmentData, refId: string) => void;
 }
 
 type IconComponent = React.ComponentType<{ className?: string; strokeWidth?: number }>;
@@ -65,13 +64,14 @@ const PLACEMENT: Record<string, string> = {
 
 const Tile: React.FC<{
   service: BookableService;
-  onOpen: (s: BookableService) => void;
-}> = ({ service, onOpen }) => {
+  href: string;
+  onOpen: (href: string) => (event: React.MouseEvent) => void;
+}> = ({ service, href, onOpen }) => {
   const Icon = ICONS[service.icon] ?? Activity;
   return (
-  <button
-    type="button"
-    onClick={() => onOpen(service)}
+  <a
+    href={href}
+    onClick={onOpen(href)}
     aria-label={`${service.title} — what's included`}
     className={`${PLACEMENT[service.code] ?? ''} group relative overflow-hidden text-left bg-[#f8f3ed] border border-[#d4c3bd]/30 p-8 sm:p-10 min-h-[220px] flex flex-col justify-between hover:bg-white transition-colors duration-500`}
   >
@@ -108,136 +108,25 @@ const Tile: React.FC<{
         What&rsquo;s included &rarr;
       </span>
     </span>
-  </button>
+  </a>
   );
 };
 
-const DetailPanel: React.FC<{
-  /** null = the visitor does not know which service they need. */
-  service: BookableService | null;
-  onClose: () => void;
-  onSubmitSuccess: (data: AppointmentData, refId: string) => void;
-}> = ({ service, onClose, onSubmitSuccess }) => (
-  <div
-    className="fixed inset-0 z-50 flex items-stretch sm:items-center justify-center sm:p-4 bg-[#3C2117]/40"
-    role="dialog"
-    aria-modal="true"
-    aria-label={service ? service.title : 'Tell us about your pet'}
-    onClick={onClose}
-  >
-    {/* Full screen on a phone. At 390px a centred box holding a seven-field
-        form is a scroll inside a scroll, with the submit button stranded below
-        the fold of a container whose edges the visitor cannot see. A sheet that
-        owns the screen behaves like a page, which is what it is. */}
-    <div
-      className="bg-[#fef9f2] w-full sm:max-w-[620px] h-full sm:h-auto sm:max-h-[90vh] overflow-y-auto p-6 pt-16 sm:p-10 relative"
-      onClick={(e) => e.stopPropagation()}
-    >
-      <button
-        type="button"
-        onClick={onClose}
-        aria-label="Close"
-        className="absolute top-5 right-5 text-[#84523e] hover:text-[#3C2117] transition-colors"
-      >
-        <X className="w-5 h-5" />
-      </button>
-
-      <span className="text-xs uppercase tracking-widest text-[#84523e] font-semibold block mb-2">
-        {service ? 'Bookable service' : 'Not sure yet'}
-      </span>
-      <h3 className="font-['Plus_Jakarta_Sans'] text-2xl sm:text-3xl text-[#3C2117] font-light mb-3">
-        {service ? service.title : 'Tell us about your pet'}
-      </h3>
-      <p className="font-['Inter'] text-sm sm:text-base text-[#504440] font-light leading-relaxed mb-7">
-        {service
-          ? service.summary
-          : 'Describe what is troubling your pet and we will tell you which service suits them when we call. You do not have to decide now.'}
-      </p>
-
-      {service && (
-        <>
-          <h4 className="text-xs uppercase tracking-widest text-[#84523e] font-semibold mb-3">
-            What&rsquo;s included
-          </h4>
-          <ul className="space-y-2.5 mb-6">
-            {service.includes.map((item) => (
-              <li
-                key={item}
-                className="flex gap-3 font-['Inter'] text-sm text-[#504440] font-light leading-relaxed"
-              >
-                <span aria-hidden="true" className="mt-2 w-1 h-1 bg-[#84523e] shrink-0" />
-                {item}
-              </li>
-            ))}
-          </ul>
-
-          {service.note && (
-            <p className="font-['Inter'] text-xs text-[#84523e] leading-relaxed mb-6 italic">
-              {service.note}
-            </p>
-          )}
-        </>
-      )}
-
-      {/* The form lives here rather than further down the page. Choosing a
-          service and then being scrolled to a separate block reads as two
-          different things; this way each service books itself, and the service
-          is already decided by the card that opened this. */}
-      <div className="pt-2 border-t border-[#d4c3bd]/40">
-        <p className="flex items-center gap-2 text-xs uppercase tracking-widest text-[#84523e] font-semibold mb-5 mt-6">
-          <CalendarCheck className="w-4 h-4" />
-          {service ? `Request ${service.title}` : 'Your details'}
-        </p>
-        <BookingForm
-          variant="panel"
-          initialService={service ? service.code : ''}
-          onSubmitSuccess={onSubmitSuccess}
-        />
-      </div>
-    </div>
-  </div>
-);
-
-export const BookableServices: React.FC<BookableServicesProps> = ({
-  availableCodes,
-  onSubmitSuccess,
-}) => {
-  // `undefined` = closed. `null` = open with no service chosen ("not sure").
-  // A service object = open on that service.
-  const [open, setOpen] = React.useState<BookableService | null | undefined>(undefined);
-
-  // Close on Escape, hold the page still behind the dialog, and hand focus to
-  // it -- without that last part a keyboard or screen-reader user opens a
-  // dialog and their focus is still somewhere up the page behind it, which
-  // makes the form effectively unreachable.
-  React.useEffect(() => {
-    if (open === undefined) return;
-
-    const previouslyFocused = document.activeElement as HTMLElement | null;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setOpen(undefined);
-    };
-    window.addEventListener('keydown', onKey);
-
-    const priorOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-
-    const id = window.setTimeout(() => {
-      document
-        .querySelector<HTMLElement>('[role="dialog"] input, [role="dialog"] button')
-        ?.focus();
-    }, 0);
-
-    return () => {
-      window.removeEventListener('keydown', onKey);
-      document.body.style.overflow = priorOverflow;
-      window.clearTimeout(id);
-      previouslyFocused?.focus?.();
-    };
-  }, [open]);
+export const BookableServices: React.FC<BookableServicesProps> = ({ availableCodes }) => {
+  // Tiles are links, not buttons with handlers. Opening the form is a URL
+  // change on the CURRENT page (see BookingPanel), so a tile is just an anchor
+  // to that URL -- which also makes each service's form shareable and lets the
+  // browser's Back button close it.
+  const { path, navigate } = useRouter();
 
   const offered = BOOKABLE_SERVICES.filter((s) => availableCodes.includes(s.code));
   if (offered.length === 0) return null;
+
+  const open = (href: string) => (event: React.MouseEvent) => {
+    if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey) return;
+    event.preventDefault();
+    navigate(href);
+  };
 
   return (
     <section id="book" className="py-20 sm:py-28 bg-[#fef9f2]">
@@ -258,7 +147,12 @@ export const BookableServices: React.FC<BookableServicesProps> = ({
 
         <div className="grid grid-cols-1 lg:grid-cols-2 lg:grid-rows-3 gap-px bg-[#d4c3bd]/20">
           {offered.map((s) => (
-            <Tile key={s.code} service={s} onOpen={setOpen} />
+            <Tile
+              key={s.code}
+              service={s}
+              href={bookingHref(path, { service: s.code })}
+              onOpen={open}
+            />
           ))}
         </div>
 
@@ -268,10 +162,10 @@ export const BookableServices: React.FC<BookableServicesProps> = ({
             whichever looks closest" is a dead end at 11pm. A band rather than a
             sixth tile: the bento above is exactly filled, and this is a
             different kind of action, not another service. */}
-        <button
-          type="button"
-          onClick={() => setOpen(null)}
-          className="mt-px w-full bg-[#f8f3ed] border border-[#d4c3bd]/30 px-8 py-7 text-left hover:bg-white transition-colors duration-500 group"
+        <a
+          href={bookingHref(path)}
+          onClick={open(bookingHref(path))}
+          className="mt-px block w-full bg-[#f8f3ed] border border-[#d4c3bd]/30 px-8 py-7 text-left hover:bg-white transition-colors duration-500 group"
         >
           <span className="block font-['Plus_Jakarta_Sans'] text-lg sm:text-xl text-[#3C2117] font-light mb-1 group-hover:text-[#84523e] transition-colors">
             Not sure which one your pet needs?
@@ -280,16 +174,8 @@ export const BookableServices: React.FC<BookableServicesProps> = ({
             Tell us what is troubling them and we will advise when we call
             &nbsp;&rarr;
           </span>
-        </button>
+        </a>
       </div>
-
-      {open !== undefined && (
-        <DetailPanel
-          service={open}
-          onClose={() => setOpen(undefined)}
-          onSubmitSuccess={onSubmitSuccess}
-        />
-      )}
     </section>
   );
 };

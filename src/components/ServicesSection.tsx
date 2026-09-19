@@ -1,13 +1,8 @@
 import React from 'react';
 import { SERVICES } from '../data/clinicData';
-import { ServiceItem } from '../types';
 import { ArrowUpRight, Activity, Waves, Zap, Hand, Dumbbell, Home, Sparkles, BedDouble } from 'lucide-react';
 import { EntityCardLink } from './EntityCardLink';
 import { servicePath } from '../seo/routes';
-
-interface ServicesSectionProps {
-  onSelectService: (service: ServiceItem) => void;
-}
 
 const renderServiceIcon = (iconName: string) => {
   switch (iconName) {
@@ -40,7 +35,7 @@ const renderServiceIcon = (iconName: string) => {
   }
 };
 
-export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectService }) => {
+export const ServicesSection: React.FC = () => {
   return (
     <section id="services" className="py-20 sm:py-28 bg-[#f8f3ed]">
       <div className="max-w-[1280px] mx-auto px-4 sm:px-8">
@@ -79,7 +74,6 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectServic
             <EntityCardLink
               key={service.id}
               href={servicePath(service.id)}
-              onActivate={() => onSelectService(service)}
               aria-label={`${service.title} treatment details`}
               className="bg-[#f8f3ed] border border-[#d4c3bd]/30 p-8 sm:p-12 hover:bg-[#ffffff] transition-all duration-500 group cursor-pointer flex flex-col justify-between grow-0 shrink-0 basis-full md:basis-[calc(50%-1px)] lg:basis-[calc(33.333%-1px)]"
             >

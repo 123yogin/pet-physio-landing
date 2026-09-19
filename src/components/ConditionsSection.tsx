@@ -1,15 +1,10 @@
 import React, { useState } from 'react';
 import { CONDITIONS } from '../data/clinicData';
-import { ConditionItem } from '../types';
 import { ArrowRight, Info } from 'lucide-react';
 import { EntityCardLink } from './EntityCardLink';
 import { conditionPath } from '../seo/routes';
 
-interface ConditionsSectionProps {
-  onSelectCondition: (condition: ConditionItem) => void;
-}
-
-export const ConditionsSection: React.FC<ConditionsSectionProps> = ({ onSelectCondition }) => {
+export const ConditionsSection: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
 
   const categories = [
@@ -68,7 +63,6 @@ export const ConditionsSection: React.FC<ConditionsSectionProps> = ({ onSelectCo
             <EntityCardLink
               key={condition.id}
               href={conditionPath(condition.id)}
-              onActivate={() => onSelectCondition(condition)}
               aria-label={`${condition.title} rehabilitation`}
               className="group cursor-pointer flex flex-col justify-between h-full bg-[#ffffff] p-4 sm:p-5 border border-[#d4c3bd]/30 hover:border-[#3C2117] transition-all hover:shadow-md"
             >
