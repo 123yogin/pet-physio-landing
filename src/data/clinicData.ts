@@ -16,11 +16,9 @@ export const CONDITIONS: ConditionItem[] = [
     symptoms: ['Difficulty rising from bed', 'Reluctance to climb stairs or jump', 'Limping or stiffness after rest', 'Licking specific joints'],
     recommendedTherapies: ['Laser Therapy', 'Hydrotherapy', 'Targeted Massage', 'Joint Supplements Plan', 'Pulsed electro-magnetic field (PEMF)', 'Acupuncture', 'Electro-acupuncture', 'TENS'],
     expectedRecoveryTime: 'Ongoing maintenance & visible improvement within 3-4 weeks',
-    // No photograph yet. The clinic is supplying its own; until then the card
-    // and the page render without one rather than borrowing an image that
-    // does not show this condition.
-    imageUrl: '',
-    altText: '',
+    imageUrl: '/photos/pool-swim-blue.webp',
+    altText:
+      'A Labrador swimming in the clinic’s indoor pool',
   },
   {
     id: 'ivdd',
@@ -31,11 +29,9 @@ export const CONDITIONS: ConditionItem[] = [
     symptoms: ['Back pain or arched spine', 'Hind leg weakness or knuckling', 'Incontinence or difficulty standing', 'Shaking or reluctance to move head'],
     recommendedTherapies: ['Electro-acupuncture', 'TENS', 'Hydrotherapy — Indoor Swimming Pool', 'Class IV Laser', 'Neuromuscular Electrical Stimulation', 'Pulsed electro-magnetic field (PEMF)', 'Acupuncture'],
     expectedRecoveryTime: '6 to 16 weeks based on severity (Grade I to V)',
-    // No photograph yet. The clinic is supplying its own; until then the card
-    // and the page render without one rather than borrowing an image that
-    // does not show this condition.
-    imageUrl: '',
-    altText: '',
+    imageUrl: '/photos/pool-swim.webp',
+    altText:
+      'A dog swimming on a supporting lead in the clinic’s indoor pool',
   },
   {
     id: 'hip-dysplasia',
@@ -46,11 +42,9 @@ export const CONDITIONS: ConditionItem[] = [
     symptoms: ['Bunny-hopping gait when running', 'Narrow stance in hind legs', 'Decreased hip joint flexibility', 'Loss of thigh muscle mass'],
     recommendedTherapies: ['Physiotherapy', 'Therapeutic Exercise (Peanut Ball)', 'Indoor Swimming Pool', 'Cryotherapy & Heat Modalities', 'Pulsed electro-magnetic field (PEMF)', 'Acupuncture', 'Electro-acupuncture', 'TENS'],
     expectedRecoveryTime: '6 to 8 weeks for baseline stabilization',
-    // No photograph yet. The clinic is supplying its own; until then the card
-    // and the page render without one rather than borrowing an image that
-    // does not show this condition.
-    imageUrl: '',
-    altText: '',
+    imageUrl: '/photos/therapy-ramp.webp',
+    altText:
+      'A Labrador working on the clinic’s therapy ramp',
   },
   {
     id: 'post-surgical',
@@ -61,11 +55,9 @@ export const CONDITIONS: ConditionItem[] = [
     symptoms: ['Surgical site swelling', 'Non-weight bearing limb stance', 'Stiffness after cage rest', 'Loss of range of motion'],
     recommendedTherapies: ['Class IV Laser Therapy', 'Passive Range of Motion (PROM)', 'Controlled Aquatic Gait Retraining', 'Home Cryotherapy Protocol', 'Pulsed electro-magnetic field (PEMF)', 'Acupuncture', 'Electro-acupuncture', 'TENS'],
     expectedRecoveryTime: '8 to 12 weeks guided post-op milestones',
-    // No photograph yet. The clinic is supplying its own; until then the card
-    // and the page render without one rather than borrowing an image that
-    // does not show this condition.
-    imageUrl: '',
-    altText: '',
+    imageUrl: '/photos/therapy-platform.webp',
+    altText:
+      'A Labrador standing on the clinic’s raised therapy platform',
   },
   {
     id: 'neurological-recovery',
@@ -76,11 +68,9 @@ export const CONDITIONS: ConditionItem[] = [
     symptoms: ['Loss of paw position awareness', 'Unsteady, wobbling gait', 'Weakness in all limbs', 'Difficulty keeping balance'],
     recommendedTherapies: ['Proprioceptive Circuit Exercises', 'Electrical Muscle Stimulation', 'Hydrotherapy', 'Laser Therapy', 'Pulsed electro-magnetic field (PEMF)', 'Acupuncture', 'Electro-acupuncture', 'TENS'],
     expectedRecoveryTime: '8 to 20 weeks individualized neural program',
-    // No photograph yet. The clinic is supplying its own; until then the card
-    // and the page render without one rather than borrowing an image that
-    // does not show this condition.
-    imageUrl: '',
-    altText: '',
+    imageUrl: '/photos/therapy-platform.webp',
+    altText:
+      'A Labrador standing on the clinic’s raised therapy platform',
   },
   {
     id: 'sports-injury',
@@ -91,11 +81,9 @@ export const CONDITIONS: ConditionItem[] = [
     symptoms: ['Shortened stride length', 'Reluctance to jump obstacles', 'Intermittent lameness after exercise', 'Local muscle twitching or soreness'],
     recommendedTherapies: ['High-Power Laser', 'Myofascial Trigger Point Release', 'Aquatic Conditioning', 'Plyometric Strength Building', 'Pulsed electro-magnetic field (PEMF)', 'Acupuncture', 'Electro-acupuncture', 'TENS'],
     expectedRecoveryTime: '4 to 10 weeks to return to agility & outdoor sports',
-    // No photograph yet. The clinic is supplying its own; until then the card
-    // and the page render without one rather than borrowing an image that
-    // does not show this condition.
-    imageUrl: '',
-    altText: '',
+    imageUrl: '/photos/therapy-ramp.webp',
+    altText:
+      'A Labrador working on the clinic’s therapy ramp',
   },
   {
     id: 'senior-mobility',
@@ -106,11 +94,9 @@ export const CONDITIONS: ConditionItem[] = [
     symptoms: ['Slipping on hardwood floors', 'Slower walk speed', 'Muscle wasting in hips', 'Vocalizing when standing'],
     recommendedTherapies: ['Gentle Massage', 'Warm Water Hydrotherapy Walk', 'Low-Impact Balance Matting', 'Nonslip Assistive Gear Consultation', 'Pulsed electro-magnetic field (PEMF)', 'Acupuncture', 'Electro-acupuncture', 'TENS'],
     expectedRecoveryTime: 'Continuous weekly or bi-weekly comfort care program',
-    // No photograph yet. The clinic is supplying its own; until then the card
-    // and the page render without one rather than borrowing an image that
-    // does not show this condition.
-    imageUrl: '',
-    altText: '',
+    imageUrl: '/photos/pool-swim.webp',
+    altText:
+      'A dog swimming on a supporting lead in the clinic’s indoor pool',
   },
   {
     id: 'obesity-rehab',
@@ -121,11 +107,9 @@ export const CONDITIONS: ConditionItem[] = [
     symptoms: ['Inability to feel ribcage easily', 'Excessive panting during short walks', 'Lethargy and low stamina', 'Difficulty grooming'],
     recommendedTherapies: ['Indoor Pool Swimming Sessions', 'Targeted Metabolic Caloric Plan', 'Land Resistance Walks', 'Progressive Weight Milestones', 'Pulsed electro-magnetic field (PEMF)', 'Acupuncture', 'Electro-acupuncture', 'TENS'],
     expectedRecoveryTime: '8 to 16 weeks target body condition restoration',
-    // No photograph yet. The clinic is supplying its own; until then the card
-    // and the page render without one rather than borrowing an image that
-    // does not show this condition.
-    imageUrl: '',
-    altText: '',
+    imageUrl: '/photos/pool-swim-blue.webp',
+    altText:
+      'A Labrador swimming in the clinic’s indoor pool',
   }
 ];
 
