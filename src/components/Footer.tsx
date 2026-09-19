@@ -1,5 +1,5 @@
 import React from 'react';
-import { Share2, ThumbsUp, Camera, MapPin, Phone, Mail } from 'lucide-react';
+import { Camera, MapPin, Phone, Mail } from 'lucide-react';
 import { SITE, formattedAddress } from '../seo/siteConfig';
 
 export const Footer: React.FC = () => {
@@ -57,16 +57,36 @@ export const Footer: React.FC = () => {
             )}
           </address>
 
+          {/* One real profile, not three href="#" stubs. A Share and a Like
+              button that go nowhere are decoration that costs trust: a visitor
+              who clicks one learns the site does not work. The clinic has an
+              Instagram and no other profile, so that is what is here. */}
           <div className="flex gap-4">
-            <a href="#" className="p-2 border border-[#d4c3bd] text-[#3C2117] hover:bg-[#3C2117] hover:text-white transition-colors" aria-label="Share">
-              <Share2 className="w-4 h-4" />
-            </a>
-            <a href="#" className="p-2 border border-[#d4c3bd] text-[#3C2117] hover:bg-[#3C2117] hover:text-white transition-colors" aria-label="Like">
-              <ThumbsUp className="w-4 h-4" />
-            </a>
-            <a href="#" className="p-2 border border-[#d4c3bd] text-[#3C2117] hover:bg-[#3C2117] hover:text-white transition-colors" aria-label="Instagram">
-              <Camera className="w-4 h-4" />
-            </a>
+            {SITE.sameAs
+              .filter((url) => /instagram\.com/i.test(url))
+              .map((url) => (
+                <a
+                  key={url}
+                  href={url}
+                  target="_blank"
+                  rel="me noopener noreferrer"
+                  className="p-2 border border-[#d4c3bd] text-[#3C2117] hover:bg-[#3C2117] hover:text-white transition-colors"
+                  aria-label={`${SITE.brandName} on Instagram`}
+                >
+                  <Camera className="w-4 h-4" />
+                </a>
+              ))}
+            {SITE.mapUrl && (
+              <a
+                href={SITE.mapUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-2 border border-[#d4c3bd] text-[#3C2117] hover:bg-[#3C2117] hover:text-white transition-colors"
+                aria-label="Find the clinic on Google Maps"
+              >
+                <MapPin className="w-4 h-4" />
+              </a>
+            )}
           </div>
         </div>
 
@@ -75,20 +95,41 @@ export const Footer: React.FC = () => {
           <h4 className="text-xs tracking-widest text-[#84523e] mb-6 uppercase font-semibold">
             Clinic Hours
           </h4>
-          <ul className="space-y-3 text-[#3C2117] font-light text-sm">
-            {SITE.openingHours.map((slot) => (
-              <li key={slot.days.join('-')} className="flex justify-between border-b border-[#3C2117]/10 pb-2">
-                <span>
-                  {slot.days.length === 1 ? slot.days[0] : `${slot.days[0]} - ${slot.days[slot.days.length - 1]}`}
-                </span>{' '}
-                {slot.opens && slot.closes ? (
-                  <span>{`${slot.opens} - ${slot.closes}`}</span>
-                ) : (
-                  <span className="text-[#84523e] font-medium">Closed</span>
-                )}
-              </li>
-            ))}
-          </ul>
+          {/* openingHours is empty until the clinic confirms which days its
+              window covers, and an empty <ul> under a "Clinic Hours" heading is
+              what shipped before -- a heading with nothing under it. Fall back
+              to the window the clinic did state. */}
+          {SITE.openingHours.length > 0 ? (
+            <ul className="space-y-3 text-[#3C2117] font-light text-sm">
+              {SITE.openingHours.map((slot) => (
+                <li key={slot.days.join('-')} className="flex justify-between border-b border-[#3C2117]/10 pb-2">
+                  <span>
+                    {slot.days.length === 1 ? slot.days[0] : `${slot.days[0]} - ${slot.days[slot.days.length - 1]}`}
+                  </span>{' '}
+                  {slot.opens && slot.closes ? (
+                    <span>{`${slot.opens} - ${slot.closes}`}</span>
+                  ) : (
+                    <span className="text-[#84523e] font-medium">Closed</span>
+                  )}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <div className="text-[#3C2117] font-light text-sm space-y-3">
+              {SITE.serviceHours.window && (
+                <p className="border-b border-[#3C2117]/10 pb-2">
+                  <span className="block text-[#504440]">{SITE.serviceHours.label}</span>
+                  <span className="font-medium">{SITE.serviceHours.window}</span>
+                </p>
+              )}
+              {SITE.serviceHours.appointmentOnly && (
+                <p className="text-[#84523e] font-medium">By appointment only</p>
+              )}
+              <p className="text-[#504440] leading-relaxed">
+                Call to confirm a time before you travel.
+              </p>
+            </div>
+          )}
         </div>
 
         {/* Column 3: Emergency */}
@@ -97,17 +138,35 @@ export const Footer: React.FC = () => {
             Emergency Care
           </h4>
           <p className="text-[#504440] font-light mb-4 text-sm leading-relaxed">
-            If your pet requires immediate emergency medical attention outside of clinic hours, please contact:
+            {SITE.contact.emergencyPhone
+              ? 'If your pet requires immediate emergency medical attention outside of clinic hours, please contact:'
+              : 'If your pet needs urgent attention:'}
           </p>
-          <p className="font-medium text-[#3C2117] text-sm bg-[#ffffff] p-3 border border-[#d4c3bd]/40">
-            {SITE.contact.emergencyName}: <br />
-            <a
-              href={`tel:${SITE.contact.emergencyPhone}`}
-              className="text-[#84523e] hover:underline font-semibold"
-            >
-              {SITE.contact.emergencyPhoneDisplay}
-            </a>
-          </p>
+          {/* No emergency number has been supplied, and this block used to
+              render the bare string ": " above an empty tel: link -- a dead
+              phone link on the one line where a dead phone link does real harm.
+              Until the clinic names an out-of-hours contact, say the true and
+              useful thing instead. */}
+          {SITE.contact.emergencyPhone ? (
+            <p className="font-medium text-[#3C2117] text-sm bg-[#ffffff] p-3 border border-[#d4c3bd]/40">
+              {SITE.contact.emergencyName}
+              {SITE.contact.emergencyName && ': '}
+              <br />
+              <a
+                href={`tel:${SITE.contact.emergencyPhone}`}
+                className="text-[#84523e] hover:underline font-semibold"
+              >
+                {SITE.contact.emergencyPhoneDisplay}
+              </a>
+            </p>
+          ) : (
+            <p className="text-[#3C2117] text-sm bg-[#ffffff] p-3 border border-[#d4c3bd]/40 font-light leading-relaxed">
+              This is a physiotherapy and rehabilitation practice, not a 24-hour
+              emergency hospital. If your pet is in distress, contact your
+              regular veterinary surgeon or a nearby emergency hospital straight
+              away rather than waiting for an appointment here.
+            </p>
+          )}
         </div>
 
         {/* Column 4: Legal & Navigation */}

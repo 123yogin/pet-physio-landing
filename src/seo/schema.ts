@@ -115,6 +115,9 @@ export function businessNode(): Node {
     geo: { '@type': 'GeoCoordinates', latitude: SITE.geo.latitude, longitude: SITE.geo.longitude },
     areaServed: SITE.areaServed.map((name) => ({ '@type': 'AdministrativeArea', name })),
     openingHoursSpecification: openingHoursSpecification(),
+    // Points search engines at the clinic's own Google listing, which is the
+    // authoritative source for the pin and the hours this file cannot assert.
+    ...(SITE.mapUrl ? { hasMap: SITE.mapUrl } : {}),
     ...(SITE.sameAs.length ? { sameAs: SITE.sameAs } : {}),
     employee: SPECIALISTS.map((p) => ({ '@id': ID.person(p.id) })),
     // Mirrors the visible treatment list, so the graph matches the page.
