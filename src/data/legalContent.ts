@@ -11,10 +11,11 @@
  *    and sessionStorage are all empty on every route, which is also why this
  *    site has no cookie banner;
  *  - the third-party hosts are the ones the page really contacts
- *    (fonts.googleapis.com, fonts.gstatic.com). Photographs are now served
- *    from this site's own origin, so the image host that used to be listed
- *    here has been removed -- leaving it would have told visitors their IP
- *    reaches a third party it no longer reaches.
+ *    (fonts.googleapis.com, fonts.gstatic.com, lh3.googleusercontent.com).
+ *    The image host is listed again because the condition illustrations were
+ *    restored to the originals, which are served from it. This line tracks
+ *    what the site actually loads -- if those images become local again, it
+ *    has to come back out.
  *
  * If any of that changes -- an analytics script, a chat widget, a new form
  * field -- this file is now wrong and has to change with it.
@@ -100,13 +101,14 @@ export const PRIVACY: LegalDoc = {
     {
       heading: 'Other companies that see something',
       body: [
-        'Pages load fonts hosted by Google. Requesting a file tells '
+        'Pages load fonts and some illustrations hosted by Google. Requesting a file tells '
         + 'that service your IP address and which page asked for it — this is '
         + 'true of any site using hosted fonts, and it happens whether or not you '
         + 'use the form.',
       ],
       bullets: [
         'fonts.googleapis.com and fonts.gstatic.com — typefaces',
+        'lh3.googleusercontent.com — some illustrations used on the site',
       ],
     },
     {
