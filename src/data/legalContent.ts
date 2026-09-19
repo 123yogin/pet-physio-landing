@@ -11,8 +11,7 @@
  *    and sessionStorage are all empty on every route, which is also why this
  *    site has no cookie banner;
  *  - the third-party hosts are the ones the page really contacts
- *    (fonts.googleapis.com, fonts.gstatic.com, lh3.googleusercontent.com,
- *    and tile.openstreetmap.org for the location map in the footer).
+ *    (fonts.googleapis.com, fonts.gstatic.com, lh3.googleusercontent.com).
  *    The image host is listed again because the condition illustrations were
  *    restored to the originals, which are served from it. This line tracks
  *    what the site actually loads -- if those images become local again, it
@@ -110,7 +109,6 @@ export const PRIVACY: LegalDoc = {
       bullets: [
         'fonts.googleapis.com and fonts.gstatic.com — typefaces',
         'lh3.googleusercontent.com — some illustrations used on the site',
-        'tile.openstreetmap.org — the map of the clinic\u2019s location, loaded only if you scroll to it',
       ],
     },
     {
