@@ -67,8 +67,10 @@ export const NapBlock: React.FC<{ heading?: string }> = ({ heading = 'Visit the 
         <h3 className="flex items-center gap-2 text-xs uppercase tracking-widest text-[#84523e] font-semibold mb-4">
           <Clock className="w-3.5 h-3.5" aria-hidden="true" /> Opening hours
         </h3>
-        {/* Days are not established yet, so there is no table to draw. Show
-            the window the clinic actually stated rather than an empty list. */}
+        {/* The day table when days are known, the bare window when they are
+            not. "By appointment only" sits outside that choice -- it is true
+            either way, and it was previously stranded in the fallback branch,
+            so populating openingHours silently deleted it from the page. */}
         {SITE.openingHours.length > 0 ? (
           <ul className="space-y-2 font-light">
             {SITE.openingHours.map((slot) => (
@@ -79,21 +81,19 @@ export const NapBlock: React.FC<{ heading?: string }> = ({ heading = 'Visit the 
             ))}
           </ul>
         ) : (
-          <div className="font-light space-y-2">
-            {SITE.serviceHours.window && (
-              <p className="flex justify-between gap-4 border-b border-[#3C2117]/10 pb-1.5">
-                <span>{SITE.serviceHours.label}</span>
-                <span className="font-medium">{SITE.serviceHours.window}</span>
-              </p>
-            )}
-            {SITE.serviceHours.appointmentOnly && (
-              <p className="text-[#84523e] font-medium pt-1">By appointment only</p>
-            )}
-            <p className="text-[#504440] leading-relaxed pt-1">
-              Please call to book before you travel.
+          SITE.serviceHours.window && (
+            <p className="flex justify-between gap-4 border-b border-[#3C2117]/10 pb-1.5 font-light">
+              <span>{SITE.serviceHours.label}</span>
+              <span className="font-medium">{SITE.serviceHours.window}</span>
             </p>
-          </div>
+          )
         )}
+        {SITE.serviceHours.appointmentOnly && (
+          <p className="text-[#84523e] font-medium pt-3">By appointment only</p>
+        )}
+        <p className="text-[#504440] font-light leading-relaxed pt-1">
+          Please call to book before you travel.
+        </p>
         <p className="mt-5 text-xs text-[#504440] font-light leading-relaxed">
           Serving {SITE.areaServed.join(', ')}.
         </p>

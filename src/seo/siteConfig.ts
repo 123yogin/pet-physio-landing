@@ -138,14 +138,14 @@ export const SITE: SiteConfig = {
     phoneDisplay: '+91 72840 73241',
     email: 'thepetphysiovet@gmail.com',
 
-    // No emergency line has been given. These stay empty and the footer's
-    // emergency block renders general advice instead of a broken "tel:" link
-    // -- which is what it did before, printing a bare colon and an empty
-    // anchor. An out-of-hours number is exactly the thing that must not be
-    // wrong, so it is absent until the clinic names one.
-    emergencyName: '',
-    emergencyPhone: '',
-    emergencyPhoneDisplay: '',
+    // The clinic confirmed (2026-09-19) that out-of-hours enquiries go to the
+    // same number. It is published, but the footer keeps the line saying this
+    // is not a 24-hour hospital: a physiotherapy practice open 09:30-13:30 on
+    // weekdays cannot be someone's plan for a dog in distress at midnight, and
+    // a number presented as an emergency line is read as a promise to answer.
+    emergencyName: 'The Pet Physio Vet',
+    emergencyPhone: '+917284073241',
+    emergencyPhoneDisplay: '+91 72840 73241',
   },
 
   address: {
@@ -186,12 +186,22 @@ export const SITE: SiteConfig = {
   // generator omits openingHoursSpecification entirely and Google uses the
   // profile. Fill it in once the real seven-day hours are known.
   //
-  // UPDATE 2026-09-19: the clinic has given a window -- 9:30 AM to 1:30 PM,
-  // appointment based only -- but NOT which days it applies to. A day is
-  // mandatory in openingHoursSpecification, so this stays empty and the window
-  // is published as visible copy through `serviceHours` below. The reasoning
-  // above is unchanged: hours nobody verified are worse than no hours at all.
-  openingHours: [],
+  // UPDATE 2026-09-19: the clinic confirmed Monday to Friday, 9:30 AM to 1:30
+  // PM, appointment based only. That is now stated here and drives both the
+  // visible hours and openingHoursSpecification, so the two cannot disagree.
+  //
+  // Saturday and Sunday are deliberately ABSENT rather than listed as closed.
+  // "Monday to Friday" answers which days the window covers; it is not the
+  // same statement as "we are shut at the weekend", and a clinic that takes
+  // the occasional Saturday booking would lose it to a schema entry nobody
+  // meant to make. Add explicit closed days only if the clinic says so.
+  openingHours: [
+    {
+      days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+      opens: '09:30',
+      closes: '13:30',
+    },
+  ],
 
   serviceHours: {
     label: 'Physiotherapy',
