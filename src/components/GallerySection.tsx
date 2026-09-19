@@ -70,9 +70,19 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ onSelectImage })
                     key={`${item.id}-${i}`}
                     aria-hidden={i >= row.length}
                     onClick={() => onSelectImage(item)}
-                    className="relative group shrink-0 w-[300px] sm:w-[380px] overflow-hidden bg-[#e6e2dc] cursor-pointer border border-[#d4c3bd]/30 hover:border-[#3C2117] transition-all"
+                    className="relative group shrink-0 w-[240px] sm:w-[300px] overflow-hidden bg-[#e6e2dc] cursor-pointer border border-[#d4c3bd]/30 hover:border-[#3C2117] transition-all"
                   >
-                    {/* A reel plays its own small loop, continuously.
+                    {/* Portrait tiles, because every asset is portrait.
+
+                        The tile used to be 380x260 landscape while the
+                        photographs are 3:4 and the reels 9:16 -- so everything
+                        in this gallery was being centre-cropped by a landscape
+                        box, slicing heads off and cutting the reels' burned-in
+                        captions mid-word. The tile is now 3:4, the photographs
+                        fit it exactly, and the reel loops are re-encoded to the
+                        same 3:4 rather than squeezed into it.
+
+                        A reel plays its own small loop, continuously.
 
                         The loop is a separate, smaller rendition: 12 seconds,
                         360px wide, no audio, about 1.9MB for all four. Playing
@@ -95,7 +105,7 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ onSelectImage })
                         playsInline
                         preload="metadata"
                         aria-label={item.altText}
-                        className="w-full h-[220px] sm:h-[260px] object-cover grayscale-[25%] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 ease-out"
+                        className="w-full aspect-[3/4] object-cover grayscale-[25%] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 ease-out"
                       />
                     ) : (
                       <img
@@ -105,7 +115,7 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ onSelectImage })
                         height={450}
                         loading="lazy"
                         decoding="async"
-                        className="w-full h-[220px] sm:h-[260px] rounded-none object-cover grayscale-[25%] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 ease-out"
+                        className="w-full aspect-[3/4] object-cover grayscale-[25%] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 ease-out"
                       />
                     )}
 
