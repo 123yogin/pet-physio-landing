@@ -1,6 +1,7 @@
 import React from 'react';
-import { Camera, MapPin, Phone, Mail } from 'lucide-react';
+import { Instagram, MapPin, Phone, Mail } from 'lucide-react';
 import { SITE, formattedAddress } from '../seo/siteConfig';
+import { ClinicMap } from './ClinicMap';
 
 export const Footer: React.FC = () => {
   return (
@@ -86,10 +87,15 @@ export const Footer: React.FC = () => {
                   className="p-2 border border-[#d4c3bd] text-[#3C2117] hover:bg-[#3C2117] hover:text-white transition-colors"
                   aria-label={`${SITE.brandName} on Instagram`}
                 >
-                  <Camera className="w-4 h-4" />
+                  <Instagram className="w-4 h-4" />
                 </a>
               ))}
           </div>
+
+          {/* The clinic on a map. OpenStreetMap via self-hosted Leaflet -- free,
+              no API key, no third-party script -- lazy-loaded so it only
+              contacts OSM once a visitor scrolls the footer into view. */}
+          <ClinicMap />
         </div>
 
         {/* Column 2: Hours */}
