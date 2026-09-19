@@ -266,7 +266,7 @@ export const SPECIALISTS: Specialist[] = [
   // description in seo/siteConfig.ts, which was taken from its Google Business
   // listing: "Qualified veterinary physiotherapist (M.V.Sc.) treating mobility
   // problems, post-surgical recovery, arthritis and injury in dogs and cats,
-  // with avian and exotic experience. Clinic visits at Sola, Science City
+  // with avian and exotic experience. Clinic visits at Shilaj, Ahmedabad,
   // Road, and home visits across Ahmedabad." Nothing is added to it.
   //
   // `experienceYears` and `imageUrl` stay empty because no source states them,
@@ -292,8 +292,8 @@ export const SPECIALISTS: Specialist[] = [
     bio:
       'Qualified veterinary physiotherapist (M.V.Sc.) treating mobility problems, '
       + 'post-surgical recovery, arthritis and injury in dogs and cats, with '
-      + 'experience in avian and exotic patients. Sees patients at the Sola / '
-      + 'Science City Road clinic and on home visits across Ahmedabad.',
+      + 'experience in avian and exotic patients. Sees patients at the Shilaj '
+      + 'clinic and on home visits across Ahmedabad.',
     specialties: [
       'Veterinary acupuncture',
       'Mobility and gait problems',

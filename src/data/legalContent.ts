@@ -16,8 +16,11 @@
  * If any of that changes -- an analytics script, a chat widget, a new form
  * field -- this file is now wrong and has to change with it.
  *
- * What is deliberately NOT written here: retention periods, the grievance
- * officer's name, and governing law. Those are commitments a business makes,
+ * Contact details ARE now real (email and phone, supplied 2026-09-19) and are
+ * written into the rights section.
+ *
+ * What is still deliberately NOT written here: retention periods, the grievance
+ * officer's NAME, and governing law. Those are commitments a business makes,
  * not facts a developer can read off the source, and under India's DPDP Act
  * naming a grievance officer is a legal requirement rather than a nicety.
  * They are marked NEEDS_CLINIC and render as a visible callout so they cannot
@@ -110,6 +113,12 @@ export const PRIVACY: LegalDoc = {
       body: [
         'You can ask what the clinic holds about you, ask for it to be corrected, '
         + 'or ask for it to be deleted.',
+        'Write to thepetphysiovet@gmail.com, or call +91 72840 73241, and say '
+        + 'what you would like done. It helps to give the phone number you used '
+        + 'on the form, since that is how an enquiry is found.',
+        // The contact route above is now real. What is still missing is
+        // narrower and specific: India's DPDP Act requires a NAMED grievance
+        // officer, not just an address to write to, and no name has been given.
         NEEDS_CLINIC,
       ],
     },

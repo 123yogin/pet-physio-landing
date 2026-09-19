@@ -2,12 +2,17 @@
  * SINGLE SOURCE OF TRUTH for every business fact used by the SEO layer.
  *
  * ─────────────────────────────────────────────────────────────────────────────
- * ⚠  ALL VALUES BELOW ARE PLACEHOLDERS.
+ * STATUS (2026-09-19): the NAP is REAL. Name, address, phone, email, the map
+ * listing and the Instagram profile were supplied by the clinic and are live.
  *
- * The whole site's content is demo data and will be replaced. Nothing in the SEO
- * layer hardcodes any of it — titles, descriptions, canonicals, Open Graph tags,
- * JSON-LD, robots.txt, sitemap.xml and llms.txt are all DERIVED from this file
- * plus `src/data/clinicData.ts`.
+ * What is still NOT settled, and must not be invented:
+ *   - which DAYS the 9:30–13:30 window applies to (see `openingHours`)
+ *   - any out-of-hours / emergency number (see `contact.emergencyName`)
+ *   - `verification` tokens, and `foundingYear` (still 0)
+ *
+ * Nothing in the SEO layer hardcodes any of this — titles, descriptions,
+ * canonicals, Open Graph tags, JSON-LD, robots.txt, sitemap.xml and llms.txt are
+ * all DERIVED from this file plus `src/data/clinicData.ts`.
  *
  * To go live with real data you edit ONLY two places:
  *   1. this file (business identity / NAP / hours / geo / socials / origin)
@@ -16,8 +21,8 @@
  * Then run `npm run build`. Every route, tag, schema block and sitemap entry
  * regenerates automatically. See SEO.md.
  *
- * Every placeholder is tagged `@placeholder` so `npm run seo:check` can find
- * anything still unswapped before you deploy.
+ * Anything still unswapped is tagged `@placeholder`, so `npm run seo:check` can
+ * find it before you deploy.
  * ─────────────────────────────────────────────────────────────────────────────
  */
 
@@ -66,6 +71,22 @@ export interface SiteConfig {
   /** Cities / regions actually served. Used for areaServed + local relevance copy. */
   areaServed: string[];
   openingHours: OpeningHours[];
+  /**
+   * Hours as the clinic has actually stated them, for when the per-day
+   * breakdown is not yet established. Rendered as visible copy only -- it
+   * deliberately does NOT feed openingHoursSpecification, because schema needs
+   * days and inventing them is how someone ends up at a closed door.
+   */
+  serviceHours: {
+    /** What the window covers, e.g. 'Physiotherapy'. */
+    label: string;
+    /** Human window, e.g. '9:30 AM \u2013 1:30 PM'. Empty = nothing stated. */
+    window: string;
+    /** Visits are booked in advance rather than walk-in. */
+    appointmentOnly: boolean;
+  };
+  /** Canonical map listing for the premises. Empty = no directions link. */
+  mapUrl: string;
   /** Profiles that establish the brand as a resolvable entity (schema `sameAs`). */
   sameAs: string[];
   images: {
@@ -96,7 +117,7 @@ export const SITE: SiteConfig = {
     'Veterinary physiotherapy and rehabilitation in Ahmedabad. Qualified veterinary '
     + 'physiotherapist (M.V.Sc.) treating mobility problems, post-surgical recovery, '
     + 'arthritis and injury in dogs and cats, with avian and exotic experience. '
-    + 'Clinic visits at Sola, Science City Road, and home visits across Ahmedabad.',
+    + 'Clinic visits at Shilaj, Ahmedabad, and home visits across the city.',
 
   // Must be the real production origin — every canonical URL is built from it.
   origin: 'https://petphysio.vercel.app',
@@ -113,25 +134,43 @@ export const SITE: SiteConfig = {
   currency: 'INR',
 
   contact: {
-    phone: '+919427071031',
-    phoneDisplay: '094270 71031',
-    email: '',
+    phone: '+917284073241',
+    phoneDisplay: '+91 72840 73241',
+    email: 'thepetphysiovet@gmail.com',
+
+    // No emergency line has been given. These stay empty and the footer's
+    // emergency block renders general advice instead of a broken "tel:" link
+    // -- which is what it did before, printing a bare colon and an empty
+    // anchor. An out-of-hours number is exactly the thing that must not be
+    // wrong, so it is absent until the clinic names one.
     emergencyName: '',
     emergencyPhone: '',
     emergencyPhoneDisplay: '',
   },
 
   address: {
-    streetAddress: 'Shop No. 6, Shyam Residency, The Trillionaire Road, Science City Road, opposite Horizon Flats, near Divine Highland Bungalows, Sola',
+    // Spelling follows the clinic's own Google Business Profile
+    // ("Avaneesh Heights"), not the message it was sent in ("Avneesh"), because
+    // the listing is what Google matches this address against -- a NAP that
+    // disagrees with the GBP weakens both.
+    streetAddress:
+      'Shop No. 1 & 2, Ground Floor, Avaneesh Heights, Thaltej \u2013 Shilaj Road, '
+      + 'near Dine in the Clouds restaurant, Shilaj Circle, Shilaj',
     addressLocality: 'Ahmedabad',
     addressRegion: 'Gujarat',
-    postalCode: '380060',
+    postalCode: '380059',
     addressCountry: 'IN',
   },
 
-  geo: { latitude: 23.0742381, longitude: 72.5118942 },
+  // Road-level, not door-level: OpenStreetMap resolves "Thaltej Road, Shilaj,
+  // 380059" here, which is the clinic's road and postcode. The previous value
+  // pointed at the old Sola premises roughly 5km away, so this is a correction
+  // rather than a refinement. The authoritative pin is the Google Business
+  // Profile linked in `mapUrl`; replace these with the exact coordinates from
+  // that listing when convenient.
+  geo: { latitude: 23.0526146, longitude: 72.4817156 },
 
-  areaServed: ['Ahmedabad', 'Sola', 'Science City', 'Bodakdev', 'Thaltej', 'Gota', 'Chandkheda'],
+  areaServed: ['Ahmedabad', 'Shilaj', 'Thaltej', 'Bodakdev', 'Science City', 'Sola', 'Gota'],
 
   // Deliberately empty, and this is a judgement not an omission.
   //
@@ -146,16 +185,36 @@ export const SITE: SiteConfig = {
   // and someone reads it and turns up to a closed clinic. With this empty the
   // generator omits openingHoursSpecification entirely and Google uses the
   // profile. Fill it in once the real seven-day hours are known.
+  //
+  // UPDATE 2026-09-19: the clinic has given a window -- 9:30 AM to 1:30 PM,
+  // appointment based only -- but NOT which days it applies to. A day is
+  // mandatory in openingHoursSpecification, so this stays empty and the window
+  // is published as visible copy through `serviceHours` below. The reasoning
+  // above is unchanged: hours nobody verified are worse than no hours at all.
   openingHours: [],
 
-  sameAs: PLACEHOLDER([
+  serviceHours: {
+    label: 'Physiotherapy',
+    window: '9:30 AM \u2013 1:30 PM',
+    appointmentOnly: true,
+  },
+
+  // The clinic's own Google listing, addressed by CID so the link survives any
+  // rename or re-share (the shortlink it arrived as carried a tracking token).
+  mapUrl: 'https://maps.google.com/?cid=16829298020285027612',
+
+  sameAs: [
     // Real, claimed profiles only. Every entry is an entity-resolution signal;
     // a dead or wrong URL is worse than an absent one.
-    // 'https://www.facebook.com/…',
+    //
+    // Both were supplied with tracking parameters attached (`?utm_source=qr`
+    // plus an `stkn` share token on the Instagram link, `?g_st=aw` on the map
+    // shortlink). Those are stripped deliberately: a share token is tied to
+    // whoever generated it and has no business being published, and sameAs is
+    // meant to be the canonical profile URL, not one visitor's referral.
     'https://www.instagram.com/thepetphysiovet/',
-    // 'https://www.linkedin.com/company/…',
-    // 'https://www.google.com/maps/place/?q=place_id:…',
-  ]),
+    'https://maps.google.com/?cid=16829298020285027612',
+  ],
 
   images: {
     logo: '/logo.png',
@@ -204,6 +263,14 @@ export function primaryLocality(): string {
  * Derived from the same array that produces the openingHoursSpecification in the
  * JSON-LD, so the visible hours and the marked-up hours cannot disagree.
  */
+export function serviceHoursSummary(): string {
+  const h = SITE.serviceHours;
+  if (!h.window) return '';
+  const parts = [h.label ? `${h.label} ${h.window}` : h.window];
+  if (h.appointmentOnly) parts.push('by appointment only');
+  return parts.join(' \u00b7 ');
+}
+
 export function openingHoursSummary(): string {
   const short = (day: string) => day.slice(0, 3);
   return SITE.openingHours
