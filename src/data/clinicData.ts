@@ -16,9 +16,9 @@ export const CONDITIONS: ConditionItem[] = [
     symptoms: ['Difficulty rising from bed', 'Reluctance to climb stairs or jump', 'Limping or stiffness after rest', 'Licking specific joints'],
     recommendedTherapies: ['Laser Therapy', 'Hydrotherapy', 'Targeted Massage', 'Joint Supplements Plan', 'Pulsed electro-magnetic field (PEMF)', 'Acupuncture', 'Electro-acupuncture', 'TENS'],
     expectedRecoveryTime: 'Ongoing maintenance & visible improvement within 3-4 weeks',
-    imageUrl: '/photos/therapy-platform.webp',
-    altText:
-      'A Labrador standing on the clinic’s raised therapy platform',
+    imageUrl:
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuDOgNL-gjqnC0wBg_bOL5-VaA7riWGDt8yinitZd_YHae2a9WFIGm6LjKsow3T5dYNWIu9v3habEmwWEDPBPM8th1pZACvXV3zqfx88GgpkQ_1ibFsEQ0pJk4ExB2lE0Ojy6jWSMO-M3jSASuw8mC5RcC3uaFB1jyGWf1-O8vgaLkWjohxXTWirFY3ls9HJXhIA8TjUOwl9lenAWnCxmjrCSLG64n1xUUAcsxlz_Tepyk2y97iDj3Gx',
+    altText: 'Dog receiving gentle joint massage therapy for arthritis',
   },
   {
     id: 'ivdd',
@@ -29,9 +29,9 @@ export const CONDITIONS: ConditionItem[] = [
     symptoms: ['Back pain or arched spine', 'Hind leg weakness or knuckling', 'Incontinence or difficulty standing', 'Shaking or reluctance to move head'],
     recommendedTherapies: ['Electro-acupuncture', 'TENS', 'Hydrotherapy — Indoor Swimming Pool', 'Class IV Laser', 'Neuromuscular Electrical Stimulation', 'Pulsed electro-magnetic field (PEMF)', 'Acupuncture'],
     expectedRecoveryTime: '6 to 16 weeks based on severity (Grade I to V)',
-    imageUrl: '/photos/pool-swim.webp',
-    altText:
-      'A dog swimming on a supporting lead in the clinic’s indoor pool',
+    imageUrl:
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuBpcya24ze5l5IDEtrIV1cA9IpgXIqozowsHHO8l6D89ttYFqye-buMv3Zfo3MoJmSjUWeecGKcjpSXrp7EGEth-Qcm555uOp19mQ2HqvzR-VHI_8i6MxSZkvWYCMskb5aLKi3knBWn1moldd0XB58ooCqN4x17NgQq1E1saCULCwxjjjXo4oLvdCPX9XbBYKxljXTgiWqpoI3O-ySifnIvT0nBeSenhtH8TIXBlVotIDeQ6CXm0SVR',
+    altText: 'Dachshund supported in the indoor hydrotherapy pool for IVDD spinal recovery',
   },
   {
     id: 'hip-dysplasia',
@@ -42,9 +42,9 @@ export const CONDITIONS: ConditionItem[] = [
     symptoms: ['Bunny-hopping gait when running', 'Narrow stance in hind legs', 'Decreased hip joint flexibility', 'Loss of thigh muscle mass'],
     recommendedTherapies: ['Physiotherapy', 'Therapeutic Exercise (Peanut Ball)', 'Indoor Swimming Pool', 'Cryotherapy & Heat Modalities', 'Pulsed electro-magnetic field (PEMF)', 'Acupuncture', 'Electro-acupuncture', 'TENS'],
     expectedRecoveryTime: '6 to 8 weeks for baseline stabilization',
-    imageUrl: '/photos/therapy-ramp.webp',
-    altText:
-      'A Labrador working on the clinic’s therapy ramp',
+    imageUrl:
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuCWOALUCpPzB5Y48NeeAIMH1krV-26VzLU8CBjGtyCfSCsGVwNbQxlr4cpMbTK7jpQEGpgrgvhghtk_NSM9ysyH0tIvZHm4l7TR25RxG6dzG5DxBZawa37qGWu9G3rs3uLlIDHEy251XixCQs8R61E6sSOYMiT7PX1AozXa7K-NMA0rWEZ7W99P8gf-o7AZLJBT8AYyZX822P_PI0jPyCppt9M4qJDXlb_Z8zKfhIwNskreTHLNrYuj',
+    altText: 'Golden Retriever doing core stabilization on a peanut ball',
   },
   {
     id: 'post-surgical',
@@ -55,9 +55,9 @@ export const CONDITIONS: ConditionItem[] = [
     symptoms: ['Surgical site swelling', 'Non-weight bearing limb stance', 'Stiffness after cage rest', 'Loss of range of motion'],
     recommendedTherapies: ['Class IV Laser Therapy', 'Passive Range of Motion (PROM)', 'Controlled Aquatic Gait Retraining', 'Home Cryotherapy Protocol', 'Pulsed electro-magnetic field (PEMF)', 'Acupuncture', 'Electro-acupuncture', 'TENS'],
     expectedRecoveryTime: '8 to 12 weeks guided post-op milestones',
-    imageUrl: '/photos/therapy-platform.webp',
-    altText:
-      'A Labrador standing on the clinic’s raised therapy platform',
+    imageUrl:
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuAvI-3WE-lGQXdcDD20B1xiQ2Lhi0bDwyT675vXAGmNsMtx1xrKI-kRU9rokOTsCv8SJg30BqpHc2IVtTighJP_HRFNYq5K-lqqkjygLHTEKlwZR_votGvlUT7nLcjN-WlKHbxbbGJaJKZlBbO0mOne32osndTrNmIcF7mqX9aBB6TepzRQ2fxo0YJoF-UxlORjeJA1OFa5Vy2gPSSNSH9pfo7BU_rMnFzQJc3Dcgr-tbAw4RiRTTSn',
+    altText: 'Veterinarian gently examining dog post knee surgery',
   },
   {
     id: 'neurological-recovery',
@@ -68,9 +68,9 @@ export const CONDITIONS: ConditionItem[] = [
     symptoms: ['Loss of paw position awareness', 'Unsteady, wobbling gait', 'Weakness in all limbs', 'Difficulty keeping balance'],
     recommendedTherapies: ['Proprioceptive Circuit Exercises', 'Electrical Muscle Stimulation', 'Hydrotherapy', 'Laser Therapy', 'Pulsed electro-magnetic field (PEMF)', 'Acupuncture', 'Electro-acupuncture', 'TENS'],
     expectedRecoveryTime: '8 to 20 weeks individualized neural program',
-    imageUrl: '/photos/therapy-ramp.webp',
-    altText:
-      'A Labrador working on the clinic’s therapy ramp',
+    imageUrl:
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuB5UeByUqIKRa0dshbpNaG5TpQ0vFKLn-IocfE8_XwSM_q-nH5yrd4zWYsEepp00mLboqJQQQ6cspzH_NfHibdJne0cSYC2jMZ-fyKp7ltTQ-qAq1hEaC4rW0yLPclwH1-tSFku-wJVw1tvTkWjKkxlTRlIM23qc0Y105YQJaVcz2RntNixEPu5PrAvCuhj0zaMT-5AZIvPKdEY9NldGb_bFAc3w22kilSF7hEy3-XFco-l8v8VGjv3',
+    altText: 'Dog undergoing neurological balance and coordination training',
   },
   {
     id: 'sports-injury',
@@ -81,9 +81,9 @@ export const CONDITIONS: ConditionItem[] = [
     symptoms: ['Shortened stride length', 'Reluctance to jump obstacles', 'Intermittent lameness after exercise', 'Local muscle twitching or soreness'],
     recommendedTherapies: ['High-Power Laser', 'Myofascial Trigger Point Release', 'Aquatic Conditioning', 'Plyometric Strength Building', 'Pulsed electro-magnetic field (PEMF)', 'Acupuncture', 'Electro-acupuncture', 'TENS'],
     expectedRecoveryTime: '4 to 10 weeks to return to agility & outdoor sports',
-    imageUrl: '/photos/outdoor-walk.webp',
-    altText:
-      'A Labrador walking outdoors under its own power',
+    imageUrl:
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuBtr-022SXsB1NTBRLaXQRGaW7oir_XGpluV1e2iB7vsWYKAaKjYVUIbJH9h4D1SfHb0ip1XzWp_O1wrnKVxvIf8R6lLS28qeLBlhGSQyb-97-HOzcgXIOaA00mPnNytYgzQP6ujWDsk9ywdvWtnhTkCtROhjYS5hWQOKpPSmn7ZsYzIpP6L-YbtcWGHWVyuvxvYc6N9CNRq41IRDecnDU3MlbPcSU8xttqjgpEcB-amjmxckgXCCs8',
+    altText: 'Athletic agility dog training and undergoing injury conditioning',
   },
   {
     id: 'senior-mobility',
@@ -107,9 +107,9 @@ export const CONDITIONS: ConditionItem[] = [
     symptoms: ['Inability to feel ribcage easily', 'Excessive panting during short walks', 'Lethargy and low stamina', 'Difficulty grooming'],
     recommendedTherapies: ['Indoor Pool Swimming Sessions', 'Targeted Metabolic Caloric Plan', 'Land Resistance Walks', 'Progressive Weight Milestones', 'Pulsed electro-magnetic field (PEMF)', 'Acupuncture', 'Electro-acupuncture', 'TENS'],
     expectedRecoveryTime: '8 to 16 weeks target body condition restoration',
-    imageUrl: '/photos/pool-swim-blue.webp',
-    altText:
-      'A Labrador swimming in the clinic’s indoor pool',
+    imageUrl:
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuAmDWgI1fS9Ph9ngrwa3L9PHwN7DzI3mZPsCTEiQO_-9yP6lAPBlmU6muhXOSQ0zpEmw8rR0watnXCvI31JOoyPBeYciqUA3x1eapZE6h5E1XCxrUWM5uDitc5G2Jj_K57z7Dly70y3co2fBZyFTpU5YtQlBVZgSOwnUkRC5XsqGnXRurn3qa8r-hZAPxTy_nZlIg3yKW01Qf1z0EbUr1xuUOu5pPz_JBpuTT0t65K9HDSHh5B_h108',
+    altText: 'Dog swimming in the indoor hydrotherapy pool during weight management rehabilitation',
   }
 ];
 
