@@ -1,7 +1,7 @@
 import React from 'react';
 import { GALLERY_ITEMS } from '../data/clinicData';
 import { GalleryItem } from '../types';
-import { Maximize2, Play } from 'lucide-react';
+import { Maximize2 } from 'lucide-react';
 
 interface GallerySectionProps {
   onSelectImage: (item: GalleryItem) => void;
@@ -26,16 +26,21 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ onSelectImage })
         <div className="mb-16 grid grid-cols-1 md:grid-cols-12 gap-8 items-end border-b border-[#d4c3bd]/30 pb-8">
           <div className="md:col-span-7">
             <span className="text-xs uppercase tracking-widest text-[#84523e] font-semibold mb-2 block font-['Inter']">
-              Luxury Rehabilitation Facility
+              Patients and sessions
             </span>
             <h2 className="font-['Plus_Jakarta_Sans'] text-3xl sm:text-4xl lg:text-5xl text-[#3C2117] font-light">
               Our Clinic
             </h2>
           </div>
           <div className="md:col-span-5 md:text-right">
+            {/* This read "A serene, state-of-the-art sanctuary equipped with
+                warm water aquatic suites, non-slip therapeutic flooring, and
+                calm private therapy bays" -- a facility none of these pictures
+                shows. What is actually below is the clinic's own patients, its
+                pool and mats, and home visits, so the copy says that. */}
             <p className="font-['Inter'] text-base sm:text-lg text-[#504440] font-light leading-relaxed">
-              A serene, state-of-the-art sanctuary equipped with warm water aquatic suites, non-slip
-              therapeutic flooring, and calm private therapy bays.
+              Real sessions at the Shilaj clinic and home visits across Ahmedabad
+              — the pool, the mats, and the patients who use them.
             </p>
           </div>
         </div>
@@ -117,17 +122,6 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ onSelectImage })
                         decoding="async"
                         className="w-full aspect-[3/4] object-cover grayscale-[25%] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 ease-out"
                       />
-                    )}
-
-                    {/* Without this a reel reads as a photograph, and the click
-                        that starts a video is a surprise. */}
-                    {item.videoUrl && (
-                      <span
-                        aria-hidden="true"
-                        className="absolute top-3 right-3 w-9 h-9 rounded-full bg-[#fef9f2]/90 backdrop-blur-xs flex items-center justify-center text-[#3C2117]"
-                      >
-                        <Play className="w-4 h-4 ml-0.5" fill="currentColor" />
-                      </span>
                     )}
 
                     <div className="absolute inset-0 bg-gradient-to-t from-[#3C2117]/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6 text-white">
