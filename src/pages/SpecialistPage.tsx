@@ -23,7 +23,7 @@ export const SpecialistPage: React.FC<{ specialist: Specialist }> = ({ specialis
     .filter(Boolean);
 
   return (
-    <PageShell napHeading={`Request a consult with ${specialist.name}`}>
+    <PageShell>
       <article className="max-w-[1280px] mx-auto px-4 sm:px-8 pb-16">
         <header className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start border-b border-[#d4c3bd]/30 pb-12 mb-12">
           {specialist.imageUrl && (

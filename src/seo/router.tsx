@@ -13,10 +13,14 @@ import { applyHead } from './head';
 
 interface RouterValue {
   path: string;
+  /** Raw query string WITHOUT the leading "?" -- '' when there is none.
+   *  Routes are matched on path alone; this carries UI intent such as
+   *  "?book=1", which opens the booking panel. */
+  search: string;
   navigate: (to: string, options?: { replace?: boolean; scroll?: boolean }) => void;
 }
 
-const RouterContext = createContext<RouterValue>({ path: '/', navigate: () => {} });
+const RouterContext = createContext<RouterValue>({ path: '/', search: '', navigate: () => {} });
 
 export const useRouter = (): RouterValue => useContext(RouterContext);
 
@@ -30,6 +34,9 @@ export const RouterProvider: React.FC<{ initialPath?: string; children: React.Re
   const [path, setPath] = useState<string>(() =>
     typeof window === 'undefined' ? normalizePath(initialPath) : normalizePath(window.location.pathname),
   );
+  const [search, setSearch] = useState<string>(() =>
+    typeof window === 'undefined' ? '' : window.location.search.replace(/^\?/, ''),
+  );
 
   const navigate = useCallback((to: string, options?: { replace?: boolean; scroll?: boolean }) => {
     if (typeof window === 'undefined') return;
@@ -41,21 +48,39 @@ export const RouterProvider: React.FC<{ initialPath?: string; children: React.Re
     }
 
     const [rawPath, hash] = to.split('#');
-    const target = normalizePath(rawPath || window.location.pathname);
-    const url = `${target}${hash ? `#${hash}` : ''}`;
+    const [pathPart, queryPart = ''] = (rawPath || '').split('?');
+    const target = normalizePath(pathPart || window.location.pathname);
 
-    if (target !== path) {
+    // The query survives navigation. It used to be dropped on the floor here --
+    // normalizePath strips it, and the URL was rebuilt from path + hash only --
+    // so a link like "/?book=1#book" arrived with the intent removed.
+    const url = `${target}${queryPart ? `?${queryPart}` : ''}${hash ? `#${hash}` : ''}`;
+    const routeChanged = target !== path;
+    const queryChanged = queryPart !== search;
+
+    if (routeChanged || queryChanged) {
       window.history[options?.replace ? 'replaceState' : 'pushState']({}, '', url);
       setPath(target);
-      if (options?.scroll !== false) window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
+      setSearch(queryPart);
+      // Only a real route change resets the scroll. Flipping a query flag on
+      // the page you are already on must not yank the viewport to the top.
+      if (routeChanged && options?.scroll !== false) {
+        window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
+      }
+      if (!routeChanged && hash) {
+        document.getElementById(hash)?.scrollIntoView({ behavior: 'smooth' });
+      }
     } else if (hash) {
       document.getElementById(hash)?.scrollIntoView({ behavior: 'smooth' });
     }
-  }, [path]);
+  }, [path, search]);
 
   // Back/forward buttons.
   useEffect(() => {
-    const onPop = () => setPath(normalizePath(window.location.pathname));
+    const onPop = () => {
+      setPath(normalizePath(window.location.pathname));
+      setSearch(window.location.search.replace(/^\?/, ''));
+    };
     window.addEventListener('popstate', onPop);
     return () => window.removeEventListener('popstate', onPop);
   }, []);
@@ -73,7 +98,7 @@ export const RouterProvider: React.FC<{ initialPath?: string; children: React.Re
     return () => window.clearTimeout(timer);
   }, [path]);
 
-  const value = useMemo<RouterValue>(() => ({ path, navigate }), [path, navigate]);
+  const value = useMemo<RouterValue>(() => ({ path, search, navigate }), [path, search, navigate]);
   return <RouterContext.Provider value={value}>{children}</RouterContext.Provider>;
 };
 

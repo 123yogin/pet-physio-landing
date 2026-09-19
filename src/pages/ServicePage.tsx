@@ -18,7 +18,7 @@ export const ServicePage: React.FC<{ service: ServiceItem }> = ({ service }) => 
   const otherServices = SERVICES.filter((item) => item.id !== service.id).slice(0, 3);
 
   return (
-    <PageShell napHeading={`Book ${service.title}`}>
+    <PageShell>
       <article className="max-w-[1280px] mx-auto px-4 sm:px-8 pb-16">
         <header className="max-w-3xl border-b border-[#d4c3bd]/30 pb-12 mb-12">
           <span className="text-xs uppercase tracking-widest text-[#84523e] font-semibold mb-3 block">

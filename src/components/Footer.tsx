@@ -33,6 +33,19 @@ export const Footer: React.FC = () => {
               <MapPin className="w-4 h-4 text-[#84523e] shrink-0 mt-0.5" aria-hidden="true" />
               <span className="text-[#504440] font-light leading-relaxed">
                 {formattedAddress()}
+                {SITE.mapUrl && (
+                  <>
+                    <br />
+                    <a
+                      href={SITE.mapUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-block mt-2 text-[#84523e] hover:underline font-medium"
+                    >
+                      Get directions
+                    </a>
+                  </>
+                )}
               </span>
             </div>
             <div className="flex gap-3">
@@ -76,17 +89,6 @@ export const Footer: React.FC = () => {
                   <Camera className="w-4 h-4" />
                 </a>
               ))}
-            {SITE.mapUrl && (
-              <a
-                href={SITE.mapUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-2 border border-[#d4c3bd] text-[#3C2117] hover:bg-[#3C2117] hover:text-white transition-colors"
-                aria-label="Find the clinic on Google Maps"
-              >
-                <MapPin className="w-4 h-4" />
-              </a>
-            )}
           </div>
         </div>
 
@@ -129,6 +131,15 @@ export const Footer: React.FC = () => {
             <p className="text-[#504440] leading-relaxed">
               Call to confirm a time before you travel.
             </p>
+            {/* Carried over from the NapBlock that used to sit above this
+                footer on detail pages. It is the only visible statement of the
+                areas the clinic covers; schema areaServed is not something a
+                person reads. */}
+            {SITE.areaServed.length > 0 && (
+              <p className="text-[#504440] leading-relaxed pt-2 text-xs">
+                Serving {SITE.areaServed.join(', ')}.
+              </p>
+            )}
           </div>
         </div>
 

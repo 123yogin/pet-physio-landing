@@ -300,7 +300,11 @@ export const BookingForm: React.FC<BookingFormProps> = ({
               />
             </div>
 
-            {!isPanel && services.length > 0 && (
+            {/* The selector is hidden only when the dialog already named the
+                service. A panel opened from "Book appointment" has not chosen
+                one, so without this the visitor would be filling a form with
+                no way to say what they want. */}
+            {services.length > 0 && (!isPanel || !initialService) && (
               <div>
                 <label className="block text-xs tracking-widest text-[#504440] uppercase mb-2 font-medium" htmlFor="service">
                   Service Required

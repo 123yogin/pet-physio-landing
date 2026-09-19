@@ -4,6 +4,13 @@ import { Link } from '../seo/router';
 
 interface BreadcrumbsProps {
   trail: Array<{ name: string; path: string }>;
+  /**
+   * Max width of the content below, so the trail lines up with it. The legal
+   * pages are a centred 760px reading column; a trail pinned to the 1280px
+   * container floated far out to their left, looking like it belonged to a
+   * different page.
+   */
+  maxWidthClass?: string;
 }
 
 /**
@@ -11,11 +18,11 @@ interface BreadcrumbsProps {
  * are generated from the same `getPageMeta().breadcrumbs` array, so markup can
  * never claim a trail the user cannot see.
  */
-export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ trail }) => {
+export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ trail, maxWidthClass = 'max-w-[1280px]' }) => {
   if (trail.length < 2) return null;
 
   return (
-    <nav aria-label="Breadcrumb" className="w-full max-w-[1280px] mx-auto px-4 sm:px-8 pt-28 sm:pt-32 pb-6">
+    <nav aria-label="Breadcrumb" className={`w-full ${maxWidthClass} mx-auto px-4 sm:px-8 pt-8 pb-6`}>
       <ol className="flex flex-wrap items-center gap-1.5 text-xs font-['Inter'] text-[#504440]">
         {trail.map((crumb, index) => {
           const isLast = index === trail.length - 1;
