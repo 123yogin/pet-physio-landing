@@ -1,30 +1,45 @@
 import React from 'react';
-import { HERO_IMAGE } from '../data/clinicData';
 
 /**
- * Hero background clip. Set to '' to fall back to the still image below.
+ * Hero background: the clinic's own footage.
  *
- * ENCODING MATTERS HERE. The source was 1920x1080, 30s, ~5Mbps -- 18MB, fetched
- * before anyone has scrolled, on a site whose visitors are mostly on Indian
- * mobile data. What ships is 1280x720, 12s, CRF 28, 25fps, audio stripped:
- * 0.95MB, about a nineteenth of the original, and indistinguishable here
- * because it sits behind a gradient under a 15% desaturation.
+ * Both files are the practice's own -- shot at the Shilaj premises, showing its
+ * real staff, patients and mats. That replaces a Pexels stock clip whose
+ * subjects wore legible "VOLUNTEER" shirts and did not work here, which read as
+ * this clinic's team on a page headlined "India's first pet rehabilitation
+ * center".
+ *
+ * ENCODING MATTERS HERE. The camera original was 2160x3840, 29.5s, HEVC at
+ * 55Mbps -- 203MB, with an audio track, fetched before anyone has scrolled, on
+ * a site whose visitors are mostly on Indian mobile data. It was also HEVC,
+ * which Chrome frequently cannot decode at all, so the raw file would simply
+ * not have played for a large share of visitors.
+ *
+ * What ships is H.264 900x1600, 12s, 30fps, CRF 31, audio stripped: 1.7MB,
+ * about a hundred and twentieth of the original. 900px wide is not arbitrary --
+ * it matches the panel's own width on a desktop half-viewport and covers a
+ * 390px phone at 2x, so every byte beyond it would be resampled away.
  *
  * Re-encode any replacement the same way rather than dropping a camera file in:
- *   ffmpeg -ss 2 -t 12 -i source.mp4 -vf "scale=1280:-2,fps=25" \
- *     -c:v libx264 -profile:v high -preset slow -crf 28 -pix_fmt yuv420p \
+ *   ffmpeg -ss 10 -t 12 -i source.MP4 -vf "scale=900:-2,fps=30" \
+ *     -c:v libx264 -profile:v high -preset slow -crf 31 -pix_fmt yuv420p \
  *     -an -movflags +faststart public/hero-loop.mp4
  *
- * `-an` is not an oversight -- the element is muted, so an audio track is bytes
- * that can never be heard. `+faststart` puts the index at the front of the file
- * so it begins playing before the whole thing has arrived.
+ * `-an` is not an oversight: the element is muted, so an audio track is bytes
+ * nobody can ever hear. `+faststart` moves the index to the front so playback
+ * begins before the whole file has arrived. libx264 rather than HEVC for the
+ * decoder support above.
  *
- * On provenance: this clip is Pexels stock showing people who do not work at
- * this clinic. The licence permits commercial use; it also asks that imagery
- * not imply endorsement by the people in it. Swap it for the clinic's own
- * footage when there is any.
+ * The poster is frame one of that same clip, so the still and the video are the
+ * same moment -- no stock photograph flashing before the real footage loads.
+ *   ffmpeg -ss 10 -i source.MP4 -frames:v 1 -vf "scale=1080:-2" -q:v 6 \
+ *     public/hero-poster.jpg
+ *
+ * Set HERO_VIDEO to '' to fall back to the poster alone.
  */
 const HERO_VIDEO = '/hero-loop.mp4';
+const HERO_POSTER = '/hero-poster.jpg';
+
 import { Calendar, ChevronRight, Activity } from 'lucide-react';
 
 interface HeroProps {
@@ -44,7 +59,6 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
     >
       {/* Background Image Container */}
       <div className="absolute inset-0 z-0 w-full lg:w-1/2 lg:left-1/2">
-        {/* PREVIEW ONLY -- not shippable as it stands. See the note below. */}
         {HERO_VIDEO ? (
           <video
             // muted + playsInline are load-bearing: without both, iOS and
@@ -54,7 +68,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
             loop
             playsInline
             preload="none"
-            poster={HERO_IMAGE}
+            poster={HERO_POSTER}
             aria-hidden="true"
             className="w-full h-full object-cover grayscale-[15%] opacity-90 transition-opacity duration-700 motion-reduce:hidden"
           >
@@ -67,10 +81,10 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
             system for reduced motion -- autoplaying video is a genuine problem
             for some people, not a preference. */}
         <img
-          src={HERO_IMAGE}
-          alt="Veterinary physiotherapist gently working with golden retriever in luxury rehabilitation clinic"
-          width={1200}
-          height={900}
+          src={HERO_POSTER}
+          alt="A clinician steadying a white Indian Spitz on the padded mats at The Pet Physio Vet in Shilaj, Ahmedabad"
+          width={1080}
+          height={1920}
           loading="eager"
           fetchPriority="high"
           decoding="async"
