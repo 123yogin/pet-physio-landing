@@ -84,8 +84,9 @@ export const CONDITIONS: ConditionItem[] = [
     symptoms: ['Slipping on hardwood floors', 'Slower walk speed', 'Muscle wasting in hips', 'Vocalizing when standing'],
     recommendedTherapies: ['Gentle Massage', 'Warm Water Hydrotherapy Walk', 'Low-Impact Balance Matting', 'Nonslip Assistive Gear Consultation', 'Pulsed electro-magnetic field (PEMF)', 'Acupuncture', 'Electro-acupuncture', 'TENS'],
     expectedRecoveryTime: 'Continuous weekly or bi-weekly comfort care program',
-    imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBKF6FGM81GUAtKVIRXHExNqGYjoBmY1_dX3XI9ywDCPlO6OTk-_xo-ysi6LHjXx9f3BGBU9ZAd_y-eewRU_wVWAt5PGf48yFZO_PJsXsgmdUmiHsBjYoOZSx68zuKATGHpJqfO9JYxKE_Zk9s02qUzelrLdYME86vhydM-DOO_0P6l82WlWKJixoe_6KestRf_W80gEt9XaWgIX2GK7JAB7d8MfbyJ172-wMMXgQjVCOGwuCurClCf',
-    altText: 'Senior dog comfortably resting in a warm rehabilitation clinic'
+    imageUrl: '/photos/senior-beagle.webp',
+    altText:
+      'Dr. Dhanvi Patel with a senior beagle, grey around the muzzle, during a home visit in Ahmedabad',
   },
   {
     id: 'obesity-rehab',
@@ -304,53 +305,69 @@ export const SPECIALISTS: Specialist[] = [
       'Home visits across Ahmedabad',
     ],
     experienceYears: 0,
-    imageUrl: '',
-    altText: 'Dr. Dhanvi Patel',
+    // Her own photograph, supplied by the clinic 2026-09-19. Identity is not
+    // assumed: the scrub embroidery in the same set reads "Thepetphysio /
+    // Dr. Dhanvi Pa... / Veterinary Physio...", which is her own uniform.
+    imageUrl: '/photos/dhanvi-patel.webp',
+    altText:
+      'Dr. Dhanvi Patel sitting on the therapy mats at the clinic, holding a beagle',
   },
 ];
 
+/**
+ * The clinic's own photographs.
+ *
+ * Every entry here used to be a stock image from googleusercontent captioned as
+ * this practice's premises -- "Welcoming Reception Area", "Hydrotherapy Suite &
+ * Indoor Swimming Pool", "Private Manual Therapy Suite", "Class IV Laser
+ * Photobiomodulation System". Those were claims about rooms and equipment
+ * illustrated with someone else's building.
+ *
+ * What the clinic has actually supplied is four usable photographs, all of the
+ * clinician with patients -- two at the Shilaj premises, two on home visits.
+ * None of them shows a reception, a pool, a treatment room or any equipment, so
+ * the captions describe what is in the frame and nothing else. The gallery is
+ * shorter as a result, which is the honest outcome.
+ *
+ * A fifth photograph from the same set is deliberately unused: it carries a
+ * visible "AI-generated content" watermark from AI photo editing, which has no
+ * place on a veterinary clinic's website.
+ *
+ * Still wanted, to say anything about the facility itself: the reception, the
+ * indoor pool, the therapy room, and equipment in use.
+ */
 export const GALLERY_ITEMS: GalleryItem[] = [
   {
     id: 'g1',
-    title: 'Welcoming Reception Area',
-    category: 'Facility',
-    imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDGgdcm16BlKgFq_hBIFONd_vAlFnQuok-UokDLqYVvX6S6VnUkn1t_iicDmhU7QJ19_8H1_b7WKNV-C5kxsx-UCTCCADUBxlA-v9HB-CAPG4zY-uGgvXAAczsoAmQYYW-36ksnzNl_eu9r-9Y49qOZ0sQuM6zyau-37liHVKyw_Lc7rOJKfk1qKBjlxfNJJhmK-5SN09bf74ZSkx3YjPoJedPDA-7rRe1g9-oCuEsbdkBLtIdSz_Xp',
-    altText: 'Clinic reception area with modern calm warm aesthetic'
+    title: 'On the therapy mats',
+    category: 'At the clinic',
+    imageUrl: '/photos/clinic-german-shepherd.webp',
+    altText:
+      'Dr. Dhanvi Patel holding a German Shepherd on the padded therapy mats at the Shilaj clinic'
   },
   {
     id: 'g2',
-    title: 'Hydrotherapy Suite & Indoor Swimming Pool',
-    category: 'Hydrotherapy',
-    imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCzxT9AWdUNq3KyYBDyNayOMTg3SZwM0257gDy2fnGxlPb-EppUECbYXuABXMgmbMHm-3ZpHF_WCEAIg1t61--PYHo-YpVt4H4GJ8GvN3apDclLRW3EoriG-uCkzh6S0oYE_cg0dEsEsu0rG6SEglDSxpMDXU4-NnWjulpRhLFGZtszQqPD5c_BJmfYVrGzX1cPxW6MN1GwiwVN5aNeBYjlNjC3krglOEWA-eMdZbRmvbBOkTgA3EzU',
-    altText: 'Clean state-of-the-art indoor hydrotherapy swimming pool'
+    title: 'A home visit in Ahmedabad',
+    category: 'Home visits',
+    imageUrl: '/photos/home-visit-labradors.webp',
+    altText:
+      'Dr. Dhanvi Patel sitting on the floor with two Labradors during a home visit'
   },
   {
     id: 'g3',
-    title: 'Private Manual Therapy Suite',
-    category: 'Physiotherapy',
-    imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuD8gptZM_BVFQaexpq2gf8mPnEuRzWgbWbfCrHkUUiSqmEhZqaz2EumQ76gyufbJxfJhJzW8VBvV-MZhZUBhrMyaYN9FzPudOX2Uuyrn6CPzn0I3Nh68__s0EwP33PWnDX7b0waGKCLwu7QU_zxnFgpBXH6cFBoJz3vhKWCucgKiT4JIPaUuNsV88Dl9y0Xh59KKF902guyzPwbAv2nbwBLQa8FP_p0iBzmXaoZn11kHRP7nsFWjFOb',
-    altText: 'Spacious therapy room with padded mats and warm lighting'
+    title: 'Caring for older patients',
+    category: 'Home visits',
+    imageUrl: '/photos/senior-beagle.webp',
+    altText:
+      'Dr. Dhanvi Patel with a senior beagle, grey around the muzzle, during a home visit'
   },
   {
     id: 'g4',
-    title: 'Core & Proprioception Training Area',
-    category: 'Exercise',
-    imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuB8vQ8JyIdCwvtVu4t7nAHWGEflg9Grxt_xkK2kUQ2oYtBNzvkZRS8OF8tWzmSeHyhNSQ60qzZzUYdgHJRzgi9w0ZoFLAcDhsme3F42lBFwyIwopMNwlcZgk7IbdbS167G1YSESehvTnuw-q6lSYJYBOQlk4-gENTOhYWUDSBF-ZWv9K9zhQynaAfwwE09fKl1Zov8Xi3U07Yxm1Px-tkrQ33QrtG31Mr1HbXbKKRX92tMe75BqmmPi',
-    altText: 'Dog balancing on peanut ball during core strengthening session'
-  },
-  {
-    id: 'g5',
-    title: 'Class IV Laser Photobiomodulation System',
-    category: 'Technology',
-    imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDVNgigtMPEqnG0AN6eDNbPF182JgleTYeAQX_1CqWk66QqQxa2Zy0MdW8Yri8sDQydDUrZTHR8mExXy-MSaSf6h0Ng_qJf83oqMk3yeoccujoeyA5YoQizv_QnV_AQWHERWn07bu7hXGBtHbb8oFIW329I0ho6BHsqpCTXqm135ZlpJx6-HVF1iyovS6WWu25kgrdteRo7rzn094dNJI77cy6IkoD8vJhY7OkPGNcqEG4J-vArZEKX',
-    altText: 'Class IV veterinary laser therapy equipment in use'
-  },
-  {
-    id: 'g6',
-    title: 'Happy Patient After Successful Session',
-    category: 'Patients',
-    imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCPoZf2CwMiVbD20ZjvovNm-SgBAJ47VDImwZYUHbaGfZiZbs4AadQkvU4vaI5CS4k8TLMugZpjxeGXtsAtcMra01a9l14GoJijohU6T2ZnS0ZO2yEeYJxHNY7ZO0tQKMpOyfTJQHLnsmCcMop8L1Fy41LuCiWFIr0RTnHgp77l3IYQIEF7j1ExBr2GsDRrmAGrT8_k-fApNdnOJptGwWK3PlGnQEbG_BZI96oOGBBOU8-rWJCt2GLS',
-    altText: 'Happy dog smiling after a relaxing therapy session'
+    title: 'Every kind of dog',
+    category: 'Home visits',
+    imageUrl: '/photos/home-visit-indie.webp',
+    altText:
+      'An Indian pariah dog resting against Dr. Dhanvi Patel during a home visit'
   }
 ];
 
