@@ -2,6 +2,7 @@ import React from 'react';
 import { X, CalendarCheck } from 'lucide-react';
 import { BOOKABLE_SERVICES, BookableService } from '../data/bookableServices';
 import { BookingForm } from './BookingForm';
+import { FacilitySlotBooking } from './FacilitySlotBooking';
 import { BookingSuccessModal } from './BookingSuccessModal';
 import { useRouter } from '../seo/router';
 import { AppointmentData } from '../types';
@@ -191,16 +192,27 @@ export const BookingPanel: React.FC<BookingPanelProps> = ({ availableCodes }) =>
             )}
 
             <div className="pt-2 border-t border-[#d4c3bd]/40">
-              <p className="flex items-center gap-2 text-xs uppercase tracking-widest text-[#84523e] font-semibold mb-5 mt-6">
-                <CalendarCheck className="w-4 h-4" />
-                {service ? `Request ${service.title}` : 'Request an appointment'}
-              </p>
-              <BookingForm
-                variant="panel"
-                initialService={service ? service.code : ''}
-                initialCondition={reasonFor}
-                onSubmitSuccess={handleSuccess}
-              />
+              {/* The Indoor Facility books real bed inventory by the hour, so it
+                  gets the slot picker instead of the generic "we'll call you"
+                  form. Every other service keeps the request form. */}
+              {service && service.code === 'IndoorFacility' ? (
+                <div className="mt-6">
+                  <FacilitySlotBooking onClose={close} />
+                </div>
+              ) : (
+                <>
+                  <p className="flex items-center gap-2 text-xs uppercase tracking-widest text-[#84523e] font-semibold mb-5 mt-6">
+                    <CalendarCheck className="w-4 h-4" />
+                    {service ? `Request ${service.title}` : 'Request an appointment'}
+                  </p>
+                  <BookingForm
+                    variant="panel"
+                    initialService={service ? service.code : ''}
+                    initialCondition={reasonFor}
+                    onSubmitSuccess={handleSuccess}
+                  />
+                </>
+              )}
             </div>
           </div>
         </div>
