@@ -73,6 +73,27 @@ export const BookingPanel: React.FC<BookingPanelProps> = ({ availableCodes }) =>
 
   const isOpen = !!bookParam;
 
+  // Choosing the Indoor Facility in the general form swaps to its slot/bed
+  // picker IN PLACE -- no navigation and no `#book` hash, so the panel never
+  // jumps or scrolls (the reason an earlier navigate-based version felt wrong).
+  // Reset when the panel closes so the next open starts from the form again.
+  const [facilityChosen, setFacilityChosen] = React.useState(false);
+  React.useEffect(() => {
+    if (!isOpen) setFacilityChosen(false);
+  }, [isOpen]);
+
+  const facilityService = React.useMemo(
+    () =>
+      BOOKABLE_SERVICES.find(
+        (s) => s.code === 'IndoorFacility' && availableCodes.includes(s.code),
+      ) ?? null,
+    [availableCodes],
+  );
+
+  // What the panel presents: the service named in the URL, or the Indoor
+  // Facility once it is picked from the general form's selector.
+  const effectiveService = service ?? (facilityChosen ? facilityService : null);
+
   const close = React.useCallback(() => {
     const next = new URLSearchParams(search);
     next.delete('book');
@@ -122,8 +143,8 @@ export const BookingPanel: React.FC<BookingPanelProps> = ({ availableCodes }) =>
           role="dialog"
           aria-modal="true"
           aria-label={
-            service
-              ? service.title
+            effectiveService
+              ? effectiveService.title
               : reasonFor
                 ? `Request an appointment for ${reasonFor}`
                 : 'Tell us about your pet'
@@ -153,26 +174,26 @@ export const BookingPanel: React.FC<BookingPanelProps> = ({ availableCodes }) =>
                   the band that says so. Someone who pressed "Book an assessment
                   for IVDD" knows exactly what they want, and telling them
                   otherwise reads as the form not having listened. */}
-              {service ? 'Bookable service' : reasonFor ? 'Appointment request' : 'Not sure yet'}
+              {effectiveService ? 'Bookable service' : reasonFor ? 'Appointment request' : 'Not sure yet'}
             </span>
             <h3 className="font-['Plus_Jakarta_Sans'] text-2xl sm:text-3xl text-[#3C2117] font-light mb-3">
-              {service ? service.title : reasonFor ? `Book for ${reasonFor}` : 'Tell us about your pet'}
+              {effectiveService ? effectiveService.title : reasonFor ? `Book for ${reasonFor}` : 'Tell us about your pet'}
             </h3>
             <p className="font-['Inter'] text-sm sm:text-base text-[#504440] font-light leading-relaxed mb-7">
-              {service
-                ? service.summary
+              {effectiveService
+                ? effectiveService.summary
                 : reasonFor
                   ? `Tell us about your pet and we will call you back about ${reasonFor}. Pick the service below if you know which one you need.`
                   : 'Describe what is troubling your pet and we will tell you which service suits them when we call. You do not have to decide now.'}
             </p>
 
-            {service && (
+            {effectiveService && (
               <>
                 <h4 className="text-xs uppercase tracking-widest text-[#84523e] font-semibold mb-3">
                   What&rsquo;s included
                 </h4>
                 <ul className="space-y-2.5 mb-6">
-                  {service.includes.map((item) => (
+                  {effectiveService.includes.map((item) => (
                     <li
                       key={item}
                       className="flex gap-3 font-['Inter'] text-sm text-[#504440] font-light leading-relaxed"
@@ -183,9 +204,9 @@ export const BookingPanel: React.FC<BookingPanelProps> = ({ availableCodes }) =>
                   ))}
                 </ul>
 
-                {service.note && (
+                {effectiveService.note && (
                   <p className="font-['Inter'] text-xs text-[#84523e] leading-relaxed mb-6 italic">
-                    {service.note}
+                    {effectiveService.note}
                   </p>
                 )}
               </>
@@ -195,7 +216,7 @@ export const BookingPanel: React.FC<BookingPanelProps> = ({ availableCodes }) =>
               {/* The Indoor Facility books real bed inventory by the hour, so it
                   gets the slot picker instead of the generic "we'll call you"
                   form. Every other service keeps the request form. */}
-              {service && service.code === 'IndoorFacility' ? (
+              {effectiveService && effectiveService.code === 'IndoorFacility' ? (
                 <div className="mt-6">
                   <FacilitySlotBooking onClose={close} />
                 </div>
@@ -203,22 +224,17 @@ export const BookingPanel: React.FC<BookingPanelProps> = ({ availableCodes }) =>
                 <>
                   <p className="flex items-center gap-2 text-xs uppercase tracking-widest text-[#84523e] font-semibold mb-5 mt-6">
                     <CalendarCheck className="w-4 h-4" />
-                    {service ? `Request ${service.title}` : 'Request an appointment'}
+                    {effectiveService ? `Request ${effectiveService.title}` : 'Request an appointment'}
                   </p>
                   <BookingForm
                     variant="panel"
                     initialService={service ? service.code : ''}
                     initialCondition={reasonFor}
                     onServiceChange={(code) => {
-                      // The Indoor Facility is booked as real bed inventory, so
-                      // choosing it here switches the panel to the slot/bed
-                      // picker (same view as its service card) instead of the
-                      // generic request form.
-                      if (code === 'IndoorFacility') {
-                        navigate(bookingHref(path, { service: 'IndoorFacility' }), {
-                          replace: true,
-                        });
-                      }
+                      // Indoor Facility is booked as real bed inventory, so
+                      // choosing it swaps to its slot/bed picker IN PLACE via
+                      // state -- no navigation, so the panel does not jump.
+                      setFacilityChosen(code === 'IndoorFacility');
                     }}
                     onSubmitSuccess={handleSuccess}
                   />
