@@ -21,6 +21,10 @@ interface BookingFormProps {
    *  service is already chosen by the card that opened it, so the selector is
    *  hidden and the contact column and section chrome are dropped. */
   variant?: 'section' | 'panel';
+  /** Called whenever the visitor changes the Service selector. Lets the parent
+   *  swap in a different flow for an inventory-booked service -- the Indoor
+   *  Facility needs the slot/bed picker, not this "we'll call you" form. */
+  onServiceChange?: (code: string) => void;
   onSubmitSuccess: (data: AppointmentData, refId: string) => void;
 }
 
@@ -29,6 +33,7 @@ export const BookingForm: React.FC<BookingFormProps> = ({
   initialCondition,
   initialService,
   variant = 'section',
+  onServiceChange,
   onSubmitSuccess,
 }) => {
   const isPanel = variant === 'panel';
@@ -102,6 +107,9 @@ export const BookingForm: React.FC<BookingFormProps> = ({
   ) => {
     const { id, value } = e.target;
     setFormData((prev) => ({ ...prev, [id]: value }));
+    // Let the parent redirect an inventory-booked service to its own flow
+    // (the Indoor Facility slot/bed picker) instead of this request form.
+    if (id === 'service') onServiceChange?.(value);
   };
 
   const [submitting, setSubmitting] = useState(false);

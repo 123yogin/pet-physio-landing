@@ -209,6 +209,17 @@ export const BookingPanel: React.FC<BookingPanelProps> = ({ availableCodes }) =>
                     variant="panel"
                     initialService={service ? service.code : ''}
                     initialCondition={reasonFor}
+                    onServiceChange={(code) => {
+                      // The Indoor Facility is booked as real bed inventory, so
+                      // choosing it here switches the panel to the slot/bed
+                      // picker (same view as its service card) instead of the
+                      // generic request form.
+                      if (code === 'IndoorFacility') {
+                        navigate(bookingHref(path, { service: 'IndoorFacility' }), {
+                          replace: true,
+                        });
+                      }
+                    }}
                     onSubmitSuccess={handleSuccess}
                   />
                 </>
