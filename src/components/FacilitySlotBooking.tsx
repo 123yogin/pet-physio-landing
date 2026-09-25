@@ -39,25 +39,13 @@ interface Props {
   onClose: () => void;
 }
 
-/** Today and the next 13 days, as YYYY-MM-DD in the visitor's own zone. */
-function nextDays(count: number): { value: string; label: string }[] {
-  const out: { value: string; label: string }[] = [];
-  const today = new Date();
-  for (let i = 0; i < count; i++) {
-    const d = new Date(today);
-    d.setDate(today.getDate() + i);
-    const value = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(
-      d.getDate(),
-    ).padStart(2, '0')}`;
-    const label =
-      i === 0
-        ? 'Today'
-        : i === 1
-          ? 'Tomorrow'
-          : d.toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short' });
-    out.push({ value, label });
-  }
-  return out;
+/** YYYY-MM-DD for a date `offsetDays` from today, in the visitor's own zone. */
+function isoDate(offsetDays = 0): string {
+  const d = new Date();
+  d.setDate(d.getDate() + offsetDays);
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(
+    d.getDate(),
+  ).padStart(2, '0')}`;
 }
 
 export const FacilitySlotBooking: React.FC<Props> = ({ onClose }) => {
@@ -65,8 +53,11 @@ export const FacilitySlotBooking: React.FC<Props> = ({ onClose }) => {
   // booking has a reference, a date and slots, not a specialist and an email,
   // so it says exactly what was held.
   const [booked, setBooked] = React.useState<{ reference: string; detail: string } | null>(null);
-  const days = React.useMemo(() => nextDays(14), []);
-  const [date, setDate] = React.useState(days[0].value);
+  // Native date picker bounds: no past dates (the API rejects them anyway) and a
+  // sensible 90-day ceiling so the calendar isn't open-ended.
+  const minDate = React.useMemo(() => isoDate(0), []);
+  const maxDate = React.useMemo(() => isoDate(90), []);
+  const [date, setDate] = React.useState(minDate);
   const [avail, setAvail] = React.useState<Availability | null>(null);
   const [loading, setLoading] = React.useState(false);
   const [chosen, setChosen] = React.useState<number[]>([]);
@@ -184,18 +175,15 @@ export const FacilitySlotBooking: React.FC<Props> = ({ onClose }) => {
       <label className={labelCls} htmlFor="fac-date">
         Date
       </label>
-      <select
+      <input
         id="fac-date"
+        type="date"
         value={date}
-        onChange={(e) => setDate(e.target.value)}
+        min={minDate}
+        max={maxDate}
+        onChange={(e) => setDate(e.target.value || minDate)}
         className={`${field} mb-6`}
-      >
-        {days.map((d) => (
-          <option key={d.value} value={d.value}>
-            {d.label}
-          </option>
-        ))}
-      </select>
+      />
 
       {/* Slots */}
       <span className={labelCls}>
