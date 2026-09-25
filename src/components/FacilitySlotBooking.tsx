@@ -1,19 +1,22 @@
 import React from 'react';
-import { CalendarCheck, Check, Loader2 } from 'lucide-react';
+import { CalendarCheck, Check, Loader2, Clock, AlertCircle } from 'lucide-react';
 
 /**
- * Day-care slot booking for the Indoor Facility.
+ * Day-care slot booking for the Indoor Facility — a two-step, BookMyShow-style
+ * flow (minus payment).
  *
- * Unlike the other services -- which are "request a visit, the clinic calls
- * back" -- this shows real inventory: six beds per one-hour slot, 09:30-13:30,
- * and how many are left right now. The visitor picks a date, sees live
- * availability, chooses up to three slots and holds them. The counts and the
- * three-slot cap come from the API (GET /facility/availability), never
- * hard-coded here, so a change to the rules on the server needs no change here.
+ * Step 1 (select): the visitor sees live inventory — six beds per one-hour slot,
+ * 09:30–13:30, and how many are free right now — picks a date, chooses up to
+ * three slots, and HOLDS them. The counts and the three-slot cap come from the
+ * API, never hard-coded here.
  *
- * A held slot is PENDING: it occupies a bed immediately -- the count must not
- * lie -- and the clinic confirms it. That is stated on the confirmation so a
- * visitor does not read "held" as "guaranteed and paid".
+ * Step 2 (confirm): the held slots are locked for the visitor for a few minutes
+ * with a visible countdown, exactly like a cinema seat. They fill in their
+ * details and confirm before the timer runs out. If it lapses, the beds return
+ * to the pool and they start again.
+ *
+ * A confirmed hold becomes a PENDING request the clinic still confirms by phone
+ * — this is a reservation, not a paid ticket, and the copy says so.
  */
 
 const CLINIC_API = (import.meta as any).env?.VITE_CLINIC_API_URL ?? '/api/v1';
@@ -34,6 +37,13 @@ interface Availability {
   slots: Slot[];
 }
 
+interface Hold {
+  reference: string;
+  date: string;
+  slots: { slot: number; label: string }[];
+  expiresAt: number; // epoch ms
+}
+
 interface Props {
   /** Close the whole booking panel (the visitor is done). */
   onClose: () => void;
@@ -48,99 +58,156 @@ function isoDate(offsetDays = 0): string {
   ).padStart(2, '0')}`;
 }
 
+const field =
+  'w-full bg-transparent border-b border-[#d4c3bd] focus:border-[#84523e] outline-none py-2 text-[#3C2117] placeholder:text-[#a8988f]';
+const labelCls = 'block text-xs tracking-widest text-[#504440] uppercase mb-2 font-medium';
+const primaryBtn =
+  'w-full bg-[#3C2117] text-white py-3 text-xs uppercase tracking-widest font-semibold hover:bg-[#84523e] transition-colors disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2';
+
 export const FacilitySlotBooking: React.FC<Props> = ({ onClose }) => {
-  // Its own confirmation, not the appointment-shaped BookingSuccessModal: this
-  // booking has a reference, a date and slots, not a specialist and an email,
-  // so it says exactly what was held.
-  const [booked, setBooked] = React.useState<{ reference: string; detail: string } | null>(null);
-  // Native date picker bounds: no past dates (the API rejects them anyway) and a
-  // sensible 90-day ceiling so the calendar isn't open-ended.
+  type Phase = 'select' | 'confirm' | 'done';
+  const [phase, setPhase] = React.useState<Phase>('select');
+
   const minDate = React.useMemo(() => isoDate(0), []);
   const maxDate = React.useMemo(() => isoDate(90), []);
   const [date, setDate] = React.useState(minDate);
   const [avail, setAvail] = React.useState<Availability | null>(null);
   const [loading, setLoading] = React.useState(false);
   const [chosen, setChosen] = React.useState<number[]>([]);
+
+  const [hold, setHold] = React.useState<Hold | null>(null);
+  const [secondsLeft, setSecondsLeft] = React.useState(0);
   const [form, setForm] = React.useState({ petName: '', ownerName: '', ownerPhone: '', note: '' });
   const [website, setWebsite] = React.useState(''); // honeypot
-  const [submitting, setSubmitting] = React.useState(false);
+  const [busy, setBusy] = React.useState(false);
   const [error, setError] = React.useState('');
+  const [booked, setBooked] = React.useState<{ reference: string; detail: string } | null>(null);
 
   const maxSlots = avail?.max_slots_per_booking ?? 3;
 
-  // Load availability whenever the date changes; clear the slot selection so a
-  // slot chosen for one day can't carry over to another.
-  React.useEffect(() => {
-    let cancelled = false;
+  // ---- Step 1: availability -------------------------------------------------
+  const loadAvailability = React.useCallback((forDate: string) => {
     setLoading(true);
+    return fetch(`${CLINIC_API}/facility/availability?date=${forDate}`)
+      .then((r) => (r.ok ? r.json() : Promise.reject()))
+      .then((d: Availability) => setAvail(d))
+      .catch(() => setAvail(null))
+      .finally(() => setLoading(false));
+  }, []);
+
+  React.useEffect(() => {
+    if (phase !== 'select') return;
     setChosen([]);
     setError('');
+    let cancelled = false;
+    setLoading(true);
     fetch(`${CLINIC_API}/facility/availability?date=${date}`)
       .then((r) => (r.ok ? r.json() : Promise.reject()))
-      .then((d: Availability) => {
-        if (!cancelled) setAvail(d);
-      })
-      .catch(() => {
-        if (!cancelled) setAvail(null);
-      })
-      .finally(() => {
-        if (!cancelled) setLoading(false);
-      });
+      .then((d: Availability) => !cancelled && setAvail(d))
+      .catch(() => !cancelled && setAvail(null))
+      .finally(() => !cancelled && setLoading(false));
     return () => {
       cancelled = true;
     };
-  }, [date]);
+  }, [date, phase]);
+
+  // ---- The countdown --------------------------------------------------------
+  React.useEffect(() => {
+    if (phase !== 'confirm' || !hold) return;
+    const tick = () => setSecondsLeft(Math.max(0, Math.round((hold.expiresAt - Date.now()) / 1000)));
+    tick();
+    const id = window.setInterval(tick, 1000);
+    return () => window.clearInterval(id);
+  }, [phase, hold]);
+
+  const expired = phase === 'confirm' && secondsLeft <= 0;
+  const mmss = `${String(Math.floor(secondsLeft / 60)).padStart(2, '0')}:${String(
+    secondsLeft % 60,
+  ).padStart(2, '0')}`;
 
   const toggleSlot = (slot: number, available: number) => {
     if (available <= 0) return;
     setChosen((prev) => {
       if (prev.includes(slot)) return prev.filter((s) => s !== slot);
-      if (prev.length >= maxSlots) return prev; // cap enforced in the UI and re-enforced by the API
+      if (prev.length >= maxSlots) return prev;
       return [...prev, slot].sort((a, b) => a - b);
     });
   };
 
-  const canSubmit =
-    chosen.length > 0 && form.petName.trim() && form.ownerName.trim() && form.ownerPhone.trim() && !submitting;
-
-  const submit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!canSubmit) return;
-    setSubmitting(true);
+  // ---- Step 1 → hold --------------------------------------------------------
+  const placeHold = async () => {
+    if (chosen.length === 0 || busy) return;
+    setBusy(true);
     setError('');
     try {
-      const res = await fetch(`${CLINIC_API}/facility/bookings`, {
+      const res = await fetch(`${CLINIC_API}/facility/holds`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...form, date, slots: chosen, website }),
+        body: JSON.stringify({ date, slots: chosen, website }),
       });
       const data = await res.json();
       if (!res.ok) {
-        // A 409 means a slot filled between load and submit; re-fetch so the
-        // visitor sees the truth rather than a stale count.
-        setError(data.detail || 'That could not be booked. Please try another time.');
+        setError(data.detail || 'Those slots could not be held. Please try another time.');
         if (res.status === 409) {
-          fetch(`${CLINIC_API}/facility/availability?date=${date}`)
-            .then((r) => r.json())
-            .then((d: Availability) => setAvail(d))
-            .catch(() => {});
+          loadAvailability(date);
           setChosen([]);
         }
         return;
       }
-      setBooked({ reference: data.reference, detail: data.detail });
+      setHold({
+        reference: data.reference,
+        date: data.date,
+        slots: data.slots,
+        expiresAt: Date.now() + data.hold_seconds * 1000,
+      });
+      setPhase('confirm');
     } catch {
       setError('Something went wrong. Please try again.');
     } finally {
-      setSubmitting(false);
+      setBusy(false);
     }
   };
 
-  const field =
-    'w-full bg-transparent border-b border-[#d4c3bd] focus:border-[#84523e] outline-none py-2 text-[#3C2117] placeholder:text-[#a8988f]';
-  const labelCls = 'block text-xs tracking-widest text-[#504440] uppercase mb-2 font-medium';
+  // ---- Step 2 → confirm -----------------------------------------------------
+  const canConfirm =
+    !expired && form.petName.trim() && form.ownerName.trim() && form.ownerPhone.trim() && !busy;
 
-  if (booked) {
+  const confirmHold = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!hold || !canConfirm) return;
+    setBusy(true);
+    setError('');
+    try {
+      const res = await fetch(`${CLINIC_API}/facility/holds/${hold.reference}/confirm`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        // 410 = the hold lapsed server-side between the timer and the request.
+        setError(data.detail || 'That could not be confirmed. Please try again.');
+        if (res.status === 410) setSecondsLeft(0);
+        return;
+      }
+      setBooked({ reference: data.reference, detail: data.detail });
+      setPhase('done');
+    } catch {
+      setError('Something went wrong. Please try again.');
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const startOver = () => {
+    setHold(null);
+    setForm({ petName: '', ownerName: '', ownerPhone: '', note: '' });
+    setError('');
+    setPhase('select');
+  };
+
+  // ---- Done -----------------------------------------------------------------
+  if (phase === 'done' && booked) {
     return (
       <div className="pt-2 text-center">
         <div className="w-14 h-14 rounded-full bg-[#3C2117] text-white flex items-center justify-center mx-auto mb-5">
@@ -153,25 +220,133 @@ export const FacilitySlotBooking: React.FC<Props> = ({ onClose }) => {
         <p className="text-xs uppercase tracking-widest text-[#84523e] font-semibold mb-6">
           Reference {booked.reference}
         </p>
-        <button
-          type="button"
-          onClick={onClose}
-          className="w-full bg-[#3C2117] text-white py-3 text-xs uppercase tracking-widest font-semibold hover:bg-[#84523e] transition-colors"
-        >
+        <button type="button" onClick={onClose} className={primaryBtn}>
           Done
         </button>
       </div>
     );
   }
 
+  // ---- Step 2: confirm within the countdown ---------------------------------
+  if (phase === 'confirm' && hold) {
+    return (
+      <form onSubmit={confirmHold} className="pt-2">
+        {/* Countdown banner — the "seats blocked for 09:59" moment. */}
+        <div
+          className={`flex items-center justify-between px-4 py-3 mb-6 border ${
+            expired ? 'border-[#b23b3b]/40 bg-[#f7ecec]' : 'border-[#84523e]/30 bg-[#f8f3ed]'
+          }`}
+        >
+          <span className="flex items-center gap-2 text-sm text-[#3C2117]">
+            {expired ? (
+              <AlertCircle className="w-4 h-4 text-[#b23b3b]" />
+            ) : (
+              <Clock className="w-4 h-4 text-[#84523e]" />
+            )}
+            {expired ? 'Your hold has expired' : 'Slots held for you'}
+          </span>
+          {!expired && (
+            <span className="font-mono text-lg font-semibold text-[#84523e] tabular-nums">{mmss}</span>
+          )}
+        </div>
+
+        <p className="flex items-center gap-2 text-xs uppercase tracking-widest text-[#84523e] font-semibold mb-1">
+          {hold.slots.map((s) => s.label).join('  ·  ')}
+        </p>
+        <p className="text-xs text-[#504440] mb-6">
+          {new Date(hold.date).toLocaleDateString(undefined, {
+            weekday: 'long',
+            day: 'numeric',
+            month: 'long',
+          })}
+        </p>
+
+        {expired ? (
+          <button type="button" onClick={startOver} className={primaryBtn}>
+            Choose slots again
+          </button>
+        ) : (
+          <>
+            <div className="space-y-5">
+              <div>
+                <label className={labelCls} htmlFor="fac-pet">
+                  Pet&rsquo;s name *
+                </label>
+                <input
+                  id="fac-pet"
+                  className={field}
+                  placeholder="e.g. Bruno"
+                  value={form.petName}
+                  onChange={(e) => setForm({ ...form, petName: e.target.value })}
+                />
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <div>
+                  <label className={labelCls} htmlFor="fac-owner">
+                    Your name *
+                  </label>
+                  <input
+                    id="fac-owner"
+                    className={field}
+                    placeholder="e.g. Priya"
+                    value={form.ownerName}
+                    onChange={(e) => setForm({ ...form, ownerName: e.target.value })}
+                  />
+                </div>
+                <div>
+                  <label className={labelCls} htmlFor="fac-phone">
+                    Phone *
+                  </label>
+                  <input
+                    id="fac-phone"
+                    className={field}
+                    placeholder="e.g. 98765 43210"
+                    value={form.ownerPhone}
+                    onChange={(e) => setForm({ ...form, ownerPhone: e.target.value })}
+                  />
+                </div>
+              </div>
+              <div>
+                <label className={labelCls} htmlFor="fac-note">
+                  Anything we should know?
+                </label>
+                <input
+                  id="fac-note"
+                  className={field}
+                  placeholder="Optional"
+                  value={form.note}
+                  onChange={(e) => setForm({ ...form, note: e.target.value })}
+                />
+              </div>
+            </div>
+
+            {error && <p className="text-sm text-[#b23b3b] mt-4">{error}</p>}
+
+            <button type="submit" disabled={!canConfirm} className={`${primaryBtn} mt-6`}>
+              {busy && <Loader2 className="w-4 h-4 animate-spin" />}
+              Confirm booking
+            </button>
+            <button
+              type="button"
+              onClick={startOver}
+              className="w-full mt-3 text-xs uppercase tracking-widest text-[#84523e] hover:text-[#3C2117] transition-colors"
+            >
+              Back
+            </button>
+          </>
+        )}
+      </form>
+    );
+  }
+
+  // ---- Step 1: select the date and slots ------------------------------------
   return (
-    <form onSubmit={submit} className="pt-2">
+    <div className="pt-2">
       <p className="flex items-center gap-2 text-xs uppercase tracking-widest text-[#84523e] font-semibold mb-5">
         <CalendarCheck className="w-4 h-4" />
         Choose a day and time
       </p>
 
-      {/* Date */}
       <label className={labelCls} htmlFor="fac-date">
         Date
       </label>
@@ -185,7 +360,6 @@ export const FacilitySlotBooking: React.FC<Props> = ({ onClose }) => {
         className={`${field} mb-6`}
       />
 
-      {/* Slots */}
       <span className={labelCls}>
         Time slot{' '}
         <span className="text-[#84523e] normal-case tracking-normal font-normal">
@@ -235,89 +409,30 @@ export const FacilitySlotBooking: React.FC<Props> = ({ onClose }) => {
         </div>
       )}
 
-      {/* Details */}
-      <div className="space-y-5">
-        <div>
-          <label className={labelCls} htmlFor="fac-pet">
-            Pet&rsquo;s name *
-          </label>
-          <input
-            id="fac-pet"
-            className={field}
-            placeholder="e.g. Bruno"
-            value={form.petName}
-            onChange={(e) => setForm({ ...form, petName: e.target.value })}
-          />
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-          <div>
-            <label className={labelCls} htmlFor="fac-owner">
-              Your name *
-            </label>
-            <input
-              id="fac-owner"
-              className={field}
-              placeholder="e.g. Priya"
-              value={form.ownerName}
-              onChange={(e) => setForm({ ...form, ownerName: e.target.value })}
-            />
-          </div>
-          <div>
-            <label className={labelCls} htmlFor="fac-phone">
-              Phone *
-            </label>
-            <input
-              id="fac-phone"
-              className={field}
-              placeholder="e.g. 98765 43210"
-              value={form.ownerPhone}
-              onChange={(e) => setForm({ ...form, ownerPhone: e.target.value })}
-            />
-          </div>
-        </div>
-        <div>
-          <label className={labelCls} htmlFor="fac-note">
-            Anything we should know?
-          </label>
-          <input
-            id="fac-note"
-            className={field}
-            placeholder="Optional"
-            value={form.note}
-            onChange={(e) => setForm({ ...form, note: e.target.value })}
-          />
-        </div>
+      {/* Honeypot */}
+      <input
+        type="text"
+        name="website"
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+        value={website}
+        onChange={(e) => setWebsite(e.target.value)}
+        className="absolute left-[-9999px] w-px h-px opacity-0"
+      />
 
-        {/* Honeypot: hidden from people, catches bots. Same contract as the
-            booking form's `website` field. */}
-        <input
-          type="text"
-          name="website"
-          tabIndex={-1}
-          autoComplete="off"
-          aria-hidden="true"
-          value={website}
-          onChange={(e) => setWebsite(e.target.value)}
-          className="absolute left-[-9999px] w-px h-px opacity-0"
-        />
-      </div>
+      {error && <p className="text-sm text-[#b23b3b] mb-4">{error}</p>}
 
-      {error && <p className="text-sm text-[#b23b3b] mt-4">{error}</p>}
-
-      <button
-        type="submit"
-        disabled={!canSubmit}
-        className="mt-6 w-full bg-[#3C2117] text-white py-3 text-xs uppercase tracking-widest font-semibold hover:bg-[#84523e] transition-colors disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-      >
-        {submitting && <Loader2 className="w-4 h-4 animate-spin" />}
+      <button type="button" onClick={placeHold} disabled={chosen.length === 0 || busy} className={primaryBtn}>
+        {busy && <Loader2 className="w-4 h-4 animate-spin" />}
         {chosen.length > 0
           ? `Hold ${chosen.length} slot${chosen.length > 1 ? 's' : ''}`
           : 'Choose a slot'}
       </button>
       <p className="text-xs text-[#84523e] mt-3 leading-relaxed">
-        Slots are held pending the clinic&rsquo;s confirmation — we&rsquo;ll call to confirm. Day care
-        is offered alongside a course of physiotherapy.
+        Your slots are held for a few minutes while you enter your details, then the clinic confirms
+        by phone. Day care is offered alongside a course of physiotherapy.
       </p>
-    </form>
+    </div>
   );
 };
