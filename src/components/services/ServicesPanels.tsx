@@ -3,6 +3,7 @@ import { ChevronDown } from 'lucide-react';
 import { SERVICES } from '../../data/clinicData';
 import { EntityCardLink } from '../EntityCardLink';
 import { servicePath } from '../../seo/routes';
+import { onFrame, track, prefersReducedMotion } from '../../motion/engine';
 
 /**
  * One photo per service, picked from the clinic's own photo set (there are no
@@ -33,6 +34,21 @@ const PHOTOS: Record<string, { src: string; alt: string }> = {
 
 const num = (i: number) => String(i + 1).padStart(2, '0');
 
+/*
+ * Scroll-driven mode (desktop, motion allowed): the row pins while the page
+ * scrolls, and the scroll position hands the open panel along the row. The
+ * hand-off is continuous -- panel i's weight is 1 + 4 * (1 - distance from
+ * the scroll position), so the open panel shrinks exactly as fast as the next
+ * one grows and the row always sums to the same width.
+ *
+ * The runway height and sticky offset are CSS (lg: classes), so the section
+ * has its final height in the prerendered HTML and nothing shifts on
+ * hydration. JS only writes flex-grow. FRAME and stickyTop() must match them.
+ */
+const FRAME = 608; // row 560px + counter 48px
+const stickyTop = (vh: number) => Math.max(112, vh / 2 - 260);
+const HOLD = 0.08; // share of the runway spent resting on the first/last panel
+
 const ServicesPanels: React.FC = () => {
   const [active, setActive] = React.useState(0);
   const [openMobile, setOpenMobile] = React.useState(0);
@@ -45,20 +61,104 @@ const ServicesPanels: React.FC = () => {
   };
   React.useEffect(() => () => window.clearTimeout(intent.current), []);
 
+  const runwayRef = React.useRef<HTMLDivElement>(null);
+  const panelRefs = React.useRef<(HTMLDivElement | null)[]>([]);
+  const barRef = React.useRef<HTMLSpanElement>(null);
+  const countRef = React.useRef<HTMLSpanElement>(null);
+  const scrollMode = React.useRef(false);
+  const geo = React.useRef<{ box: () => { top: number; height: number } } | null>(null);
+
+  React.useEffect(() => {
+    const runway = runwayRef.current;
+    if (!runway) return;
+    const mq = window.matchMedia('(min-width: 1024px)');
+    let stopFrames: (() => void) | null = null;
+    let release: (() => void) | null = null;
+    let lastIdx = -1;
+    const n = SERVICES.length;
+
+    const disable = () => {
+      stopFrames?.();
+      release?.();
+      stopFrames = release = null;
+      geo.current = null;
+      scrollMode.current = false;
+      panelRefs.current.forEach((el) => {
+        if (el) {
+          el.style.flexGrow = '';
+          el.style.transition = '';
+        }
+      });
+    };
+    const enable = () => {
+      if (stopFrames) return;
+      scrollMode.current = true;
+      panelRefs.current.forEach((el) => el && (el.style.transition = 'none'));
+      const t = track(runway);
+      geo.current = t;
+      release = t.release;
+      stopFrames = onFrame((f) => {
+        const box = t.box();
+        const range = Math.max(1, box.height - FRAME);
+        const raw = (f.scrollY + stickyTop(f.vh) - box.top) / range;
+        const q = Math.min(1, Math.max(0, (raw - HOLD) / (1 - 2 * HOLD)));
+        const x = q * (n - 1);
+        panelRefs.current.forEach((el, i) => {
+          if (el) el.style.flexGrow = (1 + 4 * Math.max(0, 1 - Math.abs(x - i))).toFixed(3);
+        });
+        if (barRef.current) barRef.current.style.transform = `scaleX(${(q * (n - 1) + 1) / n})`;
+        const idx = Math.round(x);
+        if (idx !== lastIdx) {
+          lastIdx = idx;
+          if (countRef.current) countRef.current.textContent = `${num(idx)} / ${num(n - 1)}`;
+          setActive(idx);
+        }
+      });
+    };
+    const sync = () => (mq.matches && !prefersReducedMotion() ? enable() : disable());
+    sync();
+    mq.addEventListener('change', sync);
+    return () => {
+      mq.removeEventListener('change', sync);
+      disable();
+    };
+  }, []);
+
+  // In scroll mode, focusing a panel scrolls to where the page opens it, so a
+  // keyboard user reaches every service. Otherwise it simply opens.
+  const focusPanel = (i: number) => {
+    const t = geo.current;
+    if (!scrollMode.current || !t) return setActive(i);
+    const box = t.box();
+    const range = Math.max(1, box.height - FRAME);
+    const q = i / (SERVICES.length - 1);
+    const y = box.top - stickyTop(window.innerHeight) + (q * (1 - 2 * HOLD) + HOLD) * range;
+    window.scrollTo({ top: y, behavior: 'smooth' });
+  };
+
   return (
     <>
-      {/* Desktop / large screens: 5 tall panels, one grows on hover/focus. */}
-      <div className="hidden lg:flex gap-2 h-[560px]" role="list">
+      {/* Desktop: 5 tall panels. With motion allowed the row pins and scrolling
+          opens each in turn; with reduced motion, hover or focus opens one. */}
+      <div
+        ref={runwayRef}
+        className="hidden lg:block lg:h-[calc(608px+165vh)] motion-reduce:lg:h-auto"
+      >
+      <div className="lg:sticky lg:top-[max(112px,calc(50vh-260px))] motion-reduce:lg:static">
+      <div className="flex gap-2 h-[560px]" role="list">
         {SERVICES.map((service, i) => {
           const isActive = active === i;
           const photo = PHOTOS[service.id];
           return (
             <div
               key={service.id}
+              ref={(el) => {
+                panelRefs.current[i] = el;
+              }}
               role="listitem"
-              onMouseEnter={() => hover(i)}
+              onMouseEnter={() => !scrollMode.current && hover(i)}
               onMouseLeave={() => window.clearTimeout(intent.current)}
-              onFocus={() => setActive(i)}
+              onFocus={() => focusPanel(i)}
               style={{ flexBasis: 0 }}
               className={`relative shrink-0 overflow-hidden rounded-[var(--lab-card)] transition-[flex-grow] duration-700 ease-[cubic-bezier(0.2,0.8,0.2,1)] motion-reduce:transition-none ${isActive ? 'grow-[5]' : 'grow-[1]'}`}
             >
@@ -132,6 +232,18 @@ const ServicesPanels: React.FC = () => {
             </div>
           );
         })}
+      </div>
+      {/* Progress: which service the scroll has reached. */}
+      <div aria-hidden="true" className="flex h-12 items-center gap-6 motion-reduce:hidden">
+        <span ref={countRef} className="font-(family-name:--f-body) text-xs uppercase tracking-widest text-(--c-body) tabular-nums">
+          {num(0)} / {num(SERVICES.length - 1)}
+        </span>
+        <span className="relative h-px flex-1 bg-(--c-line)/40">
+          <span ref={barRef} className="absolute inset-0 origin-left bg-(--c-accent)" style={{ transform: `scaleX(${1 / SERVICES.length})` }} />
+        </span>
+        <span className="font-(family-name:--f-body) text-xs uppercase tracking-widest text-(--c-body)">Scroll</span>
+      </div>
+      </div>
       </div>
 
       {/* Phones / tablets: vertical accordion, one panel open at a time. */}
