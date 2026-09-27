@@ -17,7 +17,7 @@ import { DEFAULT_LAB, type LabState } from './defaults';
 const LabContext = createContext<LabState>(DEFAULT_LAB);
 export const useLab = () => useContext(LabContext);
 
-const LAB_KEYS = ['lab', 'font', 'pal', 'shape', 'hero', 'accent', 'nav', 'btn', 'eye', 'svc', 'jour', 'doc', 'foot', 'dog'];
+const LAB_KEYS = ['lab', 'font', 'pal', 'shape', 'hero', 'accent', 'nav', 'btn', 'eye', 'svc', 'jour', 'doc', 'foot'];
 const LabPanel = lazy(() => import('./LabPanel'));
 
 export const LabProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {

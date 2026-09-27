@@ -13,7 +13,6 @@ import { PageCurtain, CursorBubble, Magnetic, ImageDrift, Tilt, ImageFadeIn } fr
 import { SmoothScroll, CursorTrail, ScrollTicks } from './motion';
 import { LabProvider } from './lab/Lab';
 import { MobileActionBar } from './components/MobileActionBar';
-import { Mascot } from './mascot/Mascot';
 
 /** Resolve the active route to a page component. */
 const RouteView: React.FC = () => {
@@ -59,7 +58,6 @@ export default function App({ initialPath }: { initialPath?: string }) {
       <Tilt />
       <ImageFadeIn />
       <MobileActionBar />
-      <Mascot />
       </LabProvider>
     </RouterProvider>
   );

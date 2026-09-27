@@ -18,14 +18,11 @@ export interface LabState {
   jour: string;
   doc: string;
   foot: string;
-  /** Scroll-walking dog mascot concept ('none' = off). */
-  dog: string;
 }
 
 /** The shipped design: the winner of each lab round (2026-09-27). */
 export const DEFAULT_LAB: LabState = {
   font: 'frauncesfig', pal: 'peachhero', shape: 'round', hero: 'arch', accent: 'italic',
   nav: 'pill', btn: 'wipe', eye: 'pill', svc: 'stack', jour: 'rail', doc: 'story', foot: 'wordmark',
-  dog: 'flat',
 };
 
