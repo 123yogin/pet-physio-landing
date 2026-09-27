@@ -9,6 +9,10 @@ import { NotFoundPage } from './pages/NotFoundPage';
 import { LegalPage } from './pages/LegalPage';
 import { PRIVACY, TERMS } from './data/legalContent';
 import type { ConditionItem, ServiceItem, Specialist } from './types';
+import { PageCurtain, CursorBubble, Magnetic, ImageDrift, Tilt, ImageFadeIn } from './motion/extras';
+import { SmoothScroll, CursorTrail, ScrollTicks } from './motion';
+import { LabProvider } from './lab/Lab';
+import { MobileActionBar } from './components/MobileActionBar';
 
 /** Resolve the active route to a page component. */
 const RouteView: React.FC = () => {
@@ -40,7 +44,21 @@ const RouteView: React.FC = () => {
 export default function App({ initialPath }: { initialPath?: string }) {
   return (
     <RouterProvider initialPath={initialPath}>
+      <LabProvider>
       <RouteView />
+      {/* Site-wide motion: behaviour only, nothing rendered at rest except
+          the scroll ticks and the pointer trail. */}
+      <SmoothScroll />
+      <CursorTrail />
+      <ScrollTicks />
+      <PageCurtain />
+      <CursorBubble />
+      <Magnetic />
+      <ImageDrift />
+      <Tilt />
+      <ImageFadeIn />
+      <MobileActionBar />
+      </LabProvider>
     </RouterProvider>
   );
 }

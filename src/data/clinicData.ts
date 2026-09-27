@@ -123,7 +123,7 @@ export const SERVICES: ServiceItem[] = [
     benefits: [
       'For patients from outside the city',
       'Special care — food and hygiene',
-      '24x7 supervision',
+      'Supervised during clinic hours (9:30 AM \u2013 1:30 PM)',
       'Stay with pet-pond'
     ],
     suitableFor: [],

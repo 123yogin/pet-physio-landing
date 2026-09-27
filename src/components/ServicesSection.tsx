@@ -1,112 +1,71 @@
+/// <reference types="vite/client" />
 import React from 'react';
 import { SERVICES } from '../data/clinicData';
 import { ArrowUpRight, Activity, Waves, Zap, Hand, Dumbbell, Home, Sparkles, BedDouble } from 'lucide-react';
 import { EntityCardLink } from './EntityCardLink';
 import { servicePath } from '../seo/routes';
+import { SplitWords, useStagger } from '../motion';
+import { useLab } from '../lab/Lab';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { Pulse } from '../motion/extras';
+import ServicesPanels from './services/ServicesPanels';
 
-const renderServiceIcon = (iconName: string) => {
-  switch (iconName) {
-    case 'healing':
-      return <Activity className="w-9 h-9 text-[#3C2117]" />;
-    case 'pool':
-      return <Waves className="w-9 h-9 text-[#3C2117]" />;
-    case 'flashlight_on':
-      return <Zap className="w-9 h-9 text-[#3C2117]" />;
-    case 'front_hand':
-      return <Hand className="w-9 h-9 text-[#3C2117]" />;
-    case 'fitness_center':
-      return <Dumbbell className="w-9 h-9 text-[#3C2117]" />;
-    case 'home':
-      return <Home className="w-9 h-9 text-[#3C2117]" />;
-    case 'bolt':
-      return <Zap className="w-9 h-9 text-[#3C2117]" />;
-    case 'star':
-      return <Waves className="w-9 h-9 text-[#3C2117]" />;
-    case 'night_shelter':
-      return <BedDouble className="w-9 h-9 text-[#3C2117]" />;
-    case 'sparkles':
-      return <Sparkles className="w-9 h-9 text-[#3C2117]" />;
-    default:
-      // An unmapped name lands here, which is how three services silently
-      // shared one icon after the service list was rewritten -- the fallback
-      // hid the miss instead of surfacing it. Every `icon` in clinicData
-      // should be matched by a case above.
-      return <Activity className="w-9 h-9 text-[#3C2117]" />;
-  }
+// Design-lab candidates, one file each under ./services/, loaded only when
+// ?svc=<name> selects them so none of them weighs on the main bundle.
+// (The chosen default, `panels`, is imported statically above so it is in
+// the prerendered HTML.)
+const CANDIDATES: Record<string, string> = {
+  index: './services/ServicesIndex.tsx',
+  scrolly: './services/ServicesScrolly.tsx',
+  hscroll: './services/ServicesHScroll.tsx',
+  bento: './services/ServicesBento.tsx',
+};
+const candidateModules = import.meta.glob<{ default: React.ComponentType }>(['./services/*.tsx', '!./services/ServicesPanels.tsx']);
+// The earlier layouts (card grid, snap rail, stacking cards), kept for
+// comparison in the lab but out of the main bundle.
+const LegacyLayouts = React.lazy(() => import('./services/legacy/ServicesLegacy'));
+const lazyCache: Record<string, React.LazyExoticComponent<React.ComponentType>> = {};
+const candidate = (id: string) => {
+  const load = candidateModules[CANDIDATES[id]];
+  if (!load) return null;
+  return (lazyCache[id] ??= React.lazy(load));
 };
 
 export const ServicesSection: React.FC = () => {
+  const headRef = useStagger<HTMLDivElement>({ step: 140 });
+  const { svc } = useLab();
+
   return (
-    <section id="services" className="py-20 sm:py-28 bg-[#f8f3ed]">
+    <section id="services" className="py-20 sm:py-28 bg-(--c-surface)">
       <div className="max-w-[1280px] mx-auto px-4 sm:px-8">
         
         {/* Header */}
-        <div className="mb-16 grid grid-cols-1 md:grid-cols-12 gap-8 items-end border-b border-[#d4c3bd]/30 pb-8">
+        <div ref={headRef} className="mb-16 grid grid-cols-1 md:grid-cols-12 gap-8 items-end border-b border-(--c-line)/30 pb-8">
           <div className="md:col-span-7">
-            <span className="text-xs uppercase tracking-widest text-[#84523e] font-semibold mb-2 block font-['Inter']">
+            <span className="text-xs uppercase tracking-widest text-(--c-accent) font-semibold mb-2 flex items-center gap-3 font-(family-name:--f-body)">
+            <Pulse />
               Treatment Modalities
             </span>
-            <h2 className="font-['Plus_Jakarta_Sans'] text-3xl sm:text-4xl lg:text-5xl text-[#3C2117] font-light">
-              Our Services
-            </h2>
+            <SplitWords className="font-(family-name:--f-display) text-3xl sm:text-4xl lg:text-5xl text-(--c-ink) font-light">Our Services</SplitWords>
           </div>
           <div className="md:col-span-5 md:text-right">
-            <p className="font-['Inter'] text-base sm:text-lg text-[#504440] font-light leading-relaxed">
+            <p className="font-(family-name:--f-body) text-base sm:text-lg text-(--c-body) font-light leading-relaxed">
               Cutting-edge, non-invasive therapeutic modalities performed by certified veterinary specialists.
             </p>
           </div>
         </div>
 
-        {/* Modalities Grid */}
-        <div className="flex flex-wrap justify-center gap-px">
-          {/* Three per row, and a short final row centres under them.
-
-              This was a 3-column grid whose hairlines came from a container
-              background showing through 1px gaps. That works only while every
-              cell is filled: five services left the sixth cell uncovered, and
-              the divider colour showed through it as a solid block. Centring a
-              short row the same way would just split that block to both ends.
-
-              So the border moved onto the cards and the container became a
-              centred flex-wrap. Any count now closes tidily, with the remainder
-              centred rather than left-aligned against an empty gap. */}
-          {SERVICES.map((service) => (
-            <EntityCardLink
-              key={service.id}
-              href={servicePath(service.id)}
-              aria-label={`${service.title} treatment details`}
-              className="bg-[#f8f3ed] border border-[#d4c3bd]/30 p-8 sm:p-12 hover:bg-[#ffffff] transition-all duration-500 group cursor-pointer flex flex-col justify-between grow-0 shrink-0 basis-full md:basis-[calc(50%-1px)] lg:basis-[calc(33.333%-1px)]"
-            >
-              <div>
-                <div className="flex items-center justify-between mb-8">
-                  <div className="p-3 bg-[#f2ede7] rounded-full group-hover:bg-[#3C2117]/10 transition-colors">
-                    {renderServiceIcon(service.icon)}
-                  </div>
-                  <span className="p-2 text-[#84523e] opacity-0 group-hover:opacity-100 transition-opacity">
-                    <ArrowUpRight className="w-5 h-5" />
-                  </span>
-                </div>
-
-                <h3 className="font-['Plus_Jakarta_Sans'] text-xl sm:text-2xl text-[#3C2117] mb-4 font-medium group-hover:text-[#84523e] transition-colors">
-                  {service.title}
-                </h3>
-
-                <p className="font-['Inter'] text-sm sm:text-base text-[#504440] font-light leading-relaxed mb-6">
-                  {service.shortDesc}
-                </p>
-              </div>
-
-              {/* flex-wrap and a real gap: `justify-between` alone let the two
-                  labels butt straight into each other once a duration was
-                  longer than the old "45-60 min". */}
-              <div className="pt-4 border-t border-[#d4c3bd]/20 flex flex-wrap items-center justify-between gap-x-6 gap-y-2 text-xs font-['Inter'] uppercase tracking-widest text-[#504440]">
-                <span>Typical Session: {service.duration}</span>
-                <span className="text-[#84523e] font-semibold group-hover:underline whitespace-nowrap">View Modality →</span>
-              </div>
-            </EntityCardLink>
-          ))}
-        </div>
-
+        {svc === 'panels' ? (
+          <ServicesPanels />
+        ) : CANDIDATES[svc] && candidate(svc) ? (
+          <React.Suspense fallback={<div className="min-h-[60vh]" />}>
+            {React.createElement(candidate(svc)!)}
+          </React.Suspense>
+        ) : (
+          <React.Suspense fallback={<div className="min-h-[60vh]" />}>
+            <LegacyLayouts svc={svc} />
+          </React.Suspense>
+        )}
       </div>
     </section>
   );

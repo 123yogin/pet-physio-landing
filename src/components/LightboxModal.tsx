@@ -12,10 +12,10 @@ export const LightboxModal: React.FC<LightboxModalProps> = ({ item, onClose }) =
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="max-w-4xl w-full bg-[#fef9f2] border border-[#d4c3bd] p-4 sm:p-6 relative">
+      <div className="max-w-4xl w-full bg-(--c-bg) border border-(--c-line) p-4 sm:p-6 relative">
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 z-10 p-2 bg-[#3C2117] text-white hover:bg-[#504440] transition-colors cursor-pointer"
+          className="absolute top-4 right-4 z-10 p-2 bg-(--c-ink) text-white hover:bg-(--c-body) transition-colors cursor-pointer"
           aria-label="Close"
         >
           <X className="w-5 h-5" />
@@ -37,7 +37,7 @@ export const LightboxModal: React.FC<LightboxModalProps> = ({ item, onClose }) =
             />
           </div>
         ) : (
-          <div className="aspect-[16/10] w-full overflow-hidden bg-[#e6e2dc] mb-4">
+          <div className="aspect-[16/10] w-full overflow-hidden bg-(--c-surface-3) mb-4">
             <img
               src={item.imageUrl}
               alt={item.altText}
@@ -46,19 +46,19 @@ export const LightboxModal: React.FC<LightboxModalProps> = ({ item, onClose }) =
           </div>
         )}
 
-        <div className="flex justify-between items-center font-['Inter'] px-2">
+        <div className="flex justify-between items-center font-(family-name:--f-body) px-2">
           <div>
-            <span className="text-[10px] uppercase tracking-widest text-[#84523e] font-semibold block">
+            <span className="text-[10px] uppercase tracking-widest text-(--c-accent) font-semibold block">
               {item.category}
             </span>
-            <h3 className="font-['Plus_Jakarta_Sans'] text-lg text-[#3C2117] font-medium">
+            <h3 className="font-(family-name:--f-display) text-lg text-(--c-ink) font-medium">
               {item.title}
             </h3>
           </div>
 
           <button
             onClick={onClose}
-            className="text-xs text-[#504440] uppercase tracking-widest hover:text-[#3C2117]"
+            className="text-xs text-(--c-body) uppercase tracking-widest hover:text-(--c-ink)"
           >
             Close View
           </button>

@@ -20,7 +20,7 @@ import { LegalDoc, LegalSection, NEEDS_CLINIC } from '../data/legalContent';
  * either. It now says which section it is standing in.
  */
 const MissingFromClinic: React.FC<{ heading: string }> = ({ heading }) => (
-  <p className="border border-dashed border-[#84523e]/60 bg-[#f8f3ed] px-4 py-3 font-['Inter'] text-sm text-[#84523e] leading-relaxed">
+  <p className="border border-dashed border-(--c-accent)/60 bg-(--c-surface) px-4 py-3 font-(family-name:--f-body) text-sm text-(--c-accent) leading-relaxed">
     <strong className="font-semibold">
       Still to be confirmed by the clinic: {heading.toLowerCase()}.
     </strong>{' '}
@@ -31,7 +31,7 @@ const MissingFromClinic: React.FC<{ heading: string }> = ({ heading }) => (
 
 const Section: React.FC<{ section: LegalSection }> = ({ section }) => (
   <section className="mb-10">
-    <h2 className="font-['Plus_Jakarta_Sans'] text-xl sm:text-2xl text-[#3C2117] font-medium mb-4">
+    <h2 className="font-(family-name:--f-display) text-xl sm:text-2xl text-(--c-ink) font-medium mb-4">
       {section.heading}
     </h2>
     {section.body.map((para, i) =>
@@ -40,7 +40,7 @@ const Section: React.FC<{ section: LegalSection }> = ({ section }) => (
       ) : (
         <p
           key={i}
-          className="font-['Inter'] text-sm sm:text-base text-[#504440] font-light leading-relaxed mb-4"
+          className="font-(family-name:--f-body) text-sm sm:text-base text-(--c-body) font-light leading-relaxed mb-4"
         >
           {para}
         </p>
@@ -51,9 +51,9 @@ const Section: React.FC<{ section: LegalSection }> = ({ section }) => (
         {section.bullets.map((b) => (
           <li
             key={b}
-            className="flex gap-3 font-['Inter'] text-sm text-[#504440] font-light leading-relaxed"
+            className="flex gap-3 font-(family-name:--f-body) text-sm text-(--c-body) font-light leading-relaxed"
           >
-            <span aria-hidden="true" className="mt-2 w-1 h-1 bg-[#84523e] shrink-0" />
+            <span aria-hidden="true" className="mt-2 w-1 h-1 bg-(--c-accent) shrink-0" />
             {b}
           </li>
         ))}
@@ -65,15 +65,15 @@ const Section: React.FC<{ section: LegalSection }> = ({ section }) => (
 export const LegalPage: React.FC<{ doc: LegalDoc }> = ({ doc }) => (
   <PageShell contentWidthClass="max-w-[760px]">
     <article className="max-w-[760px] mx-auto px-4 sm:px-8 pb-14 sm:pb-20 pt-4">
-      <h1 className="font-['Plus_Jakarta_Sans'] text-3xl sm:text-4xl lg:text-5xl text-[#3C2117] font-light mb-5">
+      <h1 style={{ ['--d' as string]: '280ms' }} className="hero-rise font-(family-name:--f-display) text-3xl sm:text-4xl lg:text-5xl text-(--c-ink) font-light mb-5">
         {doc.title}
       </h1>
-      <p className="font-['Inter'] text-base sm:text-lg text-[#504440] font-light leading-relaxed mb-4">
+      <p className="font-(family-name:--f-body) text-base sm:text-lg text-(--c-body) font-light leading-relaxed mb-4">
         {doc.intro}
       </p>
       {/* A policy with no date cannot be versioned, and a reader has no way to
           tell whether they are looking at the terms they agreed to. */}
-      <p className="font-['Inter'] text-xs uppercase tracking-widest text-[#84523e] font-semibold mb-12 pb-8 border-b border-[#d4c3bd]/40">
+      <p className="font-(family-name:--f-body) text-xs uppercase tracking-widest text-(--c-accent) font-semibold mb-12 pb-8 border-b border-(--c-line)/40">
         Last updated {doc.lastUpdated}
       </p>
       {doc.sections.map((s) => (

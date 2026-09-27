@@ -1,5 +1,44 @@
 @import "tailwindcss";
 
+/* Design tokens.
+
+   Every colour and typeface on the site reads from these. They used to be
+   hex literals repeated in ~700 class names (text-[#3C2117] x121 ...), which
+   made any palette or type change a find-and-replace across 26 files. The
+   defaults below are exactly those old values, so nothing changes visually;
+   the design lab (src/lab) overrides them to audition alternatives. */
+:root {
+  --c-ink: #3c2117;
+  --c-accent: #84523e;
+  --c-accent-soft: #ffbda5;
+  --c-body: #504440;
+  --c-line: #d4c3bd;
+  --c-card: #ffffff;
+  --c-surface: #f8f3ed;
+  --c-surface-2: #f2ede7;
+  --c-surface-3: #e6e2dc;
+  --c-bg: #fef9f2;
+  --c-hover: #ece7e2;
+  --c-mute: #82746f;
+  --c-mute-2: #a8988f;
+  --c-on-ink: #ffffff;
+  /* The hero's own surface; defaults to the page surface. */
+  --c-hero: #fbe9d6;
+  /* Chosen in the design lab (see src/lab): Fraunces with its SOFT axis for
+     warmth, Figtree for friendly, legible body text, Instrument-style italic
+     accents from Fraunces' own italic. */
+  --f-display: 'Fraunces', serif;
+  --f-body: 'Figtree', sans-serif;
+  --f-italic: 'Fraunces', serif;
+  --f-display-weight: 350;
+  --f-display-tracking: -0.02em;
+  /* Round shape system: soft cards, pill buttons and chips. */
+  --lab-card: 24px;
+  --lab-btn: 999px;
+  --lab-img: 18px;
+}
+
+
 /* Continuous horizontal drift for the gallery rows.
 
    The row renders its items twice and shifts by half its own width, so the

@@ -25,7 +25,7 @@ export const PageShell: React.FC<{
   const publicServiceCodes = usePublicServiceCodes();
 
   return (
-    <div className="min-h-screen bg-[#fef9f2] text-[#3C2117] font-['Inter'] selection:bg-[#3C2117] selection:text-white flex flex-col">
+    <div className="min-h-screen bg-(--c-bg) text-(--c-ink) font-(family-name:--f-body) selection:bg-(--c-ink) selection:text-white flex flex-col">
       <Navbar onOpenBooking={() => navigate(bookingHref(path))} />
       {/* The navbar is position:fixed, so something has to reserve its height.
           That job used to belong, by accident, to the breadcrumb's pt-28 --
@@ -78,13 +78,13 @@ export const DetailCta: React.FC<{ label: string; prefill?: string }> = ({ label
           event.preventDefault();
           navigate(bookHref);
         }}
-        className="inline-flex items-center justify-center gap-2 px-7 py-3.5 bg-[#3C2117] text-white text-xs uppercase tracking-widest font-medium hover:bg-[#84523e] transition-colors"
+        className="inline-flex items-center justify-center gap-2 px-7 py-3.5 bg-(--c-ink) text-white text-xs uppercase tracking-widest font-medium hover:bg-(--c-accent) transition-colors"
       >
         {label}
       </a>
       <a
         href="/#conditions"
-        className="inline-flex items-center justify-center gap-2 px-7 py-3.5 border border-[#3C2117] text-[#3C2117] text-xs uppercase tracking-widest font-medium hover:bg-[#3C2117] hover:text-white transition-colors"
+        className="inline-flex items-center justify-center gap-2 px-7 py-3.5 border border-(--c-ink) text-(--c-ink) text-xs uppercase tracking-widest font-medium hover:bg-(--c-ink) hover:text-white transition-colors"
       >
         Browse all conditions
       </a>
@@ -100,11 +100,11 @@ export const DetailCta: React.FC<{ label: string; prefill?: string }> = ({ label
 export const FactList: React.FC<{ title: string; items: string[] }> = ({ title, items }) => (
   items.length === 0 ? null :
   <div>
-    <h2 className="text-xs uppercase tracking-widest text-[#84523e] font-semibold mb-4">{title}</h2>
+    <h2 className="text-xs uppercase tracking-widest text-(--c-accent) font-semibold mb-4">{title}</h2>
     <ul className="space-y-2.5">
       {items.map((item) => (
-        <li key={item} className="flex gap-3 font-['Inter'] text-sm text-[#504440] font-light leading-relaxed">
-          <span aria-hidden="true" className="mt-2 w-1 h-1 bg-[#84523e] shrink-0" />
+        <li key={item} className="flex gap-3 font-(family-name:--f-body) text-sm text-(--c-body) font-light leading-relaxed">
+          <span aria-hidden="true" className="mt-2 w-1 h-1 bg-(--c-accent) shrink-0" />
           {item}
         </li>
       ))}

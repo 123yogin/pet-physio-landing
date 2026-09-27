@@ -1,4 +1,5 @@
 import React from 'react';
+import { CountUp, useStagger } from '../motion';
 
 export const TrustMetrics: React.FC = () => {
   const metrics = [
@@ -8,15 +9,17 @@ export const TrustMetrics: React.FC = () => {
     { number: '98%', label: 'Patient Success Rate' },
   ];
 
+  const gridRef = useStagger<HTMLDivElement>({ step: 120 });
+
   return (
-    <section className="py-16 sm:py-24 bg-[#ffffff] border-b border-[#d4c3bd]/20">
-      <div className="max-w-[1280px] mx-auto px-4 sm:px-8 grid grid-cols-2 md:grid-cols-4 gap-8 sm:gap-12 text-center">
+    <section className="py-16 sm:py-24 bg-(--c-card) border-b border-(--c-line)/20">
+      <div ref={gridRef} className="max-w-[1280px] mx-auto px-4 sm:px-8 grid grid-cols-2 md:grid-cols-4 gap-8 sm:gap-12 text-center">
         {metrics.map((item, idx) => (
           <div key={idx} className="flex flex-col items-center group">
-            <span className="font-['Plus_Jakarta_Sans'] text-4xl sm:text-5xl lg:text-6xl text-[#3C2117] mb-2 sm:mb-4 font-light tracking-tight group-hover:scale-105 transition-transform">
-              {item.number}
+            <span className="font-(family-name:--f-display) text-4xl sm:text-5xl lg:text-6xl text-(--c-ink) mb-2 sm:mb-4 font-light tracking-tight group-hover:scale-105 transition-transform">
+              <CountUp value={item.number} />
             </span>
-            <span className="font-['Inter'] text-xs sm:text-sm uppercase tracking-widest text-[#504440] font-medium max-w-[160px]">
+            <span className="font-(family-name:--f-body) text-xs sm:text-sm uppercase tracking-widest text-(--c-body) font-medium max-w-[160px]">
               {item.label}
             </span>
           </div>

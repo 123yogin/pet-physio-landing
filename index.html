@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" class="scroll-smooth">
+<html lang="en" class="scroll-smooth" data-lab-font="frauncesfig" data-lab-shape="round" data-lab-btn="wipe" data-lab-eye="pill" data-lab-pal="peachhero">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -34,7 +34,7 @@
       This origin kept serving the previous paw from cache after the file itself
       had been replaced. Bump the number whenever the mark changes.
     -->
-    <link rel="icon" type="image/svg+xml" href="/logo.svg?v=2" />
+    <link rel="icon" type="image/svg+xml" href="/logo.svg?v=3" />
     <link rel="apple-touch-icon" href="/logo.png?v=2" />
 
     <!--
@@ -45,18 +45,44 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..700,50..100;1,9..144,300..700,50..100&family=Figtree:wght@300..700&display=swap"
       rel="stylesheet"
     />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
-      rel="stylesheet"
-    />
+    <!-- The Material Symbols icon font was linked here but no component uses it:
+         it was a render-blocking request (~460 ms in a trace) for nothing. -->
+
+    <!--
+      Intro gate. Runs before first paint so the intro overlay and the hero's
+      delayed entrance agree from the very first frame. Home page only, once
+      per browser session, never under reduced motion. If storage is blocked
+      it simply shows. The overlay's exit is a CSS animation, so it clears
+      itself even if the app never hydrates.
+    -->
+    <style>#intro{display:none}html.intro #intro{display:flex;position:fixed;inset:0;z-index:1000;background:#fef9f2}</style>
+    <script>
+      (function () {
+        try {
+          if (location.pathname !== '/') return;
+          if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+          if (sessionStorage.getItem('pp-intro')) return;
+          sessionStorage.setItem('pp-intro', '1');
+        } catch (e) {}
+        document.documentElement.classList.add('intro');
+      })();
+    </script>
 
   </head>
   <body
-    class="bg-[#fef9f2] text-[#3C2117] antialiased selection:bg-[#3c2117] selection:text-white min-h-screen flex flex-col font-['Inter']"
+    class="bg-(--c-bg) text-(--c-ink) antialiased selection:bg-(--c-ink) selection:text-white min-h-screen flex flex-col font-(family-name:--f-body)"
   >
+    <div id="intro" aria-hidden="true">
+      <div class="intro-mark">
+        <img class="intro-l" src="/logo.svg?v=3" alt="" width="180" height="180" />
+        <img class="intro-r" src="/logo.svg?v=3" alt="" width="180" height="180" />
+      </div>
+      <span class="intro-word">The Pet Physio Vet</span>
+      <div class="intro-ticks"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    </div>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

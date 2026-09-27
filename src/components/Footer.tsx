@@ -1,37 +1,130 @@
 import React from 'react';
-import { Instagram, MapPin, Phone, Mail } from 'lucide-react';
+import { Instagram, MapPin, Phone, Mail, ArrowUpRight } from 'lucide-react';
 import { SITE, formattedAddress } from '../seo/siteConfig';
+import { useStagger, useReveal, SplitWords, Roll } from '../motion';
+import { Pulse } from '../motion/extras';
+import { useRouter } from '../seo/router';
+import { bookingHref } from './BookingPanel';
 
+/**
+ * Footer, rebuilt in the motion-graphic style the rest of the site borrows from
+ * its reference: an oversized interactive contact block and columns that reveal
+ * in sequence with roll-up links. The content is exactly what the previous
+ * footer carried (the one crawlable name/address/phone, hours, emergency notice,
+ * legal and staff login) — only the composition and the motion are new.
+ */
 export const Footer: React.FC = () => {
+  const { path, navigate } = useRouter();
+
+  const heroRef = useReveal<HTMLDivElement>({ variant: 'rise' });
+  const colsRef = useStagger<HTMLDivElement>({ step: 90 });
+
+  const go = (href: string) => (e: React.MouseEvent) => {
+    if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey) return;
+    e.preventDefault();
+    navigate(href);
+  };
+
+  const instagram = SITE.sameAs.filter((url) => /instagram\.com/i.test(url));
+
   return (
-    <footer id="contact" className="bg-[#f8f3ed] text-[#3C2117] font-['Inter'] w-full border-t border-[#d4c3bd]/30 mt-auto">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 sm:gap-16 px-4 sm:px-8 py-16 sm:py-24 max-w-[1280px] mx-auto">
-        
-        {/* Column 1: Brand */}
-        <div className="col-span-1">
-          <a href="/#home" className="font-['Plus_Jakarta_Sans'] text-xl font-light text-[#3C2117] mb-6 block tracking-tight">
-            {SITE.brandName}
-          </a>
-          <p className="text-[#504440] mb-8 max-w-sm font-light leading-relaxed text-sm">
-            Premium rehabilitation, hydrotherapy, and restorative care for your beloved companions.
-          </p>
+    <footer
+      id="contact"
+      className="bg-(--c-surface) text-(--c-ink) font-(family-name:--f-body) w-full border-t border-(--c-line)/30 mt-auto overflow-hidden"
+    >
+      {/* 1 ── Oversized, interactive contact block ------------------------- */}
+      <div ref={heroRef} className="max-w-[1280px] mx-auto px-4 sm:px-8 pt-20 sm:pt-28 pb-14">
+        <span className="flex items-center gap-3 text-xs uppercase tracking-widest text-(--c-accent) font-semibold mb-8 font-(family-name:--f-body)">
+          <Pulse />
+          Get in touch
+        </span>
 
-          {/* Address and phone live here now.
+        <SplitWords
+          as="h2"
+          className="font-(family-name:--f-display) text-5xl sm:text-7xl lg:text-8xl font-light leading-[0.98] mb-12"
+        >
+          Ready when they are.
+        </SplitWords>
 
-              They used to sit in a standalone contact block on the home page.
-              Once the booking form moved into the service cards, that block was
-              a lone narrow column under a full section's padding -- a lot of
-              empty page holding four lines of text.
+        <div className="grid lg:grid-cols-12 gap-10 lg:items-end">
+          {/* Giant email + phone — the loudest thing a visitor can act on. */}
+          <div className="lg:col-span-7 min-w-0">
+            {SITE.contact.email && (
+              <a
+                href={`mailto:${SITE.contact.email}`}
+                data-magnetic
+                className="group flex items-center gap-3 font-(family-name:--f-display) text-2xl sm:text-4xl lg:text-[52px] font-light leading-tight text-(--c-ink) hover:text-(--c-accent) transition-colors break-all"
+              >
+                <Roll>{SITE.contact.email}</Roll>
+                <ArrowUpRight
+                  aria-hidden="true"
+                  className="w-6 h-6 sm:w-8 sm:h-8 shrink-0 opacity-50 transition-all group-hover:opacity-100 group-hover:translate-x-1 group-hover:-translate-y-1"
+                />
+              </a>
+            )}
+            <a
+              href={`tel:${SITE.contact.phone}`}
+              className="mt-5 inline-block font-(family-name:--f-display) text-xl sm:text-2xl font-light text-(--c-body) hover:text-(--c-accent) transition-colors"
+            >
+              <Roll>{SITE.contact.phoneDisplay}</Roll>
+            </a>
+            <p className="mt-8 max-w-md text-(--c-body) font-light leading-relaxed text-sm">
+              Premium rehabilitation, hydrotherapy, and restorative care for your
+              beloved companions.
+            </p>
+          </div>
 
-              This is not only tidying: it is the page's only crawlable
-              name/address/phone, since NapBlock was removed from the home page
-              as a duplicate. Moving it had to mean moving it somewhere, not
-              deleting it, and a footer is where a visitor looks for an address
-              anyway. */}
-          <address className="not-italic space-y-4 mb-8 text-sm">
+          {/* Actions — book + the one real social profile. */}
+          <div className="lg:col-span-5 flex flex-col sm:flex-row lg:flex-col lg:items-end gap-3">
+            <a
+              href={bookingHref(path)}
+              onClick={go(bookingHref(path))}
+              data-magnetic
+              data-cursor="Book"
+              className="inline-flex justify-center items-center gap-2 h-14 px-8 bg-(--c-ink) text-(--c-bg) text-xs uppercase tracking-widest font-medium hover:bg-(--c-accent) transition-colors"
+            >
+              <Roll>Book an assessment</Roll>
+            </a>
             <div className="flex gap-3">
-              <MapPin className="w-4 h-4 text-[#84523e] shrink-0 mt-0.5" aria-hidden="true" />
-              <span className="text-[#504440] font-light leading-relaxed">
+              <a
+                href={`tel:${SITE.contact.phone}`}
+                data-magnetic
+                className="inline-flex justify-center items-center h-14 px-8 border border-(--c-line) text-(--c-ink) text-xs uppercase tracking-widest font-medium hover:bg-(--c-ink) hover:text-(--c-bg) transition-colors"
+              >
+                <Roll>Call</Roll>
+              </a>
+              {instagram.map((url) => (
+                <a
+                  key={url}
+                  href={url}
+                  target="_blank"
+                  rel="me noopener noreferrer"
+                  data-magnetic
+                  aria-label={`${SITE.brandName} on Instagram`}
+                  className="inline-flex justify-center items-center h-14 w-14 border border-(--c-line) text-(--c-ink) hover:bg-(--c-ink) hover:text-(--c-bg) transition-colors"
+                >
+                  <Instagram className="w-5 h-5" />
+                </a>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Detail columns, revealed in sequence ---------------------------- */}
+      <div
+        ref={colsRef}
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 sm:gap-14 px-4 sm:px-8 py-16 sm:py-20 max-w-[1280px] mx-auto text-sm"
+      >
+        {/* Visit us */}
+        <div>
+          <h4 className="text-xs tracking-widest text-(--c-accent) mb-6 uppercase font-semibold">
+            Visit us
+          </h4>
+          <address className="not-italic space-y-4">
+            <div className="flex gap-3">
+              <MapPin className="w-4 h-4 text-(--c-accent) shrink-0 mt-0.5" aria-hidden="true" />
+              <span className="text-(--c-body) font-light leading-relaxed">
                 {formattedAddress()}
                 {SITE.mapUrl && (
                   <>
@@ -40,178 +133,141 @@ export const Footer: React.FC = () => {
                       href={SITE.mapUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-block mt-2 text-[#84523e] hover:underline font-medium"
+                      className="inline-block mt-2 text-(--c-accent) font-medium w-fit"
                     >
-                      Get directions
+                      <Roll>Get directions</Roll>
                     </a>
                   </>
                 )}
               </span>
             </div>
             <div className="flex gap-3">
-              <Phone className="w-4 h-4 text-[#84523e] shrink-0 mt-0.5" aria-hidden="true" />
-              <a
-                href={`tel:${SITE.contact.phone}`}
-                className="text-[#3C2117] hover:text-[#84523e] transition-colors"
-              >
+              <Phone className="w-4 h-4 text-(--c-accent) shrink-0 mt-0.5" aria-hidden="true" />
+              <a href={`tel:${SITE.contact.phone}`} className="text-(--c-ink) hover:text-(--c-accent) transition-colors">
                 {SITE.contact.phoneDisplay}
               </a>
             </div>
             {SITE.contact.email && (
               <div className="flex gap-3">
-                <Mail className="w-4 h-4 text-[#84523e] shrink-0 mt-0.5" aria-hidden="true" />
+                <Mail className="w-4 h-4 text-(--c-accent) shrink-0 mt-0.5" aria-hidden="true" />
                 <a
                   href={`mailto:${SITE.contact.email}`}
-                  className="text-[#3C2117] hover:text-[#84523e] transition-colors break-all"
+                  className="text-(--c-ink) hover:text-(--c-accent) transition-colors break-all"
                 >
                   {SITE.contact.email}
                 </a>
               </div>
             )}
           </address>
-
-          {/* One real profile, not three href="#" stubs. A Share and a Like
-              button that go nowhere are decoration that costs trust: a visitor
-              who clicks one learns the site does not work. The clinic has an
-              Instagram and no other profile, so that is what is here. */}
-          <div className="flex gap-4">
-            {SITE.sameAs
-              .filter((url) => /instagram\.com/i.test(url))
-              .map((url) => (
-                <a
-                  key={url}
-                  href={url}
-                  target="_blank"
-                  rel="me noopener noreferrer"
-                  className="p-2 border border-[#d4c3bd] text-[#3C2117] hover:bg-[#3C2117] hover:text-white transition-colors"
-                  aria-label={`${SITE.brandName} on Instagram`}
-                >
-                  <Instagram className="w-4 h-4" />
-                </a>
-              ))}
-          </div>
         </div>
 
-        {/* Column 2: Hours */}
+        {/* Clinic hours */}
         <div>
-          <h4 className="text-xs tracking-widest text-[#84523e] mb-6 uppercase font-semibold">
+          <h4 className="text-xs tracking-widest text-(--c-accent) mb-6 uppercase font-semibold">
             Clinic Hours
           </h4>
-          {/* openingHours is empty until the clinic confirms which days its
-              window covers, and an empty <ul> under a "Clinic Hours" heading is
-              what shipped before -- a heading with nothing under it. Fall back
-              to the window the clinic did state. */}
-          <div className="text-[#3C2117] font-light text-sm space-y-3">
+          <div className="text-(--c-ink) font-light space-y-3">
             {SITE.openingHours.length > 0 ? (
               <ul className="space-y-3">
                 {SITE.openingHours.map((slot) => (
-                  <li key={slot.days.join('-')} className="flex justify-between border-b border-[#3C2117]/10 pb-2">
+                  <li key={slot.days.join('-')} className="flex justify-between border-b border-(--c-ink)/10 pb-2">
                     <span>
                       {slot.days.length === 1 ? slot.days[0] : `${slot.days[0]} - ${slot.days[slot.days.length - 1]}`}
                     </span>{' '}
                     {slot.opens && slot.closes ? (
                       <span>{`${slot.opens} - ${slot.closes}`}</span>
                     ) : (
-                      <span className="text-[#84523e] font-medium">Closed</span>
+                      <span className="text-(--c-accent) font-medium">Closed</span>
                     )}
                   </li>
                 ))}
               </ul>
             ) : (
               SITE.serviceHours.window && (
-                <p className="border-b border-[#3C2117]/10 pb-2">
-                  <span className="block text-[#504440]">{SITE.serviceHours.label}</span>
+                <p className="border-b border-(--c-ink)/10 pb-2">
+                  <span className="block text-(--c-body)">{SITE.serviceHours.label}</span>
                   <span className="font-medium">{SITE.serviceHours.window}</span>
                 </p>
               )
             )}
             {SITE.serviceHours.appointmentOnly && (
-              <p className="text-[#84523e] font-medium">By appointment only</p>
+              <p className="text-(--c-accent) font-medium">By appointment only</p>
             )}
-            <p className="text-[#504440] leading-relaxed">
-              Call to confirm a time before you travel.
-            </p>
-            {/* Carried over from the NapBlock that used to sit above this
-                footer on detail pages. It is the only visible statement of the
-                areas the clinic covers; schema areaServed is not something a
-                person reads. */}
+            <p className="text-(--c-body) leading-relaxed">Call to confirm a time before you travel.</p>
             {SITE.areaServed.length > 0 && (
-              <p className="text-[#504440] leading-relaxed pt-2 text-xs">
+              <p className="text-(--c-body) leading-relaxed pt-2 text-xs">
                 Serving {SITE.areaServed.join(', ')}.
               </p>
             )}
           </div>
         </div>
 
-        {/* Column 3: Emergency */}
+        {/* Emergency care */}
         <div>
-          <h4 className="text-xs tracking-widest text-[#84523e] mb-6 uppercase font-semibold">
+          <h4 className="text-xs tracking-widest text-(--c-accent) mb-6 uppercase font-semibold">
             Emergency Care
           </h4>
-          <p className="text-[#504440] font-light mb-4 text-sm leading-relaxed">
+          <p className="text-(--c-body) font-light mb-4 leading-relaxed">
             {SITE.contact.emergencyPhone
               ? 'For urgent questions about a patient of ours, outside clinic hours:'
               : 'If your pet needs urgent attention:'}
           </p>
-          {/* No emergency number has been supplied, and this block used to
-              render the bare string ": " above an empty tel: link -- a dead
-              phone link on the one line where a dead phone link does real harm.
-              Until the clinic names an out-of-hours contact, say the true and
-              useful thing instead. */}
           {SITE.contact.emergencyPhone && (
-            <p className="font-medium text-[#3C2117] text-sm bg-[#ffffff] p-3 border border-[#d4c3bd]/40 mb-4">
+            <p className="font-medium text-(--c-ink) bg-(--c-card) p-3 border border-(--c-line)/40 mb-4">
               {SITE.contact.emergencyName}
               {SITE.contact.emergencyName && ': '}
               <br />
-              <a
-                href={`tel:${SITE.contact.emergencyPhone}`}
-                className="text-[#84523e] hover:underline font-semibold"
-              >
+              <a href={`tel:${SITE.contact.emergencyPhone}`} className="text-(--c-accent) font-semibold">
                 {SITE.contact.emergencyPhoneDisplay}
               </a>
             </p>
           )}
-          {/* Shown whether or not a number is published. The clinic's number
-              IS the out-of-hours contact, but this is a weekday 09:30-13:30
-              physiotherapy practice, not a 24-hour hospital -- and a number
-              under an "Emergency Care" heading reads as a promise to answer.
-              Saying what the practice is not costs nothing and could matter. */}
-          <p className="text-[#504440] text-sm font-light leading-relaxed">
+          <p className="text-(--c-body) font-light leading-relaxed">
             This is a physiotherapy and rehabilitation practice, not a 24-hour
             emergency hospital. If your pet is in distress, contact your regular
-            veterinary surgeon or a nearby emergency hospital straight away
-            rather than waiting for an appointment here.
+            veterinary surgeon or a nearby emergency hospital straight away rather
+            than waiting for an appointment here.
           </p>
         </div>
 
-        {/* Column 4: Legal & Navigation */}
+        {/* Information */}
         <div className="flex flex-col gap-3">
-          <h4 className="text-xs tracking-widest text-[#84523e] mb-3 uppercase font-semibold">
+          <h4 className="text-xs tracking-widest text-(--c-accent) mb-3 uppercase font-semibold">
             Information
           </h4>
-          <a href="/#services" className="text-[#3C2117] hover:text-[#84523e] transition-colors font-light text-sm">Treatment Modalities</a>
-          <a href="/#conditions" className="text-[#3C2117] hover:text-[#84523e] transition-colors font-light text-sm">Conditions We Treat</a>
-          <a href="/#about" className="text-[#3C2117] hover:text-[#84523e] transition-colors font-light text-sm">Our Specialists</a>
-          <a href="/privacy" className="text-[#3C2117] hover:text-[#84523e] transition-colors font-light text-sm">Privacy Policy</a>
-          <a href="/terms" className="text-[#3C2117] hover:text-[#84523e] transition-colors font-light text-sm">Terms of Service</a>
+          {[
+            { href: '/#services', label: 'Treatment Modalities' },
+            { href: '/#conditions', label: 'Conditions We Treat' },
+            { href: '/#about', label: 'Our Specialists' },
+            { href: '/privacy', label: 'Privacy Policy' },
+            { href: '/terms', label: 'Terms of Service' },
+          ].map((link) => (
+            <a
+              key={link.href}
+              href={link.href}
+              className="text-(--c-ink) hover:text-(--c-accent) transition-colors font-light w-fit"
+            >
+              <Roll>{link.label}</Roll>
+            </a>
+          ))}
         </div>
-
       </div>
 
-      <div className="border-t border-[#d4c3bd]/30 py-8 text-center text-[#504440] font-light text-xs tracking-wide">
-        © {new Date().getFullYear()} {SITE.brandName}. All rights reserved.
-        {/* Deliberately discreet. Pet owners and clinic staff share one login —
-            the account's role decides which portal they land in. Hiding this
-            link would add no security (the route is public regardless), it
-            would just make staff hunt for the URL. */}
-        <span className="mx-2 text-[#d4c3bd]">·</span>
-        <a
-          href="/app/login"
-          className="underline underline-offset-4 hover:text-[#84523e] transition-colors"
-        >
-          Staff &amp; client login
-        </a>
+      {/* Bottom bar ------------------------------------------------------ */}
+      <div className="border-t border-(--c-line)/30">
+        <div className="max-w-[1280px] mx-auto px-4 sm:px-8 py-8 flex flex-col sm:flex-row gap-3 justify-between items-center text-xs text-(--c-body) font-light tracking-wide">
+          <p>© {new Date().getFullYear()} {SITE.brandName}. All rights reserved.</p>
+          {/* Pet owners and clinic staff share one login — the account's role
+              decides which portal they land in. */}
+          <a
+            href="/app/login"
+            className="underline underline-offset-4 hover:text-(--c-accent) transition-colors"
+          >
+            <Roll>Staff &amp; client login</Roll>
+          </a>
+        </div>
       </div>
+
     </footer>
   );
 };

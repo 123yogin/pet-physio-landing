@@ -2,6 +2,8 @@ import React from 'react';
 import { GALLERY_ITEMS } from '../data/clinicData';
 import { GalleryItem } from '../types';
 import { Maximize2 } from 'lucide-react';
+import { SplitWords, VelocitySkew } from '../motion';
+import { Pulse } from '../motion/extras';
 
 interface GallerySectionProps {
   onSelectImage: (item: GalleryItem) => void;
@@ -19,18 +21,38 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ onSelectImage })
     return () => mq.removeEventListener('change', apply);
   }, []);
 
+  // Play the loops only while the gallery is on screen. Eight looping videos
+  // kept decoding off-screen while the visitor read other sections -- a
+  // steady CPU/battery drain on phones that competes with scroll smoothness.
+  const sectionRef = React.useRef<HTMLElement>(null);
+  React.useEffect(() => {
+    const el = sectionRef.current;
+    if (!el || prefersReducedMotion) return;
+    const videos = (): HTMLVideoElement[] => Array.from(el.querySelectorAll('video'));
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        videos().forEach((v) => {
+          if (entry.isIntersecting) v.play().catch(() => {});
+          else v.pause();
+        });
+      },
+      { rootMargin: '200px 0px' },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [prefersReducedMotion]);
+
   return (
-    <section id="gallery" className="py-20 sm:py-28 bg-[#ffffff]">
+    <section ref={sectionRef} id="gallery" className="py-20 sm:py-28 bg-(--c-card) overflow-x-clip">
       <div className="max-w-[1280px] mx-auto px-4 sm:px-8">
         {/* Header */}
-        <div className="mb-16 grid grid-cols-1 md:grid-cols-12 gap-8 items-end border-b border-[#d4c3bd]/30 pb-8">
+        <div className="mb-16 grid grid-cols-1 md:grid-cols-12 gap-8 items-end border-b border-(--c-line)/30 pb-8">
           <div className="md:col-span-7">
-            <span className="text-xs uppercase tracking-widest text-[#84523e] font-semibold mb-2 block font-['Inter']">
+            <span className="text-xs uppercase tracking-widest text-(--c-accent) font-semibold mb-2 flex items-center gap-3 font-(family-name:--f-body)">
+            <Pulse />
               Patients and sessions
             </span>
-            <h2 className="font-['Plus_Jakarta_Sans'] text-3xl sm:text-4xl lg:text-5xl text-[#3C2117] font-light">
-              Our Clinic
-            </h2>
+            <SplitWords className="font-(family-name:--f-display) text-3xl sm:text-4xl lg:text-5xl text-(--c-ink) font-light">Our Clinic</SplitWords>
           </div>
           <div className="md:col-span-5 md:text-right">
             {/* This read "A serene, state-of-the-art sanctuary equipped with
@@ -38,7 +60,7 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ onSelectImage })
                 calm private therapy bays" -- a facility none of these pictures
                 shows. What is actually below is the clinic's own patients, its
                 pool and mats, and home visits, so the copy says that. */}
-            <p className="font-['Inter'] text-base sm:text-lg text-[#504440] font-light leading-relaxed">
+            <p className="font-(family-name:--f-body) text-base sm:text-lg text-(--c-body) font-light leading-relaxed">
               Real sessions at the Shilaj clinic and home visits across Ahmedabad
               — the pool, the mats, and the patients who use them.
             </p>
@@ -58,7 +80,12 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ onSelectImage })
             the tiles open a lightbox on click, and clicking a moving target is
             genuinely hard -- and permanent motion on a page is a real problem
             for some people rather than a taste. */}
-        <div className="-mx-4 sm:-mx-8 space-y-6 overflow-hidden motion-reduce:overflow-visible">
+        {/* The rows lean with scroll speed and settle flat when the page stops,
+            after the skewed cards of the reference site. */}
+        <VelocitySkew max={5}>
+        {/* Full-bleed: the rows run edge to edge of the screen rather than
+            stopping at the content column, so tiles slide in from off-screen. */}
+        <div className="mx-[calc(50%-50vw)] space-y-6 overflow-hidden motion-reduce:overflow-visible">
           {[0, 1].map((rowIndex) => {
             const row = GALLERY_ITEMS.filter((_, i) => i % 2 === rowIndex);
             return (
@@ -75,7 +102,8 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ onSelectImage })
                     key={`${item.id}-${i}`}
                     aria-hidden={i >= row.length}
                     onClick={() => onSelectImage(item)}
-                    className="relative group shrink-0 w-[240px] sm:w-[300px] overflow-hidden bg-[#e6e2dc] cursor-pointer border border-[#d4c3bd]/30 hover:border-[#3C2117] transition-all"
+                    data-cursor={item.videoUrl ? 'Play' : 'Open'}
+                    className="relative group shrink-0 w-[240px] sm:w-[300px] overflow-hidden bg-(--c-surface-3) cursor-pointer border border-(--c-line)/30 hover:border-(--c-ink) transition-all"
                   >
                     {/* Portrait tiles, because every asset is portrait.
 
@@ -124,13 +152,13 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ onSelectImage })
                       />
                     )}
 
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#3C2117]/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6 text-white">
-                      <span className="text-[10px] uppercase tracking-widest text-[#ffbda5] font-semibold mb-1">
+                    <div className="absolute inset-0 bg-gradient-to-t from-(--c-ink)/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6 text-white">
+                      <span className="text-[10px] uppercase tracking-widest text-(--c-accent-soft) font-semibold mb-1">
                         {item.category}
                       </span>
-                      <h4 className="font-['Plus_Jakarta_Sans'] text-lg font-medium flex items-center justify-between">
+                      <h4 className="font-(family-name:--f-display) text-lg font-medium flex items-center justify-between">
                         <span>{item.title}</span>
-                        <Maximize2 className="w-4 h-4 text-[#ffffff]" />
+                        <Maximize2 className="w-4 h-4 text-(--c-card)" />
                       </h4>
                     </div>
                   </div>
@@ -139,6 +167,7 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ onSelectImage })
             );
           })}
         </div>
+        </VelocitySkew>
       </div>
     </section>
   );

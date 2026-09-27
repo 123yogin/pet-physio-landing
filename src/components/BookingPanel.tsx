@@ -2,6 +2,7 @@ import React from 'react';
 import { X, CalendarCheck } from 'lucide-react';
 import { BOOKABLE_SERVICES, BookableService } from '../data/bookableServices';
 import { BookingForm } from './BookingForm';
+import { FacilitySlotBooking } from './FacilitySlotBooking';
 import { BookingSuccessModal } from './BookingSuccessModal';
 import { useRouter } from '../seo/router';
 import { AppointmentData } from '../types';
@@ -72,6 +73,27 @@ export const BookingPanel: React.FC<BookingPanelProps> = ({ availableCodes }) =>
 
   const isOpen = !!bookParam;
 
+  // Choosing the Indoor Facility in the general form swaps to its slot/bed
+  // picker IN PLACE -- no navigation and no `#book` hash, so the panel never
+  // jumps or scrolls (the reason an earlier navigate-based version felt wrong).
+  // Reset when the panel closes so the next open starts from the form again.
+  const [facilityChosen, setFacilityChosen] = React.useState(false);
+  React.useEffect(() => {
+    if (!isOpen) setFacilityChosen(false);
+  }, [isOpen]);
+
+  const facilityService = React.useMemo(
+    () =>
+      BOOKABLE_SERVICES.find(
+        (s) => s.code === 'IndoorFacility' && availableCodes.includes(s.code),
+      ) ?? null,
+    [availableCodes],
+  );
+
+  // What the panel presents: the service named in the URL, or the Indoor
+  // Facility once it is picked from the general form's selector.
+  const effectiveService = service ?? (facilityChosen ? facilityService : null);
+
   const close = React.useCallback(() => {
     const next = new URLSearchParams(search);
     next.delete('book');
@@ -117,12 +139,12 @@ export const BookingPanel: React.FC<BookingPanelProps> = ({ availableCodes }) =>
     <>
       {isOpen && (
         <div
-          className="fixed inset-0 z-50 flex items-stretch sm:items-center justify-center sm:p-4 bg-[#3C2117]/40"
+          className="fixed inset-0 z-50 flex items-stretch sm:items-center justify-center sm:p-4 bg-(--c-ink)/40 animate-in fade-in"
           role="dialog"
           aria-modal="true"
           aria-label={
-            service
-              ? service.title
+            effectiveService
+              ? effectiveService.title
               : reasonFor
                 ? `Request an appointment for ${reasonFor}`
                 : 'Tell us about your pet'
@@ -135,72 +157,89 @@ export const BookingPanel: React.FC<BookingPanelProps> = ({ availableCodes }) =>
               visitor cannot see. A sheet that owns the screen behaves like a
               page, which is what it is. */}
           <div
-            className="bg-[#fef9f2] w-full sm:max-w-[620px] h-full sm:h-auto sm:max-h-[90vh] overflow-y-auto p-6 pt-16 sm:p-10 relative"
+            className="bg-(--c-bg) w-full sm:max-w-[620px] h-full sm:h-auto sm:max-h-[90vh] overflow-y-auto p-6 pt-16 sm:p-10 relative"
             onClick={(event) => event.stopPropagation()}
           >
             <button
               type="button"
               onClick={close}
               aria-label="Close"
-              className="absolute top-5 right-5 text-[#84523e] hover:text-[#3C2117] transition-colors"
+              className="absolute top-5 right-5 text-(--c-accent) hover:text-(--c-ink) transition-colors"
             >
               <X className="w-5 h-5" />
             </button>
 
-            <span className="text-xs uppercase tracking-widest text-[#84523e] font-semibold block mb-2">
+            <span className="text-xs uppercase tracking-widest text-(--c-accent) font-semibold block mb-2">
               {/* "Not sure yet" is only true when the visitor opened this from
                   the band that says so. Someone who pressed "Book an assessment
                   for IVDD" knows exactly what they want, and telling them
                   otherwise reads as the form not having listened. */}
-              {service ? 'Bookable service' : reasonFor ? 'Appointment request' : 'Not sure yet'}
+              {effectiveService ? 'Bookable service' : reasonFor ? 'Appointment request' : 'Not sure yet'}
             </span>
-            <h3 className="font-['Plus_Jakarta_Sans'] text-2xl sm:text-3xl text-[#3C2117] font-light mb-3">
-              {service ? service.title : reasonFor ? `Book for ${reasonFor}` : 'Tell us about your pet'}
+            <h3 className="font-(family-name:--f-display) text-2xl sm:text-3xl text-(--c-ink) font-light mb-3">
+              {effectiveService ? effectiveService.title : reasonFor ? `Book for ${reasonFor}` : 'Tell us about your pet'}
             </h3>
-            <p className="font-['Inter'] text-sm sm:text-base text-[#504440] font-light leading-relaxed mb-7">
-              {service
-                ? service.summary
+            <p className="font-(family-name:--f-body) text-sm sm:text-base text-(--c-body) font-light leading-relaxed mb-7">
+              {effectiveService
+                ? effectiveService.summary
                 : reasonFor
                   ? `Tell us about your pet and we will call you back about ${reasonFor}. Pick the service below if you know which one you need.`
                   : 'Describe what is troubling your pet and we will tell you which service suits them when we call. You do not have to decide now.'}
             </p>
 
-            {service && (
+            {effectiveService && (
               <>
-                <h4 className="text-xs uppercase tracking-widest text-[#84523e] font-semibold mb-3">
+                <h4 className="text-xs uppercase tracking-widest text-(--c-accent) font-semibold mb-3">
                   What&rsquo;s included
                 </h4>
                 <ul className="space-y-2.5 mb-6">
-                  {service.includes.map((item) => (
+                  {effectiveService.includes.map((item) => (
                     <li
                       key={item}
-                      className="flex gap-3 font-['Inter'] text-sm text-[#504440] font-light leading-relaxed"
+                      className="flex gap-3 font-(family-name:--f-body) text-sm text-(--c-body) font-light leading-relaxed"
                     >
-                      <span aria-hidden="true" className="mt-2 w-1 h-1 bg-[#84523e] shrink-0" />
+                      <span aria-hidden="true" className="mt-2 w-1 h-1 bg-(--c-accent) shrink-0" />
                       {item}
                     </li>
                   ))}
                 </ul>
 
-                {service.note && (
-                  <p className="font-['Inter'] text-xs text-[#84523e] leading-relaxed mb-6 italic">
-                    {service.note}
+                {effectiveService.note && (
+                  <p className="font-(family-name:--f-body) text-xs text-(--c-accent) leading-relaxed mb-6 italic">
+                    {effectiveService.note}
                   </p>
                 )}
               </>
             )}
 
-            <div className="pt-2 border-t border-[#d4c3bd]/40">
-              <p className="flex items-center gap-2 text-xs uppercase tracking-widest text-[#84523e] font-semibold mb-5 mt-6">
-                <CalendarCheck className="w-4 h-4" />
-                {service ? `Request ${service.title}` : 'Request an appointment'}
-              </p>
-              <BookingForm
-                variant="panel"
-                initialService={service ? service.code : ''}
-                initialCondition={reasonFor}
-                onSubmitSuccess={handleSuccess}
-              />
+            <div className="pt-2 border-t border-(--c-line)/40">
+              {/* The Indoor Facility books real bed inventory by the hour, so it
+                  gets the slot picker instead of the generic "we'll call you"
+                  form. Every other service keeps the request form. */}
+              {effectiveService && effectiveService.code === 'IndoorFacility' ? (
+                <div className="mt-6">
+                  <FacilitySlotBooking onClose={close} />
+                </div>
+              ) : (
+                <>
+                  <p className="flex items-center gap-2 text-xs uppercase tracking-widest text-(--c-accent) font-semibold mb-5 mt-6">
+                    <CalendarCheck className="w-4 h-4" />
+                    {effectiveService ? `Request ${effectiveService.title}` : 'Request an appointment'}
+                  </p>
+                  <BookingForm
+                    variant="panel"
+                    initialService={service ? service.code : ''}
+                    initialCondition={reasonFor}
+                    onServiceChange={(code) => {
+                      // Indoor Facility is booked as real bed inventory, so
+                      // choosing it swaps to its slot/bed picker IN PLACE via
+                      // state -- no navigation, so the panel does not jump.
+                      setFacilityChosen(code === 'IndoorFacility');
+                    }}
+                    onSubmitSuccess={handleSuccess}
+                  />
+                </>
+              )}
             </div>
           </div>
         </div>
