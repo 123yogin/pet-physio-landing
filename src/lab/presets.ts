@@ -115,6 +115,11 @@ export const SECTION_OPTIONS: Record<'nav' | 'btn' | 'eye' | 'svc' | 'jour' | 'd
     { id: 'current', label: 'Card grid (previous)' },
     { id: 'rail', label: 'Horizontal snap rail' },
     { id: 'stack', label: 'Sticky stacking cards' },
+    { id: 'index', label: 'Index list, cursor-follow photo' },
+    { id: 'scrolly', label: 'Sticky scrollytelling' },
+    { id: 'hscroll', label: 'Pinned horizontal scroll' },
+    { id: 'panels', label: 'Expanding photo panels' },
+    { id: 'bento', label: 'Bento grid' },
   ],
   jour: [
     { id: 'current', label: 'Horizontal steps + panel (previous)' },

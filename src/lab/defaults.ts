@@ -23,6 +23,6 @@ export interface LabState {
 /** The shipped design: the winner of each lab round (2026-09-27). */
 export const DEFAULT_LAB: LabState = {
   font: 'frauncesfig', pal: 'peachhero', shape: 'round', hero: 'arch', accent: 'italic',
-  nav: 'pill', btn: 'wipe', eye: 'pill', svc: 'stack', jour: 'rail', doc: 'story', foot: 'wordmark',
+  nav: 'pill', btn: 'wipe', eye: 'pill', svc: 'panels', jour: 'rail', doc: 'story', foot: 'wordmark',
 };
 
