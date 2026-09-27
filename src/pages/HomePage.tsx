@@ -24,6 +24,7 @@ import { BookingPanel, bookingHref } from '../components/BookingPanel';
 import { usePublicServiceCodes } from '../hooks/usePublicServiceCodes';
 import { SuccessStories } from '../components/SuccessStories';
 import { SpecialistsSection } from '../components/SpecialistsSection';
+import { SplitDoorsReveal } from '../components/SplitDoorsReveal';
 import { GallerySection } from '../components/GallerySection';
 import { FaqSection } from '../components/FaqSection';
 import { Footer } from '../components/Footer';
@@ -103,6 +104,9 @@ export const HomePage: React.FC = () => {
         <TreatmentJourney />
 
         <SuccessStories />
+
+        {/* Split-doors reveal: the heading parts to uncover the clinician. */}
+        <SplitDoorsReveal />
 
         <SpecialistsSection onOpenBookingWithSpecialist={handleBookWithSpecialist} />
 
