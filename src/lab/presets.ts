@@ -97,7 +97,7 @@ export { DEFAULT_LAB } from './defaults';
 import { DEFAULT_LAB, type LabState } from './defaults';
 
 /** Section- and component-level alternatives. `current` is always the shipped one. */
-export const SECTION_OPTIONS: Record<'nav' | 'btn' | 'eye' | 'svc' | 'jour' | 'doc' | 'foot', { id: string; label: string }[]> = {
+export const SECTION_OPTIONS: Record<'nav' | 'btn' | 'eye' | 'svc' | 'jour' | 'doc' | 'foot' | 'dog', { id: string; label: string }[]> = {
   nav: [
     { id: 'current', label: 'Full-width bar (previous)' },
     { id: 'pill', label: 'Floating pill nav (Heva)' },
@@ -127,6 +127,12 @@ export const SECTION_OPTIONS: Record<'nav' | 'btn' | 'eye' | 'svc' | 'jour' | 'd
   foot: [
     { id: 'current', label: 'Columns footer (previous)' },
     { id: 'wordmark', label: 'Closing CTA band + giant wordmark' },
+  ],
+  dog: [
+    { id: 'none', label: 'No mascot' },
+    { id: 'flat', label: 'Dog mascot: flat illustration (chosen)' },
+    { id: 'line', label: 'Dog mascot: line art' },
+    { id: 'silhouette', label: 'Dog mascot: silhouette + paw prints' },
   ],
 };
 
@@ -158,6 +164,7 @@ export function parseLab(q: URLSearchParams): LabState {
     jour: pick(SECTION_OPTIONS.jour, 'jour', DEFAULT_LAB.jour),
     doc: pick(SECTION_OPTIONS.doc, 'doc', DEFAULT_LAB.doc),
     foot: pick(SECTION_OPTIONS.foot, 'foot', DEFAULT_LAB.foot),
+    dog: pick(SECTION_OPTIONS.dog, 'dog', DEFAULT_LAB.dog),
   };
 }
 
