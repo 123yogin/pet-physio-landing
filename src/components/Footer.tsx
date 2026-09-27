@@ -53,9 +53,12 @@ export const Footer: React.FC = () => {
               <a
                 href={`mailto:${SITE.contact.email}`}
                 data-magnetic
-                className="group flex items-center gap-3 font-(family-name:--f-display) text-2xl sm:text-4xl lg:text-[52px] font-light leading-tight text-(--c-ink) hover:text-(--c-accent) transition-colors break-all"
+                className="group flex items-center gap-3 font-(family-name:--f-display) text-2xl sm:text-4xl lg:text-[52px] font-light leading-tight text-(--c-ink) hover:text-(--c-accent) transition-colors"
               >
-                <Roll>{SITE.contact.email}</Roll>
+                {/* No <Roll> here: its overflow:hidden clips the last glyph of a
+                    long address at this size (".com" became ".co"). Plain text
+                    that can wrap instead, keeping the hover colour and arrow. */}
+                <span className="min-w-0 break-words">{SITE.contact.email}</span>
                 <ArrowUpRight
                   aria-hidden="true"
                   className="w-6 h-6 sm:w-8 sm:h-8 shrink-0 opacity-50 transition-all group-hover:opacity-100 group-hover:translate-x-1 group-hover:-translate-y-1"
