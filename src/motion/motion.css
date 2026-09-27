@@ -138,12 +138,19 @@ html.intro #intro.is-done {
 #intro .intro-mark img { position: absolute; inset: 0; width: 100%; height: 100%; }
 #intro .intro-l { clip-path: inset(0 50% 0 0); animation: intro-half-l 1.1s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
 #intro .intro-r { clip-path: inset(0 0 0 50%); animation: intro-half-r 1.1s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+/* Centred by spanning the full width, not by translateX(-50%): the hero-rise
+   animation below owns `transform` (fill-mode both), so a centring transform
+   was overwritten and the word started at the midpoint, off to the right of
+   the logo. The left padding balances the trailing letter-spacing so the
+   letters, not their box, sit on the centre line. */
 #intro .intro-word {
   position: absolute;
-  left: 50%;
+  left: 0;
+  right: 0;
   top: calc(50% + min(120px, 26vw));
-  transform: translateX(-50%);
-  font: 500 12px/1 'Inter', sans-serif;
+  text-align: center;
+  padding-left: 0.3em;
+  font: 500 12px/1 var(--f-body), sans-serif;
   letter-spacing: 0.3em;
   text-transform: uppercase;
   color: var(--c-accent);

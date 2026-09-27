@@ -20,9 +20,10 @@
     }
   </style>
   <defs>
-    <clipPath id="d"><circle cx="450.0" cy="450.0" r="444.0"/></clipPath>
+    <clipPath id="d"><circle cx="450.0" cy="450.0" r="438.0"/></clipPath>
   </defs>
   <g clip-path="url(#d)">
+<circle cx="450" cy="450" r="444" fill="var(--disc)"/>
     <!-- disc ground -->
     <g transform="translate(0.000000,900.000000) scale(0.100000,-0.100000)" fill="var(--disc)"><path d="M0 4500 l0 -4500 4500 0 4500 0 0 4500 0 4500 -4500 0 -4500 0 0
 -4500z"/></g>
