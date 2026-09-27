@@ -25,7 +25,7 @@ export const SpecialistPage: React.FC<{ specialist: Specialist }> = ({ specialis
   return (
     <PageShell>
       <article className="max-w-[1280px] mx-auto px-4 sm:px-8 pb-16">
-        <header className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start border-b border-[#d4c3bd]/30 pb-12 mb-12">
+        <header className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start border-b border-(--c-line)/30 pb-12 mb-12">
           {specialist.imageUrl && (
             <div className="lg:col-span-4">
               <img
@@ -36,27 +36,27 @@ export const SpecialistPage: React.FC<{ specialist: Specialist }> = ({ specialis
                 loading="eager"
                 fetchPriority="high"
                 decoding="async"
-                className="w-full aspect-4/5 object-cover bg-[#e6e2dc] grayscale"
+                className="w-full aspect-4/5 object-cover bg-(--c-surface-3) grayscale"
               />
             </div>
           )}
 
           <div className={specialist.imageUrl ? 'lg:col-span-8' : 'lg:col-span-12'}>
             {specialist.experienceYears > 0 && (
-              <span className="text-xs uppercase tracking-widest text-[#84523e] font-semibold mb-3 block">
+              <span className="text-xs uppercase tracking-widest text-(--c-accent) font-semibold mb-3 block">
                 {specialist.experienceYears}+ years clinical practice
               </span>
             )}
-            <h1 className="font-['Plus_Jakarta_Sans'] text-3xl sm:text-4xl lg:text-5xl text-[#3C2117] font-light leading-tight tracking-tight mb-2">
+            <h1 style={{ ['--d' as string]: '280ms' }} className="hero-rise font-(family-name:--f-display) text-3xl sm:text-4xl lg:text-5xl text-(--c-ink) font-light leading-tight tracking-tight mb-2">
               {specialist.name}
             </h1>
             {specialist.role && (
-              <p className="font-['Inter'] text-base text-[#84523e] uppercase tracking-widest font-semibold mb-6">
+              <p className="font-(family-name:--f-body) text-base text-(--c-accent) uppercase tracking-widest font-semibold mb-6">
                 {specialist.role}
               </p>
             )}
             {specialist.bio && (
-              <p className="font-['Inter'] text-lg text-[#504440] font-light leading-relaxed mb-8">
+              <p className="font-(family-name:--f-body) text-lg text-(--c-body) font-light leading-relaxed mb-8">
                 {specialist.bio}
               </p>
             )}
@@ -65,14 +65,14 @@ export const SpecialistPage: React.FC<{ specialist: Specialist }> = ({ specialis
                 clinician with none, which is worse than not asking. */}
             {credentials.length > 0 && (
               <div>
-                <h2 className="text-xs uppercase tracking-widest text-[#84523e] font-semibold mb-3">
+                <h2 className="text-xs uppercase tracking-widest text-(--c-accent) font-semibold mb-3">
                   Credentials
                 </h2>
                 <ul className="flex flex-wrap gap-2">
                   {credentials.map((credential) => (
                     <li
                       key={credential}
-                      className="px-3 py-1.5 bg-white border border-[#d4c3bd]/50 font-['Inter'] text-xs text-[#3C2117]"
+                      className="px-3 py-1.5 bg-white border border-(--c-line)/50 font-(family-name:--f-body) text-xs text-(--c-ink)"
                     >
                       {credential}
                     </li>
@@ -88,8 +88,8 @@ export const SpecialistPage: React.FC<{ specialist: Specialist }> = ({ specialis
             <FactList title="Areas of focus" items={specialist.specialties} />
           )}
           <div>
-            <h2 className="text-xs uppercase tracking-widest text-[#84523e] font-semibold mb-4">Practising at</h2>
-            <p className="font-['Inter'] text-sm text-[#504440] font-light leading-relaxed">
+            <h2 className="text-xs uppercase tracking-widest text-(--c-accent) font-semibold mb-4">Practising at</h2>
+            <p className="font-(family-name:--f-body) text-sm text-(--c-body) font-light leading-relaxed">
               {specialist.name} practises at {SITE.brandName} in {SITE.address.addressLocality}
               {colleagues.length > 0 ? ', working alongside the wider rehabilitation team' : ''}, on referral
               cases coordinated with each patient&apos;s primary veterinarian.
@@ -98,8 +98,8 @@ export const SpecialistPage: React.FC<{ specialist: Specialist }> = ({ specialis
         </div>
 
         {colleagues.length > 0 && (
-          <section aria-labelledby="team" className="border-t border-[#d4c3bd]/30 mt-16 pt-12">
-            <h2 id="team" className="font-['Plus_Jakarta_Sans'] text-2xl text-[#3C2117] font-light mb-6">
+          <section aria-labelledby="team" className="border-t border-(--c-line)/30 mt-16 pt-12">
+            <h2 id="team" className="font-(family-name:--f-display) text-2xl text-(--c-ink) font-light mb-6">
               Meet the rest of the team
             </h2>
             <ul className="flex flex-wrap gap-3">
@@ -107,7 +107,7 @@ export const SpecialistPage: React.FC<{ specialist: Specialist }> = ({ specialis
                 <li key={person.id}>
                   <Link
                     to={specialistPath(person.id)}
-                    className="inline-block px-4 py-2 border border-[#d4c3bd] text-xs uppercase tracking-widest text-[#3C2117] hover:bg-[#3C2117] hover:text-white transition-colors"
+                    className="inline-block px-4 py-2 border border-(--c-line) text-xs uppercase tracking-widest text-(--c-ink) hover:bg-(--c-ink) hover:text-white transition-colors"
                   >
                     {person.name}
                   </Link>

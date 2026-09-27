@@ -20,22 +20,22 @@ export const ServicePage: React.FC<{ service: ServiceItem }> = ({ service }) => 
   return (
     <PageShell>
       <article className="max-w-[1280px] mx-auto px-4 sm:px-8 pb-16">
-        <header className="max-w-3xl border-b border-[#d4c3bd]/30 pb-12 mb-12">
-          <span className="text-xs uppercase tracking-widest text-[#84523e] font-semibold mb-3 block">
+        <header className="max-w-3xl border-b border-(--c-line)/30 pb-12 mb-12">
+          <span className="text-xs uppercase tracking-widest text-(--c-accent) font-semibold mb-3 block">
             Treatment modality
           </span>
-          <h1 className="font-['Plus_Jakarta_Sans'] text-3xl sm:text-4xl lg:text-5xl text-[#3C2117] font-light leading-tight tracking-tight mb-6">
+          <h1 style={{ ['--d' as string]: '280ms' }} className="hero-rise font-(family-name:--f-display) text-3xl sm:text-4xl lg:text-5xl text-(--c-ink) font-light leading-tight tracking-tight mb-6">
             {service.title}
           </h1>
-          <p className="font-['Inter'] text-lg text-[#504440] font-light leading-relaxed mb-4">
+          <p className="font-(family-name:--f-body) text-lg text-(--c-body) font-light leading-relaxed mb-4">
             {service.shortDesc}
           </p>
-          <p className="font-['Inter'] text-base text-[#504440] font-light leading-relaxed">
+          <p className="font-(family-name:--f-body) text-base text-(--c-body) font-light leading-relaxed">
             {service.fullDesc}
           </p>
-          <dl className="mt-8 inline-flex flex-col gap-1 border-l-2 border-[#84523e] pl-4">
-            <dt className="text-xs uppercase tracking-widest text-[#84523e] font-semibold">Typical session</dt>
-            <dd className="font-['Inter'] text-sm text-[#3C2117]">{service.duration}</dd>
+          <dl className="mt-8 inline-flex flex-col gap-1 border-l-2 border-(--c-accent) pl-4">
+            <dt className="text-xs uppercase tracking-widest text-(--c-accent) font-semibold">Typical session</dt>
+            <dd className="font-(family-name:--f-body) text-sm text-(--c-ink)">{service.duration}</dd>
           </dl>
         </header>
 
@@ -45,8 +45,8 @@ export const ServicePage: React.FC<{ service: ServiceItem }> = ({ service }) => 
         </div>
 
         {treatedConditions.length > 0 && (
-          <section aria-labelledby="treats" className="border-t border-[#d4c3bd]/30 pt-12">
-            <h2 id="treats" className="font-['Plus_Jakarta_Sans'] text-2xl sm:text-3xl text-[#3C2117] font-light mb-8">
+          <section aria-labelledby="treats" className="border-t border-(--c-line)/30 pt-12">
+            <h2 id="treats" className="font-(family-name:--f-display) text-2xl sm:text-3xl text-(--c-ink) font-light mb-8">
               Conditions treated with {service.title}
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -54,7 +54,7 @@ export const ServicePage: React.FC<{ service: ServiceItem }> = ({ service }) => 
                 <Link
                   key={condition.id}
                   to={conditionPath(condition.id)}
-                  className="group block bg-white border border-[#d4c3bd]/30 hover:border-[#3C2117] transition-colors"
+                  className="group block bg-white border border-(--c-line)/30 hover:border-(--c-ink) transition-colors"
                 >
                   <img
                     src={condition.imageUrl}
@@ -63,13 +63,13 @@ export const ServicePage: React.FC<{ service: ServiceItem }> = ({ service }) => 
                     height={300}
                     loading="lazy"
                     decoding="async"
-                    className="w-full aspect-[4/3] object-cover bg-[#e6e2dc]"
+                    className="w-full aspect-[4/3] object-cover bg-(--c-surface-3)"
                   />
                   <div className="p-4">
-                    <h3 className="font-['Plus_Jakarta_Sans'] text-lg text-[#3C2117] font-medium group-hover:text-[#84523e] transition-colors">
+                    <h3 className="font-(family-name:--f-display) text-lg text-(--c-ink) font-medium group-hover:text-(--c-accent) transition-colors">
                       {condition.title}
                     </h3>
-                    <p className="mt-2 font-['Inter'] text-sm text-[#504440] font-light leading-relaxed">
+                    <p className="mt-2 font-(family-name:--f-body) text-sm text-(--c-body) font-light leading-relaxed">
                       {condition.shortDesc}
                     </p>
                   </div>
@@ -80,8 +80,8 @@ export const ServicePage: React.FC<{ service: ServiceItem }> = ({ service }) => 
         )}
 
         {otherServices.length > 0 && (
-          <section aria-labelledby="other-treatments" className="border-t border-[#d4c3bd]/30 mt-16 pt-12">
-            <h2 id="other-treatments" className="font-['Plus_Jakarta_Sans'] text-2xl text-[#3C2117] font-light mb-6">
+          <section aria-labelledby="other-treatments" className="border-t border-(--c-line)/30 mt-16 pt-12">
+            <h2 id="other-treatments" className="font-(family-name:--f-display) text-2xl text-(--c-ink) font-light mb-6">
               Other treatments
             </h2>
             <ul className="flex flex-wrap gap-3">
@@ -89,7 +89,7 @@ export const ServicePage: React.FC<{ service: ServiceItem }> = ({ service }) => 
                 <li key={item.id}>
                   <Link
                     to={servicePath(item.id)}
-                    className="inline-block px-4 py-2 border border-[#d4c3bd] text-xs uppercase tracking-widest text-[#3C2117] hover:bg-[#3C2117] hover:text-white transition-colors"
+                    className="inline-block px-4 py-2 border border-(--c-line) text-xs uppercase tracking-widest text-(--c-ink) hover:bg-(--c-ink) hover:text-white transition-colors"
                   >
                     {item.title}
                   </Link>

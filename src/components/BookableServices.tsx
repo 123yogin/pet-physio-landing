@@ -3,6 +3,8 @@ import { Activity, Waves, BedDouble, Sparkles, Footprints } from 'lucide-react';
 import { BOOKABLE_SERVICES, BookableService } from '../data/bookableServices';
 import { useRouter } from '../seo/router';
 import { bookingHref } from './BookingPanel';
+import { SplitWords, useStagger } from '../motion';
+import { Pulse } from '../motion/extras';
 
 /**
  * The bookable services as a bento grid.
@@ -73,7 +75,9 @@ const Tile: React.FC<{
     href={href}
     onClick={onOpen(href)}
     aria-label={`${service.title} — what's included`}
-    className={`${PLACEMENT[service.code] ?? ''} group relative overflow-hidden text-left bg-[#f8f3ed] border border-[#d4c3bd]/30 p-8 sm:p-10 min-h-[220px] flex flex-col justify-between hover:bg-white transition-colors duration-500`}
+    data-cursor="Book"
+    data-tilt
+    className={`${PLACEMENT[service.code] ?? ''} group relative overflow-hidden text-left bg-(--c-surface) border border-(--c-line)/30 p-8 sm:p-10 min-h-[220px] flex flex-col justify-between hover:bg-white transition-colors duration-500`}
   >
     {/* The tile's own icon again, oversized and very faint, as texture.
 
@@ -90,21 +94,21 @@ const Tile: React.FC<{
     <Icon
       aria-hidden="true"
       strokeWidth={1}
-      className="pointer-events-none absolute -right-8 -bottom-10 w-48 h-48 text-[#84523e] opacity-[0.06] group-hover:opacity-[0.10] transition-opacity duration-500"
+      className="pointer-events-none absolute -right-8 -bottom-10 w-48 h-48 text-(--c-accent) opacity-[0.06] group-hover:opacity-[0.10] transition-opacity duration-500"
     />
 
-    <span className="relative text-[#84523e] opacity-70 group-hover:opacity-100 transition-opacity">
+    <span className="icon-nudge relative text-(--c-accent) opacity-70 group-hover:opacity-100 transition-opacity">
       <Icon className="w-7 h-7" />
     </span>
 
     <span className="relative block">
-      <span className="block font-['Plus_Jakarta_Sans'] text-2xl sm:text-3xl text-[#3C2117] font-light mb-2 group-hover:text-[#84523e] transition-colors">
+      <span className="block font-(family-name:--f-display) text-2xl sm:text-3xl text-(--c-ink) font-light mb-2 group-hover:text-(--c-accent) transition-colors">
         {service.title}
       </span>
-      <span className="block font-['Inter'] text-sm text-[#504440] font-light leading-relaxed max-w-[42ch]">
+      <span className="block font-(family-name:--f-body) text-sm text-(--c-body) font-light leading-relaxed max-w-[42ch]">
         {service.summary}
       </span>
-      <span className="mt-5 inline-block text-xs uppercase tracking-widest text-[#84523e] font-semibold">
+      <span className="mt-5 inline-block text-xs uppercase tracking-widest text-(--c-accent) font-semibold">
         What&rsquo;s included &rarr;
       </span>
     </span>
@@ -118,6 +122,7 @@ export const BookableServices: React.FC<BookableServicesProps> = ({ availableCod
   // to that URL -- which also makes each service's form shareable and lets the
   // browser's Back button close it.
   const { path, navigate } = useRouter();
+  const tilesRef = useStagger<HTMLDivElement>({ step: 110 }, [availableCodes.join()]);
 
   const offered = BOOKABLE_SERVICES.filter((s) => availableCodes.includes(s.code));
   if (offered.length === 0) return null;
@@ -129,23 +134,22 @@ export const BookableServices: React.FC<BookableServicesProps> = ({ availableCod
   };
 
   return (
-    <section id="book" className="py-20 sm:py-28 bg-[#fef9f2]">
+    <section id="book" className="py-20 sm:py-28 bg-(--c-bg)">
       <div className="max-w-[1280px] mx-auto px-4 sm:px-8">
-        <div className="mb-12 border-b border-[#d4c3bd]/30 pb-8">
-          <span className="text-xs uppercase tracking-widest text-[#84523e] font-semibold mb-2 block font-['Inter']">
+        <div className="mb-12 border-b border-(--c-line)/30 pb-8">
+          <span className="text-xs uppercase tracking-widest text-(--c-accent) font-semibold mb-2 flex items-center gap-3 font-(family-name:--f-body)">
+            <Pulse />
             Book a visit
           </span>
-          <h2 className="font-['Plus_Jakarta_Sans'] text-3xl sm:text-4xl lg:text-5xl text-[#3C2117] font-light">
-            What would you like to book?
-          </h2>
-          <p className="font-['Inter'] text-base sm:text-lg text-[#504440] font-light leading-relaxed mt-4 max-w-[60ch]">
+          <SplitWords className="font-(family-name:--f-display) text-3xl sm:text-4xl lg:text-5xl text-(--c-ink) font-light">What would you like to book?</SplitWords>
+          <p className="font-(family-name:--f-body) text-base sm:text-lg text-(--c-body) font-light leading-relaxed mt-4 max-w-[60ch]">
             Pick a service to see what it includes and request it from there.
             Not sure which one your pet needs? Choose whichever looks closest,
             or call the clinic and we will advise.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 lg:grid-rows-3 gap-px bg-[#d4c3bd]/20">
+        <div ref={tilesRef} className="grid grid-cols-1 lg:grid-cols-2 lg:grid-rows-3 gap-px bg-(--c-line)/20">
           {offered.map((s) => (
             <Tile
               key={s.code}
@@ -165,12 +169,12 @@ export const BookableServices: React.FC<BookableServicesProps> = ({ availableCod
         <a
           href={bookingHref(path)}
           onClick={open(bookingHref(path))}
-          className="mt-px block w-full bg-[#f8f3ed] border border-[#d4c3bd]/30 px-8 py-7 text-left hover:bg-white transition-colors duration-500 group"
+          className="mt-px block w-full bg-(--c-surface) border border-(--c-line)/30 px-8 py-7 text-left hover:bg-white transition-colors duration-500 group"
         >
-          <span className="block font-['Plus_Jakarta_Sans'] text-lg sm:text-xl text-[#3C2117] font-light mb-1 group-hover:text-[#84523e] transition-colors">
+          <span className="block font-(family-name:--f-display) text-lg sm:text-xl text-(--c-ink) font-light mb-1 group-hover:text-(--c-accent) transition-colors">
             Not sure which one your pet needs?
           </span>
-          <span className="block font-['Inter'] text-sm text-[#504440] font-light">
+          <span className="block font-(family-name:--f-body) text-sm text-(--c-body) font-light">
             Tell us what is troubling them and we will advise when we call
             &nbsp;&rarr;
           </span>

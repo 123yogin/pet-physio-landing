@@ -33,6 +33,8 @@ import { Footer } from '../components/Footer';
 import { LightboxModal } from '../components/LightboxModal';
 
 import { GalleryItem } from '../types';
+import { SITE } from '../seo/siteConfig';
+import { IntroController, ScrollMarquee } from '../motion';
 
 export const HomePage: React.FC = () => {
   const [selectedGalleryImage, setSelectedGalleryImage] = useState<GalleryItem | null>(null);
@@ -56,7 +58,11 @@ export const HomePage: React.FC = () => {
 
 
   return (
-    <div className="min-h-screen bg-[#fef9f2] text-[#3C2117] font-['Inter'] selection:bg-[#3C2117] selection:text-white flex flex-col">
+    <div className="min-h-screen bg-(--c-bg) text-(--c-ink) font-(family-name:--f-body) selection:bg-(--c-ink) selection:text-white flex flex-col">
+      {/* Ends the intro overlay (home only). The rest of the motion layer
+          is mounted site-wide in App. */}
+      <IntroController />
+
       {/* Top Navigation Bar */}
       <Navbar
         onOpenBooking={openBooking}
@@ -67,6 +73,21 @@ export const HomePage: React.FC = () => {
         <Hero
           onOpenBooking={openBooking}
         />
+
+        {/* Oversized drifting type, after the reference site's scroll
+            marquees: speeds up with the scroll and turns with it. */}
+        <div className="py-10 sm:py-14 border-y border-(--c-line)/30 bg-(--c-bg) overflow-hidden">
+          <ScrollMarquee
+            text="Life is movement — movement is life —"
+            className="font-(family-name:--f-display) font-light text-(--c-ink) text-[64px] sm:text-[110px] lg:text-[150px] leading-none tracking-tight"
+          />
+          <ScrollMarquee
+            text="Physiotherapy · Hydrotherapy · Acupuncture · Home visits ·"
+            baseSpeed={-2}
+            outline
+            className="mt-2 font-(family-name:--f-display) font-light text-[40px] sm:text-[64px] lg:text-[84px] leading-none tracking-tight"
+          />
+        </div>
 
         <TrustMetrics />
 
@@ -115,6 +136,16 @@ export const HomePage: React.FC = () => {
           page carries the same three facts in the footer, which renders
           formattedAddress() and the phone from the same siteConfig source. */
       }
+
+      {/* Closing drift above the footer, carrying the clinic's own tagline. */}
+      <div className="py-10 sm:py-14 bg-(--c-bg) border-t border-(--c-line)/30 overflow-hidden">
+        <ScrollMarquee
+          text={`${SITE.tagline} —`}
+          baseSpeed={2.5}
+          outline
+          className="font-(family-name:--f-display) font-light text-[56px] sm:text-[96px] lg:text-[128px] leading-none tracking-tight"
+        />
+      </div>
 
       {/* Footer */}
       <Footer />

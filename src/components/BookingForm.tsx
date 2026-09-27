@@ -176,21 +176,21 @@ export const BookingForm: React.FC<BookingFormProps> = ({
   const formPanel = (
     <div className={isPanel
       ? ''
-      : 'bg-[#f8f3ed] p-8 sm:p-12 border border-[#d4c3bd]/50 shadow-xs'}>
+      : 'bg-(--c-surface) p-8 sm:p-12 border border-(--c-line)/50 shadow-xs'}>
           {/* No heading in a panel: the dialog already names the service and
               says "Request <service>" directly above. Two headings for one
               action is the thing this layout exists to remove. The card and
               padding go too -- a bordered box inside a bordered dialog. */}
           {!isPanel && (
-            <h3 className="font-['Plus_Jakarta_Sans'] text-2xl text-[#3C2117] mb-8 font-medium border-b border-[#d4c3bd]/30 pb-4">
+            <h3 className="font-(family-name:--f-display) text-2xl text-(--c-ink) mb-8 font-medium border-b border-(--c-line)/30 pb-4">
               Request An Appointment
             </h3>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-6 font-['Inter']">
+          <form onSubmit={handleSubmit} className="space-y-6 font-(family-name:--f-body)">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div>
-                <label className="block text-xs tracking-widest text-[#504440] uppercase mb-2 font-medium" htmlFor="firstName">
+                <label className="block text-xs tracking-widest text-(--c-body) uppercase mb-2 font-medium" htmlFor="firstName">
                   First Name *
                 </label>
                 <input
@@ -200,12 +200,12 @@ export const BookingForm: React.FC<BookingFormProps> = ({
                   value={formData.firstName}
                   onChange={handleChange}
                   placeholder="e.g. Eleanor"
-                  className="w-full border-b border-[#3C2117]/40 focus:border-[#3C2117] bg-transparent px-0 py-2.5 text-sm text-[#3C2117] focus:outline-none"
+                  className="w-full border-b border-(--c-ink)/40 focus:border-(--c-ink) bg-transparent px-0 py-2.5 text-sm text-(--c-ink) focus:outline-none"
                 />
               </div>
 
               <div>
-                <label className="block text-xs tracking-widest text-[#504440] uppercase mb-2 font-medium" htmlFor="lastName">
+                <label className="block text-xs tracking-widest text-(--c-body) uppercase mb-2 font-medium" htmlFor="lastName">
                   Last Name
                 </label>
                 <input
@@ -214,14 +214,14 @@ export const BookingForm: React.FC<BookingFormProps> = ({
                   value={formData.lastName}
                   onChange={handleChange}
                   placeholder="e.g. Vance"
-                  className="w-full border-b border-[#3C2117]/40 focus:border-[#3C2117] bg-transparent px-0 py-2.5 text-sm text-[#3C2117] focus:outline-none"
+                  className="w-full border-b border-(--c-ink)/40 focus:border-(--c-ink) bg-transparent px-0 py-2.5 text-sm text-(--c-ink) focus:outline-none"
                 />
               </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div>
-                <label className="block text-xs tracking-widest text-[#504440] uppercase mb-2 font-medium" htmlFor="petName">
+                <label className="block text-xs tracking-widest text-(--c-body) uppercase mb-2 font-medium" htmlFor="petName">
                   Pet's Name *
                 </label>
                 <input
@@ -231,12 +231,12 @@ export const BookingForm: React.FC<BookingFormProps> = ({
                   value={formData.petName}
                   onChange={handleChange}
                   placeholder="e.g. Winston"
-                  className="w-full border-b border-[#3C2117]/40 focus:border-[#3C2117] bg-transparent px-0 py-2.5 text-sm text-[#3C2117] focus:outline-none"
+                  className="w-full border-b border-(--c-ink)/40 focus:border-(--c-ink) bg-transparent px-0 py-2.5 text-sm text-(--c-ink) focus:outline-none"
                 />
               </div>
 
               <div>
-                <label className="block text-xs tracking-widest text-[#504440] uppercase mb-2 font-medium" htmlFor="speciesBreed">
+                <label className="block text-xs tracking-widest text-(--c-body) uppercase mb-2 font-medium" htmlFor="speciesBreed">
                   Species / Breed
                 </label>
                 <input
@@ -245,14 +245,14 @@ export const BookingForm: React.FC<BookingFormProps> = ({
                   value={formData.speciesBreed}
                   onChange={handleChange}
                   placeholder="e.g. Dog / Golden Retriever"
-                  className="w-full border-b border-[#3C2117]/40 focus:border-[#3C2117] bg-transparent px-0 py-2.5 text-sm text-[#3C2117] focus:outline-none"
+                  className="w-full border-b border-(--c-ink)/40 focus:border-(--c-ink) bg-transparent px-0 py-2.5 text-sm text-(--c-ink) focus:outline-none"
                 />
               </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div>
-                <label className="block text-xs tracking-widest text-[#504440] uppercase mb-2 font-medium" htmlFor="email">
+                <label className="block text-xs tracking-widest text-(--c-body) uppercase mb-2 font-medium" htmlFor="email">
                   Email Address *
                 </label>
                 <input
@@ -262,12 +262,12 @@ export const BookingForm: React.FC<BookingFormProps> = ({
                   value={formData.email}
                   onChange={handleChange}
                   placeholder="e.g. eleanor@example.com"
-                  className="w-full border-b border-[#3C2117]/40 focus:border-[#3C2117] bg-transparent px-0 py-2.5 text-sm text-[#3C2117] focus:outline-none"
+                  className="w-full border-b border-(--c-ink)/40 focus:border-(--c-ink) bg-transparent px-0 py-2.5 text-sm text-(--c-ink) focus:outline-none"
                 />
               </div>
 
               <div>
-                <label className="block text-xs tracking-widest text-[#504440] uppercase mb-2 font-medium" htmlFor="phone">
+                <label className="block text-xs tracking-widest text-(--c-body) uppercase mb-2 font-medium" htmlFor="phone">
                   Phone Number *
                 </label>
                 <input
@@ -277,7 +277,7 @@ export const BookingForm: React.FC<BookingFormProps> = ({
                   value={formData.phone}
                   onChange={handleChange}
                   placeholder="e.g. (555) 019-2831"
-                  className="w-full border-b border-[#3C2117]/40 focus:border-[#3C2117] bg-transparent px-0 py-2.5 text-sm text-[#3C2117] focus:outline-none"
+                  className="w-full border-b border-(--c-ink)/40 focus:border-(--c-ink) bg-transparent px-0 py-2.5 text-sm text-(--c-ink) focus:outline-none"
                 />
               </div>
             </div>
@@ -314,7 +314,7 @@ export const BookingForm: React.FC<BookingFormProps> = ({
                 no way to say what they want. */}
             {services.length > 0 && (!isPanel || !initialService) && (
               <div>
-                <label className="block text-xs tracking-widest text-[#504440] uppercase mb-2 font-medium" htmlFor="service">
+                <label className="block text-xs tracking-widest text-(--c-body) uppercase mb-2 font-medium" htmlFor="service">
                   Service Required
                 </label>
                 <select
@@ -322,7 +322,7 @@ export const BookingForm: React.FC<BookingFormProps> = ({
                   name="service"
                   value={formData.service}
                   onChange={handleChange}
-                  className="w-full border-b border-[#3C2117]/40 focus:border-[#3C2117] bg-transparent px-0 py-2.5 text-sm text-[#3C2117] focus:outline-none cursor-pointer"
+                  className="w-full border-b border-(--c-ink)/40 focus:border-(--c-ink) bg-transparent px-0 py-2.5 text-sm text-(--c-ink) focus:outline-none cursor-pointer"
                 >
                   <option value="">Not sure / please advise</option>
                   {services.map((s) => (
@@ -336,14 +336,14 @@ export const BookingForm: React.FC<BookingFormProps> = ({
 
             {SPECIALISTS.length > 1 && (
               <div>
-                <label className="block text-xs tracking-widest text-[#504440] uppercase mb-2 font-medium" htmlFor="preferredSpecialist">
+                <label className="block text-xs tracking-widest text-(--c-body) uppercase mb-2 font-medium" htmlFor="preferredSpecialist">
                   Preferred Specialist
                 </label>
                 <select
                   id="preferredSpecialist"
                   value={formData.preferredSpecialist}
                   onChange={handleChange}
-                  className="w-full border-b border-[#3C2117]/40 focus:border-[#3C2117] bg-transparent px-0 py-2.5 text-sm text-[#3C2117] focus:outline-none cursor-pointer"
+                  className="w-full border-b border-(--c-ink)/40 focus:border-(--c-ink) bg-transparent px-0 py-2.5 text-sm text-(--c-ink) focus:outline-none cursor-pointer"
                 >
                   <option value="">Any Available Specialist</option>
                   {SPECIALISTS.map((s) => (
@@ -356,7 +356,7 @@ export const BookingForm: React.FC<BookingFormProps> = ({
             )}
 
             <div>
-              <label className="block text-xs tracking-widest text-[#504440] uppercase mb-2 font-medium" htmlFor="reason">
+              <label className="block text-xs tracking-widest text-(--c-body) uppercase mb-2 font-medium" htmlFor="reason">
                 Reason For Visit & Symptoms
               </label>
               <textarea
@@ -365,7 +365,7 @@ export const BookingForm: React.FC<BookingFormProps> = ({
                 value={formData.reason}
                 onChange={handleChange}
                 placeholder="Describe your pet's condition, limp, surgical history, or mobility concerns..."
-                className="w-full border-b border-[#3C2117]/40 focus:border-[#3C2117] bg-transparent px-0 py-2.5 text-sm text-[#3C2117] focus:outline-none resize-none"
+                className="w-full border-b border-(--c-ink)/40 focus:border-(--c-ink) bg-transparent px-0 py-2.5 text-sm text-(--c-ink) focus:outline-none resize-none"
               />
             </div>
 
@@ -376,7 +376,7 @@ export const BookingForm: React.FC<BookingFormProps> = ({
               )}
               <button
               type="submit"
-              className="w-full bg-[#3C2117] text-[#ffffff] py-4 rounded-none text-xs tracking-widest uppercase font-medium hover:bg-[#504440] transition-colors mt-6 cursor-pointer flex items-center justify-center gap-2"
+              className="w-full bg-(--c-ink) text-(--c-card) py-4 rounded-none text-xs tracking-widest uppercase font-medium hover:bg-(--c-body) transition-colors mt-6 cursor-pointer flex items-center justify-center gap-2"
              disabled={submitting}>
                 {submitting ? (
                   <span>Sending…</span>
@@ -398,7 +398,7 @@ export const BookingForm: React.FC<BookingFormProps> = ({
   if (isPanel) return formPanel;
 
   return (
-    <section id="contact" className="py-20 sm:py-28 bg-[#ffffff] border-t border-[#d4c3bd]/30">
+    <section id="contact" className="py-20 sm:py-28 bg-(--c-card) border-t border-(--c-line)/30">
       <div className="max-w-[1280px] mx-auto px-4 sm:px-8">
 
         {/* Left Column: Contact Details.
@@ -415,53 +415,53 @@ export const BookingForm: React.FC<BookingFormProps> = ({
             here as a duplicate, and they are useful beside the form regardless. */}
         <div>
           <div className="space-y-6 mb-10">
-            <div className="flex items-start gap-5 border-l-2 border-[#3C2117]/30 pl-5">
-              <MapPin className="w-5 h-5 text-[#3C2117] mt-0.5 shrink-0" />
+            <div className="flex items-start gap-5 border-l-2 border-(--c-ink)/30 pl-5">
+              <MapPin className="w-5 h-5 text-(--c-ink) mt-0.5 shrink-0" />
               <div>
-                <h4 className="font-['Inter'] text-xs tracking-widest text-[#84523e] uppercase mb-1 font-semibold">
+                <h4 className="font-(family-name:--f-body) text-xs tracking-widest text-(--c-accent) uppercase mb-1 font-semibold">
                   Clinic Location
                 </h4>
-                <p className="font-['Inter'] text-sm sm:text-base text-[#3C2117] font-medium">
+                <p className="font-(family-name:--f-body) text-sm sm:text-base text-(--c-ink) font-medium">
                   {formattedAddress()}
                 </p>
               </div>
             </div>
 
-            <div className="flex items-start gap-5 border-l-2 border-[#3C2117]/30 pl-5">
-              <Phone className="w-5 h-5 text-[#3C2117] mt-0.5 shrink-0" />
+            <div className="flex items-start gap-5 border-l-2 border-(--c-ink)/30 pl-5">
+              <Phone className="w-5 h-5 text-(--c-ink) mt-0.5 shrink-0" />
               <div>
-                <h4 className="font-['Inter'] text-xs tracking-widest text-[#84523e] uppercase mb-1 font-semibold">
+                <h4 className="font-(family-name:--f-body) text-xs tracking-widest text-(--c-accent) uppercase mb-1 font-semibold">
                   Telephone Intake
                 </h4>
-                <p className="font-['Inter'] text-sm sm:text-base text-[#3C2117] font-medium">
-                  <a href={`tel:${SITE.contact.phone}`} className="hover:text-[#84523e] transition-colors">
+                <p className="font-(family-name:--f-body) text-sm sm:text-base text-(--c-ink) font-medium">
+                  <a href={`tel:${SITE.contact.phone}`} className="hover:text-(--c-accent) transition-colors">
                     {SITE.contact.phoneDisplay}
                   </a>
                 </p>
               </div>
             </div>
 
-            <div className="flex items-start gap-5 border-l-2 border-[#3C2117]/30 pl-5">
-              <Mail className="w-5 h-5 text-[#3C2117] mt-0.5 shrink-0" />
+            <div className="flex items-start gap-5 border-l-2 border-(--c-ink)/30 pl-5">
+              <Mail className="w-5 h-5 text-(--c-ink) mt-0.5 shrink-0" />
               <div>
-                <h4 className="font-['Inter'] text-xs tracking-widest text-[#84523e] uppercase mb-1 font-semibold">
+                <h4 className="font-(family-name:--f-body) text-xs tracking-widest text-(--c-accent) uppercase mb-1 font-semibold">
                   Email Inquiries
                 </h4>
-                <p className="font-['Inter'] text-sm sm:text-base text-[#3C2117] font-medium">
-                  <a href={`mailto:${SITE.contact.email}`} className="hover:text-[#84523e] transition-colors">
+                <p className="font-(family-name:--f-body) text-sm sm:text-base text-(--c-ink) font-medium">
+                  <a href={`mailto:${SITE.contact.email}`} className="hover:text-(--c-accent) transition-colors">
                     {SITE.contact.email}
                   </a>
                 </p>
               </div>
             </div>
 
-            <div className="flex items-start gap-5 border-l-2 border-[#3C2117]/30 pl-5">
-              <Clock className="w-5 h-5 text-[#3C2117] mt-0.5 shrink-0" />
+            <div className="flex items-start gap-5 border-l-2 border-(--c-ink)/30 pl-5">
+              <Clock className="w-5 h-5 text-(--c-ink) mt-0.5 shrink-0" />
               <div>
-                <h4 className="font-['Inter'] text-xs tracking-widest text-[#84523e] uppercase mb-1 font-semibold">
+                <h4 className="font-(family-name:--f-body) text-xs tracking-widest text-(--c-accent) uppercase mb-1 font-semibold">
                   Hours Of Operation
                 </h4>
-                <p className="font-['Inter'] text-sm text-[#3C2117] font-medium">
+                <p className="font-(family-name:--f-body) text-sm text-(--c-ink) font-medium">
                   {openingHoursSummary()}
                 </p>
               </div>

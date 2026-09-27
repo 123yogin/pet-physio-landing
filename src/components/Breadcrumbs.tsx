@@ -23,21 +23,21 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ trail, maxWidthClass =
 
   return (
     <nav aria-label="Breadcrumb" className={`w-full ${maxWidthClass} mx-auto px-4 sm:px-8 pt-8 pb-6`}>
-      <ol className="flex flex-wrap items-center gap-1.5 text-xs font-['Inter'] text-[#504440]">
+      <ol className="flex flex-wrap items-center gap-1.5 text-xs font-(family-name:--f-body) text-(--c-body)">
         {trail.map((crumb, index) => {
           const isLast = index === trail.length - 1;
           return (
             <li key={`${crumb.path}-${index}`} className="flex items-center gap-1.5">
               {isLast ? (
-                <span aria-current="page" className="text-[#3C2117] font-medium">
+                <span aria-current="page" className="text-(--c-ink) font-medium">
                   {crumb.name}
                 </span>
               ) : (
                 <>
-                  <Link to={crumb.path} className="hover:text-[#84523e] transition-colors uppercase tracking-wider">
+                  <Link to={crumb.path} className="hover:text-(--c-accent) transition-colors uppercase tracking-wider">
                     {crumb.name}
                   </Link>
-                  <ChevronRight className="w-3 h-3 text-[#d4c3bd]" aria-hidden="true" />
+                  <ChevronRight className="w-3 h-3 text-(--c-line)" aria-hidden="true" />
                 </>
               )}
             </li>

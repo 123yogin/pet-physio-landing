@@ -59,10 +59,10 @@ function isoDate(offsetDays = 0): string {
 }
 
 const field =
-  'w-full bg-transparent border-b border-[#d4c3bd] focus:border-[#84523e] outline-none py-2 text-[#3C2117] placeholder:text-[#a8988f]';
-const labelCls = 'block text-xs tracking-widest text-[#504440] uppercase mb-2 font-medium';
+  'w-full bg-transparent border-b border-(--c-line) focus:border-(--c-accent) outline-none py-2 text-(--c-ink) placeholder:text-(--c-mute-2)';
+const labelCls = 'block text-xs tracking-widest text-(--c-body) uppercase mb-2 font-medium';
 const primaryBtn =
-  'w-full bg-[#3C2117] text-white py-3 text-xs uppercase tracking-widest font-semibold hover:bg-[#84523e] transition-colors disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2';
+  'w-full bg-(--c-ink) text-white py-3 text-xs uppercase tracking-widest font-semibold hover:bg-(--c-accent) transition-colors disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2';
 
 export const FacilitySlotBooking: React.FC<Props> = ({ onClose }) => {
   type Phase = 'select' | 'confirm' | 'done';
@@ -210,14 +210,14 @@ export const FacilitySlotBooking: React.FC<Props> = ({ onClose }) => {
   if (phase === 'done' && booked) {
     return (
       <div className="pt-2 text-center">
-        <div className="w-14 h-14 rounded-full bg-[#3C2117] text-white flex items-center justify-center mx-auto mb-5">
+        <div className="w-14 h-14 rounded-full bg-(--c-ink) text-white flex items-center justify-center mx-auto mb-5">
           <Check className="w-7 h-7" />
         </div>
-        <h4 className="font-['Plus_Jakarta_Sans'] text-2xl text-[#3C2117] font-light mb-3">
+        <h4 className="font-(family-name:--f-display) text-2xl text-(--c-ink) font-light mb-3">
           Slots held
         </h4>
-        <p className="font-['Inter'] text-sm text-[#504440] leading-relaxed mb-5">{booked.detail}</p>
-        <p className="text-xs uppercase tracking-widest text-[#84523e] font-semibold mb-6">
+        <p className="font-(family-name:--f-body) text-sm text-(--c-body) leading-relaxed mb-5">{booked.detail}</p>
+        <p className="text-xs uppercase tracking-widest text-(--c-accent) font-semibold mb-6">
           Reference {booked.reference}
         </p>
         <button type="button" onClick={onClose} className={primaryBtn}>
@@ -234,26 +234,26 @@ export const FacilitySlotBooking: React.FC<Props> = ({ onClose }) => {
         {/* Countdown banner — the "seats blocked for 09:59" moment. */}
         <div
           className={`flex items-center justify-between px-4 py-3 mb-6 border ${
-            expired ? 'border-[#b23b3b]/40 bg-[#f7ecec]' : 'border-[#84523e]/30 bg-[#f8f3ed]'
+            expired ? 'border-[#b23b3b]/40 bg-[#f7ecec]' : 'border-(--c-accent)/30 bg-(--c-surface)'
           }`}
         >
-          <span className="flex items-center gap-2 text-sm text-[#3C2117]">
+          <span className="flex items-center gap-2 text-sm text-(--c-ink)">
             {expired ? (
               <AlertCircle className="w-4 h-4 text-[#b23b3b]" />
             ) : (
-              <Clock className="w-4 h-4 text-[#84523e]" />
+              <Clock className="w-4 h-4 text-(--c-accent)" />
             )}
             {expired ? 'Your hold has expired' : 'Slots held for you'}
           </span>
           {!expired && (
-            <span className="font-mono text-lg font-semibold text-[#84523e] tabular-nums">{mmss}</span>
+            <span className="font-mono text-lg font-semibold text-(--c-accent) tabular-nums">{mmss}</span>
           )}
         </div>
 
-        <p className="flex items-center gap-2 text-xs uppercase tracking-widest text-[#84523e] font-semibold mb-1">
+        <p className="flex items-center gap-2 text-xs uppercase tracking-widest text-(--c-accent) font-semibold mb-1">
           {hold.slots.map((s) => s.label).join('  ·  ')}
         </p>
-        <p className="text-xs text-[#504440] mb-6">
+        <p className="text-xs text-(--c-body) mb-6">
           {new Date(hold.date).toLocaleDateString(undefined, {
             weekday: 'long',
             day: 'numeric',
@@ -329,7 +329,7 @@ export const FacilitySlotBooking: React.FC<Props> = ({ onClose }) => {
             <button
               type="button"
               onClick={startOver}
-              className="w-full mt-3 text-xs uppercase tracking-widest text-[#84523e] hover:text-[#3C2117] transition-colors"
+              className="w-full mt-3 text-xs uppercase tracking-widest text-(--c-accent) hover:text-(--c-ink) transition-colors"
             >
               Back
             </button>
@@ -342,7 +342,7 @@ export const FacilitySlotBooking: React.FC<Props> = ({ onClose }) => {
   // ---- Step 1: select the date and slots ------------------------------------
   return (
     <div className="pt-2">
-      <p className="flex items-center gap-2 text-xs uppercase tracking-widest text-[#84523e] font-semibold mb-5">
+      <p className="flex items-center gap-2 text-xs uppercase tracking-widest text-(--c-accent) font-semibold mb-5">
         <CalendarCheck className="w-4 h-4" />
         Choose a day and time
       </p>
@@ -362,17 +362,17 @@ export const FacilitySlotBooking: React.FC<Props> = ({ onClose }) => {
 
       <span className={labelCls}>
         Time slot{' '}
-        <span className="text-[#84523e] normal-case tracking-normal font-normal">
+        <span className="text-(--c-accent) normal-case tracking-normal font-normal">
           — up to {maxSlots}, {avail?.beds_total ?? 6} beds each
         </span>
       </span>
 
       {loading ? (
-        <div className="flex items-center gap-2 text-sm text-[#504440] py-6">
+        <div className="flex items-center gap-2 text-sm text-(--c-body) py-6">
           <Loader2 className="w-4 h-4 animate-spin" /> Checking availability…
         </div>
       ) : !avail ? (
-        <p className="text-sm text-[#84523e] py-4">
+        <p className="text-sm text-(--c-accent) py-4">
           Could not load availability. Please call the clinic to book.
         </p>
       ) : (
@@ -390,17 +390,17 @@ export const FacilitySlotBooking: React.FC<Props> = ({ onClose }) => {
                 onClick={() => toggleSlot(s.slot, s.beds_available)}
                 className={`relative text-left p-3 border transition-colors ${
                   full
-                    ? 'border-[#d4c3bd]/40 bg-[#f2ede7] text-[#a8988f] cursor-not-allowed'
+                    ? 'border-(--c-line)/40 bg-(--c-surface-2) text-(--c-mute-2) cursor-not-allowed'
                     : isChosen
-                      ? 'border-[#3C2117] bg-[#3C2117] text-white'
+                      ? 'border-(--c-ink) bg-(--c-ink) text-white'
                       : blocked
-                        ? 'border-[#d4c3bd]/40 text-[#a8988f]'
-                        : 'border-[#d4c3bd] text-[#3C2117] hover:border-[#84523e]'
+                        ? 'border-(--c-line)/40 text-(--c-mute-2)'
+                        : 'border-(--c-line) text-(--c-ink) hover:border-(--c-accent)'
                 }`}
               >
                 {isChosen && <Check className="absolute top-2 right-2 w-4 h-4" />}
                 <span className="block font-medium text-sm">{s.label}</span>
-                <span className={`block text-xs mt-1 ${isChosen ? 'text-white/80' : 'text-[#84523e]'}`}>
+                <span className={`block text-xs mt-1 ${isChosen ? 'text-white/80' : 'text-(--c-accent)'}`}>
                   {full ? 'Full' : `${s.beds_available} of ${s.beds_total} beds free`}
                 </span>
               </button>
@@ -429,7 +429,7 @@ export const FacilitySlotBooking: React.FC<Props> = ({ onClose }) => {
           ? `Hold ${chosen.length} slot${chosen.length > 1 ? 's' : ''}`
           : 'Choose a slot'}
       </button>
-      <p className="text-xs text-[#84523e] mt-3 leading-relaxed">
+      <p className="text-xs text-(--c-accent) mt-3 leading-relaxed">
         Your slots are held for a few minutes while you enter your details, then the clinic confirms
         by phone. Day care is offered alongside a course of physiotherapy.
       </p>
