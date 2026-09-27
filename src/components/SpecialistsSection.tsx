@@ -24,7 +24,9 @@ export const SpecialistsSection: React.FC<SpecialistsSectionProps> = ({
     const spec = SPECIALISTS[0];
     const [first, ...rest] = spec.name.split(' ');
     return (
-      <section id="about" className="py-20 sm:py-28 bg-(--c-surface) overflow-hidden">
+      // No id here: this variant sits behind SplitDoorsReveal, whose wrapper
+      // carries #about so a nav jump lands with the doors already open.
+      <section className="py-20 sm:py-28 bg-(--c-surface) overflow-hidden">
         <div ref={portraitRef} className="max-w-[1280px] mx-auto px-4 sm:px-8 grid lg:grid-cols-12 gap-12 lg:gap-20 items-center">
           <div className="lg:col-span-5">
             {spec.imageUrl && (

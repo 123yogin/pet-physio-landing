@@ -106,9 +106,9 @@ export const HomePage: React.FC = () => {
         <SuccessStories />
 
         {/* Split-doors reveal: the heading parts to uncover the clinician. */}
-        <SplitDoorsReveal />
-
-        <SpecialistsSection onOpenBookingWithSpecialist={handleBookWithSpecialist} />
+        <SplitDoorsReveal>
+          <SpecialistsSection onOpenBookingWithSpecialist={handleBookWithSpecialist} />
+        </SplitDoorsReveal>
 
         <GallerySection
           onSelectImage={(item) => setSelectedGalleryImage(item)}
