@@ -108,6 +108,26 @@ const Tile: React.FC<{
       <span className="block font-(family-name:--f-body) text-sm text-(--c-body) font-light leading-relaxed max-w-[42ch]">
         {service.summary}
       </span>
+
+      {/* Price menu, on the card itself for services that have one (Swimming,
+          Grooming). Informational — the visit is still reserved and paid at the
+          clinic; see the booking panel. */}
+      {service.priceList && (
+        <span className="mt-4 block max-w-[42ch] border-t border-(--c-line)/30 pt-3">
+          {service.priceList.map((p) => (
+            <span
+              key={p.label}
+              className="flex justify-between gap-4 font-(family-name:--f-body) text-xs text-(--c-body) font-light py-1"
+            >
+              <span>{p.label}</span>
+              <span className="text-(--c-ink) font-medium whitespace-nowrap">
+                &#8377;{p.price.toLocaleString('en-IN')}
+              </span>
+            </span>
+          ))}
+        </span>
+      )}
+
       <span className="mt-5 inline-block text-xs uppercase tracking-widest text-(--c-accent) font-semibold">
         What&rsquo;s included &rarr;
       </span>
@@ -122,7 +142,10 @@ export const BookableServices: React.FC<BookableServicesProps> = ({ availableCod
   // to that URL -- which also makes each service's form shareable and lets the
   // browser's Back button close it.
   const { path, navigate } = useRouter();
-  const tilesRef = useStagger<HTMLDivElement>({ step: 110 }, [availableCodes.join()]);
+  // `container` so every tile reveals together when the grid enters view — the
+  // bento is three rows tall, and the per-tile default left the lower rows blank
+  // while the top was on screen (the empty band under the cards).
+  const tilesRef = useStagger<HTMLDivElement>({ step: 110, trigger: 'container' }, [availableCodes.join()]);
 
   const offered = BOOKABLE_SERVICES.filter((s) => availableCodes.includes(s.code));
   if (offered.length === 0) return null;

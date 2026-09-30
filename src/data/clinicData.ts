@@ -17,8 +17,8 @@ export const CONDITIONS: ConditionItem[] = [
     recommendedTherapies: ['Laser Therapy', 'Hydrotherapy', 'Targeted Massage', 'Joint Supplements Plan', 'Pulsed electro-magnetic field (PEMF)', 'Acupuncture', 'Electro-acupuncture', 'TENS'],
     expectedRecoveryTime: 'Ongoing maintenance & visible improvement within 3-4 weeks',
     imageUrl:
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuDOgNL-gjqnC0wBg_bOL5-VaA7riWGDt8yinitZd_YHae2a9WFIGm6LjKsow3T5dYNWIu9v3habEmwWEDPBPM8th1pZACvXV3zqfx88GgpkQ_1ibFsEQ0pJk4ExB2lE0Ojy6jWSMO-M3jSASuw8mC5RcC3uaFB1jyGWf1-O8vgaLkWjohxXTWirFY3ls9HJXhIA8TjUOwl9lenAWnCxmjrCSLG64n1xUUAcsxlz_Tepyk2y97iDj3Gx',
-    altText: 'Dog receiving gentle joint massage therapy for arthritis',
+      '/photos/conditions/arthritis.jpg',
+    altText: 'A Labrador resting — a breed prone to arthritis in later life',
   },
   {
     id: 'ivdd',
@@ -30,8 +30,8 @@ export const CONDITIONS: ConditionItem[] = [
     recommendedTherapies: ['Electro-acupuncture', 'TENS', 'Hydrotherapy — Indoor Swimming Pool', 'Class IV Laser', 'Neuromuscular Electrical Stimulation', 'Pulsed electro-magnetic field (PEMF)', 'Acupuncture'],
     expectedRecoveryTime: '6 to 16 weeks based on severity (Grade I to V)',
     imageUrl:
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuBpcya24ze5l5IDEtrIV1cA9IpgXIqozowsHHO8l6D89ttYFqye-buMv3Zfo3MoJmSjUWeecGKcjpSXrp7EGEth-Qcm555uOp19mQ2HqvzR-VHI_8i6MxSZkvWYCMskb5aLKi3knBWn1moldd0XB58ooCqN4x17NgQq1E1saCULCwxjjjXo4oLvdCPX9XbBYKxljXTgiWqpoI3O-ySifnIvT0nBeSenhtH8TIXBlVotIDeQ6CXm0SVR',
-    altText: 'Dachshund supported in the indoor hydrotherapy pool for IVDD spinal recovery',
+      '/photos/conditions/ivdd.jpg',
+    altText: 'A Dachshund, a breed prone to intervertebral disc disease (IVDD)',
   },
   {
     id: 'hip-dysplasia',
@@ -56,8 +56,8 @@ export const CONDITIONS: ConditionItem[] = [
     recommendedTherapies: ['Class IV Laser Therapy', 'Passive Range of Motion (PROM)', 'Controlled Aquatic Gait Retraining', 'Home Cryotherapy Protocol', 'Pulsed electro-magnetic field (PEMF)', 'Acupuncture', 'Electro-acupuncture', 'TENS'],
     expectedRecoveryTime: '8 to 12 weeks guided post-op milestones',
     imageUrl:
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuAvI-3WE-lGQXdcDD20B1xiQ2Lhi0bDwyT675vXAGmNsMtx1xrKI-kRU9rokOTsCv8SJg30BqpHc2IVtTighJP_HRFNYq5K-lqqkjygLHTEKlwZR_votGvlUT7nLcjN-WlKHbxbbGJaJKZlBbO0mOne32osndTrNmIcF7mqX9aBB6TepzRQ2fxo0YJoF-UxlORjeJA1OFa5Vy2gPSSNSH9pfo7BU_rMnFzQJc3Dcgr-tbAw4RiRTTSn',
-    altText: 'Veterinarian gently examining dog post knee surgery',
+      '/photos/conditions/post-surgical.jpg',
+    altText: 'A Boxer resting during recovery after orthopaedic surgery',
   },
   {
     id: 'neurological-recovery',
@@ -69,8 +69,8 @@ export const CONDITIONS: ConditionItem[] = [
     recommendedTherapies: ['Proprioceptive Circuit Exercises', 'Electrical Muscle Stimulation', 'Hydrotherapy', 'Laser Therapy', 'Pulsed electro-magnetic field (PEMF)', 'Acupuncture', 'Electro-acupuncture', 'TENS'],
     expectedRecoveryTime: '8 to 20 weeks individualized neural program',
     imageUrl:
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuB5UeByUqIKRa0dshbpNaG5TpQ0vFKLn-IocfE8_XwSM_q-nH5yrd4zWYsEepp00mLboqJQQQ6cspzH_NfHibdJne0cSYC2jMZ-fyKp7ltTQ-qAq1hEaC4rW0yLPclwH1-tSFku-wJVw1tvTkWjKkxlTRlIM23qc0Y105YQJaVcz2RntNixEPu5PrAvCuhj0zaMT-5AZIvPKdEY9NldGb_bFAc3w22kilSF7hEy3-XFco-l8v8VGjv3',
-    altText: 'Dog undergoing neurological balance and coordination training',
+      '/photos/conditions/neurological-recovery.jpg',
+    altText: 'A Rottweiler standing alert during neurological rehabilitation',
   },
   {
     id: 'sports-injury',

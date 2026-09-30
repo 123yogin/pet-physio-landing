@@ -3,6 +3,8 @@ import { X, CalendarCheck } from 'lucide-react';
 import { BOOKABLE_SERVICES, BookableService } from '../data/bookableServices';
 import { BookingForm } from './BookingForm';
 import { FacilitySlotBooking } from './FacilitySlotBooking';
+import { ServiceRequestBooking } from './ServiceRequestBooking';
+import { IndoorFacilityBooking } from './IndoorFacilityBooking';
 import { BookingSuccessModal } from './BookingSuccessModal';
 import { useRouter } from '../seo/router';
 import { AppointmentData } from '../types';
@@ -78,8 +80,16 @@ export const BookingPanel: React.FC<BookingPanelProps> = ({ availableCodes }) =>
   // scrolls (the reason an earlier navigate-based version felt wrong). Reset
   // when the panel closes so the next open starts from the form again.
   const [chosenCode, setChosenCode] = React.useState('');
+  // A generic "Book appointment" opens the SERVICE PICKER first (pick what to
+  // book, then its real flow), not the "tell us about your pet" form. That
+  // enquiry form is still reachable behind "Not sure which one?" — this flag
+  // switches to it. Both reset when the panel closes.
+  const [showGeneralForm, setShowGeneralForm] = React.useState(false);
   React.useEffect(() => {
-    if (!isOpen) setChosenCode('');
+    if (!isOpen) {
+      setChosenCode('');
+      setShowGeneralForm(false);
+    }
   }, [isOpen]);
 
   const chosenService = React.useMemo(
@@ -91,12 +101,30 @@ export const BookingPanel: React.FC<BookingPanelProps> = ({ availableCodes }) =>
   );
 
   // What the panel presents: the service named in the URL, or the one picked
-  // from the general form's selector.
+  // from the service picker.
   const effectiveService = service ?? chosenService;
+  const cameFromPicker = !service && !!chosenService;
 
-  // Every bookable service uses the one-hour slot picker, EXCEPT the Indoor
-  // Facility, which takes the general "we'll call you" enquiry form.
-  const useSlots = !!effectiveService && effectiveService.code !== 'IndoorFacility';
+  // The services the clinic currently offers, in data order, for the picker.
+  const offeredServices = React.useMemo(
+    () => BOOKABLE_SERVICES.filter((s) => availableCodes.includes(s.code)),
+    [availableCodes],
+  );
+
+  // Show the service picker when the panel was opened generically (no named
+  // service, no condition reason) and the visitor has not chosen "not sure".
+  const showPicker = !effectiveService && !reasonFor && !showGeneralForm;
+
+  // Three shapes of booking behind one panel:
+  //  - Indoor Facility  -> a duration-priced BOARDING stay (its own panel).
+  //  - Physiotherapy    -> the one-hour clinic SLOT picker (a real reserved time).
+  //  - everything else  -> a slot-less REQUEST (Swimming / Grooming pick a
+  //    package, Walking a preferred time; the clinic calls back to schedule).
+  // Only physiotherapy runs on the hourly grid, so the slot picker is scoped to
+  // it rather than to "every bookable service".
+  const isBoarding = !!effectiveService && effectiveService.code === 'IndoorFacility';
+  const useSlots = !!effectiveService && effectiveService.code === 'Physiotherapy';
+  const isRequestService = !!effectiveService && !isBoarding && !useSlots;
 
   const close = React.useCallback(() => {
     const next = new URLSearchParams(search);
@@ -173,22 +201,38 @@ export const BookingPanel: React.FC<BookingPanelProps> = ({ availableCodes }) =>
               <X className="w-5 h-5" />
             </button>
 
+            {/* When a service was reached from the picker (not a direct link),
+                offer a way back to the choices without closing the panel. */}
+            {cameFromPicker && (
+              <button
+                type="button"
+                onClick={() => setChosenCode('')}
+                className="flex items-center gap-1.5 text-xs uppercase tracking-widest text-(--c-accent) hover:text-(--c-ink) font-semibold mb-4 transition-colors"
+              >
+                <span aria-hidden="true">&larr;</span> All services
+              </button>
+            )}
+
             <span className="text-xs uppercase tracking-widest text-(--c-accent) font-semibold block mb-2">
               {/* "Not sure yet" is only true when the visitor opened this from
                   the band that says so. Someone who pressed "Book an assessment
                   for IVDD" knows exactly what they want, and telling them
                   otherwise reads as the form not having listened. */}
-              {effectiveService ? 'Bookable service' : reasonFor ? 'Appointment request' : 'Not sure yet'}
+              {showPicker ? 'Book a visit' : effectiveService ? 'Bookable service' : reasonFor ? 'Appointment request' : 'Not sure yet'}
             </span>
             <h3 className="font-(family-name:--f-display) text-2xl sm:text-3xl text-(--c-ink) font-light mb-3">
-              {effectiveService ? effectiveService.title : reasonFor ? `Book for ${reasonFor}` : 'Tell us about your pet'}
+              {showPicker
+                ? 'What would you like to book?'
+                : effectiveService ? effectiveService.title : reasonFor ? `Book for ${reasonFor}` : 'Tell us about your pet'}
             </h3>
             <p className="font-(family-name:--f-body) text-sm sm:text-base text-(--c-body) font-light leading-relaxed mb-7">
-              {effectiveService
-                ? effectiveService.summary
-                : reasonFor
-                  ? `Tell us about your pet and we will call you back about ${reasonFor}. Pick the service below if you know which one you need.`
-                  : 'Describe what is troubling your pet and we will tell you which service suits them when we call. You do not have to decide now.'}
+              {showPicker
+                ? 'Pick the service you need and book it. Not sure which one? Tell us about your pet and we will advise.'
+                : effectiveService
+                  ? effectiveService.summary
+                  : reasonFor
+                    ? `Tell us about your pet and we will call you back about ${reasonFor}. Pick the service below if you know which one you need.`
+                    : 'Describe what is troubling your pet and we will tell you which service suits them when we call. You do not have to decide now.'}
             </p>
 
             {effectiveService && (
@@ -213,16 +257,63 @@ export const BookingPanel: React.FC<BookingPanelProps> = ({ availableCodes }) =>
                     {effectiveService.note}
                   </p>
                 )}
+
               </>
             )}
 
             <div className="pt-2 border-t border-(--c-line)/40">
-              {/* Every bookable service takes the one-hour slot picker, so a
-                  visitor reserves a real time. The Indoor Facility is the one
-                  exception -- it stays on the generic "we'll call you" form. */}
-              {useSlots ? (
+              {/* Physiotherapy reserves a real one-hour slot; the Indoor
+                  Facility is a duration-priced boarding stay; Swimming,
+                  Grooming and Walking are slot-less requests the clinic
+                  schedules by phone; and "not sure" falls to the general
+                  enquiry form. */}
+              {isBoarding ? (
                 <div className="mt-6">
-                  <FacilitySlotBooking onClose={close} serviceLabel={effectiveService!.title} />
+                  <IndoorFacilityBooking onClose={close} />
+                </div>
+              ) : useSlots ? (
+                <div className="mt-6">
+                  <FacilitySlotBooking
+                    onClose={close}
+                    serviceLabel={effectiveService!.title}
+                  />
+                </div>
+              ) : isRequestService ? (
+                <div className="mt-6">
+                  <ServiceRequestBooking
+                    onClose={close}
+                    serviceCode={effectiveService!.code}
+                    serviceLabel={effectiveService!.title}
+                    packages={effectiveService!.priceList}
+                    askTimeOfDay={effectiveService!.code === 'Walking'}
+                  />
+                </div>
+              ) : showPicker ? (
+                <div className="mt-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {offeredServices.map((s) => (
+                      <button
+                        key={s.code}
+                        type="button"
+                        onClick={() => setChosenCode(s.code)}
+                        className="text-left p-4 border border-(--c-line) hover:border-(--c-ink) hover:bg-(--c-surface) transition-colors group"
+                      >
+                        <span className="block font-(family-name:--f-display) text-lg text-(--c-ink) mb-1 group-hover:text-(--c-accent) transition-colors">
+                          {s.title}
+                        </span>
+                        <span className="block font-(family-name:--f-body) text-xs text-(--c-body) font-light leading-relaxed">
+                          {s.summary}
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setShowGeneralForm(true)}
+                    className="mt-5 inline-flex items-center gap-2 text-xs uppercase tracking-widest text-(--c-accent) hover:text-(--c-ink) font-semibold transition-colors"
+                  >
+                    Not sure which one? Tell us about your pet <span aria-hidden="true">&rarr;</span>
+                  </button>
                 </div>
               ) : (
                 <>

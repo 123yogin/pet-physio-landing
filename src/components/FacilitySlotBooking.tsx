@@ -3,8 +3,9 @@ import { CalendarCheck, Check, Loader2, Clock, AlertCircle } from 'lucide-react'
 
 /**
  * One-hour slot booking — a two-step, BookMyShow-style flow (minus payment).
- * Used by every bookable service EXCEPT the Indoor Facility (which takes the
- * general "we'll call you" enquiry form).
+ * Used by Physiotherapy only — the one service that reserves a real one-hour
+ * clinic slot. Swimming, Grooming and Walking are slot-less requests (see
+ * ServiceRequestBooking) and the Indoor Facility is a boarding stay.
  *
  * Step 1 (select): the visitor sees live availability — each one-hour slot,
  * 09:30–13:30, holds up to a fixed number of bookings (currently 3) and shows
@@ -50,8 +51,7 @@ interface Props {
   /** Close the whole booking panel (the visitor is done). */
   onClose: () => void;
   /** The service being booked — recorded on the reservation so the clinic
-      knows what the slot is for (this picker now serves every bookable service
-      except the Indoor Facility). */
+      knows what the slot is for. */
   serviceLabel?: string;
 }
 
@@ -189,12 +189,10 @@ export const FacilitySlotBooking: React.FC<Props> = ({ onClose, serviceLabel }) 
       const res = await fetch(`${CLINIC_API}/facility/holds/${hold.reference}/confirm`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        // Record which service the slot is for, in the note the clinic reads.
+        // Record the service and chosen package in the note the clinic reads.
         body: JSON.stringify({
           ...form,
-          note: serviceLabel
-            ? `${serviceLabel}${form.note ? ` — ${form.note}` : ''}`
-            : form.note,
+          note: [serviceLabel, form.note].filter(Boolean).join(' — '),
         }),
       });
       const data = await res.json();
@@ -437,7 +435,12 @@ export const FacilitySlotBooking: React.FC<Props> = ({ onClose, serviceLabel }) 
 
       {error && <p className="text-sm text-[#b23b3b] mb-4">{error}</p>}
 
-      <button type="button" onClick={placeHold} disabled={chosen.length === 0 || busy} className={primaryBtn}>
+      <button
+        type="button"
+        onClick={placeHold}
+        disabled={chosen.length === 0 || busy}
+        className={primaryBtn}
+      >
         {busy && <Loader2 className="w-4 h-4 animate-spin" />}
         {chosen.length > 0
           ? `Hold ${chosen.length} slot${chosen.length > 1 ? 's' : ''}`

@@ -102,8 +102,12 @@ export const SplitDoorsReveal: React.FC<{ children: React.ReactNode }> = ({ chil
         </div>
       </div>
       {/* The pin distance. A spacer, not padding: a sticky element can only
-          travel within its parent's content box, which excludes padding. */}
-      <div aria-hidden="true" className="h-[60svh] md:h-[80svh]" />
+          travel within its parent's content box, which excludes padding. Sized
+          to just past where the doors finish opening (~half a screen, matching
+          the progress mapping's -0.5 end) plus a small buffer — more than that
+          is dead scroll that reads as a big empty gap under the revealed
+          section. */}
+      <div aria-hidden="true" className="h-[55svh]" />
     </div>
   );
 };
