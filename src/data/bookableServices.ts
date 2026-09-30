@@ -33,19 +33,25 @@ export interface BookableService {
   note?: string;
   /** lucide-react icon name, mapped in the section component. */
   icon: string;
+  /**
+   * Optional price menu, shown in the booking panel. Informational — the visit
+   * is still reserved as a one-hour slot and paid at the clinic; these are what
+   * the options cost.
+   */
+  priceList?: { label: string; price: number }[];
 }
 
 export const BOOKABLE_SERVICES: BookableService[] = [
   {
     code: 'IndoorFacility',
     title: 'Indoor Facility',
-    summary: 'Supervised day care for your pet in our indoor facility, 9:30 AM to 1:30 PM. Request it and we will confirm the time by phone.',
+    summary: 'Boarding & day-care for your pet \u2014 24\u00d77, booked by the hour, day, week or month, with supervised care and walks.',
     includes: [
-      'Supervised care, 9:30 AM \u2013 1:30 PM',
-      'Under experienced vet observation',
-      'Indoor facility for physiotherapy patients',
+      'Supervised care, round the clock',
+      'Six beds, booked by duration',
+      'Walks and feeding to your preference',
     ],
-    note: 'Offered alongside a course of physiotherapy. Ask us and we will confirm what suits your pet.',
+    note: 'Pick a duration to see the price. Paid at the clinic; Aadhaar required at check-in.',
     icon: 'bed',
   },
   {
@@ -71,6 +77,11 @@ export const BOOKABLE_SERVICES: BookableService[] = [
       'Clean, filtered water',
       'Under the observation of the vet',
     ],
+    priceList: [
+      { label: 'Single session (swim & dry)', price: 1300 },
+      { label: '5 sessions', price: 900 },
+      { label: '8 sessions', price: 1100 },
+    ],
     icon: 'waves',
   },
   {
@@ -82,6 +93,12 @@ export const BOOKABLE_SERVICES: BookableService[] = [
       'Geriatric dogs’ special grooming care',
       'Herbal care',
       'Oiling massage before bath',
+    ],
+    priceList: [
+      { label: 'Shampooing', price: 1200 },
+      { label: 'Nail trimming', price: 200 },
+      { label: 'Hair clipping', price: 800 },
+      { label: 'Swim + groom + shampoo + dry', price: 2500 },
     ],
     icon: 'sparkles',
   },

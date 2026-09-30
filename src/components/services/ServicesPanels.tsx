@@ -11,24 +11,24 @@ import { onFrame, track, prefersReducedMotion } from '../../motion/engine';
  */
 const PHOTOS: Record<string, { src: string; alt: string }> = {
   'indoor-physiotherapy': {
-    src: '/photos/clinic-german-shepherd.webp',
-    alt: 'A German Shepherd held on the padded therapy mats at the Shilaj clinic',
+    src: '/photos/senior-beagle.webp',
+    alt: 'Dr. Dhanvi Patel cradling a senior beagle during attentive residential care',
   },
   'manual-therapy': {
-    src: '/photos/therapy-ramp.webp',
-    alt: "A Labrador supported in a harness on the clinic's padded mat during a hands-on session",
+    src: '/photos/therapy-platform.webp',
+    alt: 'A Labrador supported in an overhead harness during a hands-on assisted therapy session at the clinic',
   },
   electrophysical: {
-    src: '/photos/therapy-platform.webp',
-    alt: 'A Labrador supported in an overhead harness during an assisted therapy session at the clinic',
+    src: '/photos/clinic-german-shepherd.webp',
+    alt: 'A German Shepherd on the padded therapy mats at the Shilaj clinic during a session',
   },
   specialised: {
-    src: '/photos/pool-swim-blue.webp',
-    alt: "A Golden Retriever swimming with a support harness in the clinic's indoor hydrotherapy pool",
+    src: '/photos/home-visit-indie.webp',
+    alt: 'An Indian pariah dog resting with Dr. Dhanvi Patel',
   },
   'home-care': {
-    src: '/photos/home-visit-indie.webp',
-    alt: 'An Indian pariah dog resting against Dr. Dhanvi Patel during a home visit',
+    src: '/photos/home-visit-labradors.webp',
+    alt: 'Dr. Dhanvi Patel with two Labradors during a home visit',
   },
 };
 

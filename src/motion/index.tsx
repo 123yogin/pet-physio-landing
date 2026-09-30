@@ -150,21 +150,51 @@ export function useReveal<T extends HTMLElement = HTMLElement>(
  * Re-arms when `deps` change (e.g. a filter swaps the children).
  */
 export function useStagger<T extends HTMLElement = HTMLElement>(
-  opts: { step?: number; variant?: 'rise' | 'wipe'; selector?: string } = {},
+  opts: { step?: number; variant?: 'rise' | 'wipe'; selector?: string; trigger?: 'child' | 'container' } = {},
   deps: React.DependencyList = [],
 ) {
   const ref = useRef<T>(null);
-  const { step = 90, variant = 'rise', selector } = opts;
+  const { step = 90, variant = 'rise', selector, trigger = 'child' } = opts;
   useIsoLayoutEffect(() => {
     const root = ref.current;
     if (!root) return;
     const kids: HTMLElement[] = selector
       ? Array.from(root.querySelectorAll<HTMLElement>(selector))
       : (Array.from(root.children) as HTMLElement[]);
-    const cleanups = kids.map((el, i) => {
-      el.style.setProperty('--rv-delay', `${(i % 6) * step}ms`);
-      return arm(el, 'rv-pending', 'rv-in', variant === 'wipe' ? ['rv-wipe'] : []);
-    });
+    kids.forEach((el, i) => el.style.setProperty('--rv-delay', `${(i % 6) * step}ms`));
+
+    // `container`: all children reveal together (staggered) the moment the
+    // GROUP enters view, instead of each waiting to scroll in on its own. For a
+    // tall grid the per-child default leaves the lower rows blank while the top
+    // is on screen — this keeps the whole block from ever looking half-empty.
+    if (trigger === 'container') {
+      if (prefersReduced()) return;
+      const extra = variant === 'wipe' ? ['rv-wipe'] : [];
+      // Hydration-safe: only hide the group if it is still fully below the fold.
+      if (root.getBoundingClientRect().top < window.innerHeight * 0.92) return;
+      kids.forEach((el) => el.classList.add('rv-pending', ...extra));
+      let cancelled = false;
+      const stop = observe(root, () => {
+        requestAnimationFrame(() =>
+          requestAnimationFrame(() => {
+            if (cancelled) return;
+            kids.forEach((el) => {
+              el.classList.remove('rv-pending');
+              el.classList.add('rv-in');
+            });
+          }),
+        );
+      });
+      return () => {
+        cancelled = true;
+        stop();
+        kids.forEach((el) => el.classList.remove('rv-pending', ...extra));
+      };
+    }
+
+    const cleanups = kids.map((el) =>
+      arm(el, 'rv-pending', 'rv-in', variant === 'wipe' ? ['rv-wipe'] : []),
+    );
     return () => cleanups.forEach((c) => c());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, deps);
