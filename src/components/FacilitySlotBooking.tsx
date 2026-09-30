@@ -2,18 +2,20 @@ import React from 'react';
 import { CalendarCheck, Check, Loader2, Clock, AlertCircle } from 'lucide-react';
 
 /**
- * Day-care slot booking for the Indoor Facility — a two-step, BookMyShow-style
- * flow (minus payment).
+ * One-hour slot booking — a two-step, BookMyShow-style flow (minus payment).
+ * Used by every bookable service EXCEPT the Indoor Facility (which takes the
+ * general "we'll call you" enquiry form).
  *
- * Step 1 (select): the visitor sees live inventory — six beds per one-hour slot,
- * 09:30–13:30, and how many are free right now — picks a date, chooses up to
- * three slots, and HOLDS them. The counts and the three-slot cap come from the
- * API, never hard-coded here.
+ * Step 1 (select): the visitor sees live availability — each one-hour slot,
+ * 09:30–13:30, holds up to a fixed number of bookings (currently 3) and shows
+ * how many are left right now — picks a date, chooses up to three slots, and
+ * HOLDS them. The capacity and the three-slot cap come from the API, never
+ * hard-coded here.
  *
  * Step 2 (confirm): the held slots are locked for the visitor for a few minutes
  * with a visible countdown, exactly like a cinema seat. They fill in their
- * details and confirm before the timer runs out. If it lapses, the beds return
- * to the pool and they start again.
+ * details and confirm before the timer runs out. If it lapses, the slots return
+ * to the pool and they start again. The chosen service is recorded on the hold.
  *
  * A confirmed hold becomes a PENDING request the clinic still confirms by phone
  * — this is a reservation, not a paid ticket, and the copy says so.
@@ -26,13 +28,13 @@ interface Slot {
   start: string;
   end: string;
   label: string;
-  beds_total: number;
-  beds_available: number;
+  capacity: number;
+  available: number;
 }
 
 interface Availability {
   date: string;
-  beds_total: number;
+  capacity: number;
   max_slots_per_booking: number;
   slots: Slot[];
 }
@@ -47,6 +49,10 @@ interface Hold {
 interface Props {
   /** Close the whole booking panel (the visitor is done). */
   onClose: () => void;
+  /** The service being booked — recorded on the reservation so the clinic
+      knows what the slot is for (this picker now serves every bookable service
+      except the Indoor Facility). */
+  serviceLabel?: string;
 }
 
 /** YYYY-MM-DD for a date `offsetDays` from today, in the visitor's own zone. */
@@ -64,7 +70,7 @@ const labelCls = 'block text-xs tracking-widest text-(--c-body) uppercase mb-2 f
 const primaryBtn =
   'w-full bg-(--c-ink) text-white py-3 text-xs uppercase tracking-widest font-semibold hover:bg-(--c-accent) transition-colors disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2';
 
-export const FacilitySlotBooking: React.FC<Props> = ({ onClose }) => {
+export const FacilitySlotBooking: React.FC<Props> = ({ onClose, serviceLabel }) => {
   type Phase = 'select' | 'confirm' | 'done';
   const [phase, setPhase] = React.useState<Phase>('select');
 
@@ -129,6 +135,8 @@ export const FacilitySlotBooking: React.FC<Props> = ({ onClose }) => {
     if (available <= 0) return;
     setChosen((prev) => {
       if (prev.includes(slot)) return prev.filter((s) => s !== slot);
+      // One slot per booking: picking another simply replaces the choice.
+      if (maxSlots === 1) return [slot];
       if (prev.length >= maxSlots) return prev;
       return [...prev, slot].sort((a, b) => a - b);
     });
@@ -181,7 +189,13 @@ export const FacilitySlotBooking: React.FC<Props> = ({ onClose }) => {
       const res = await fetch(`${CLINIC_API}/facility/holds/${hold.reference}/confirm`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
+        // Record which service the slot is for, in the note the clinic reads.
+        body: JSON.stringify({
+          ...form,
+          note: serviceLabel
+            ? `${serviceLabel}${form.note ? ` — ${form.note}` : ''}`
+            : form.note,
+        }),
       });
       const data = await res.json();
       if (!res.ok) {
@@ -363,7 +377,7 @@ export const FacilitySlotBooking: React.FC<Props> = ({ onClose }) => {
       <span className={labelCls}>
         Time slot{' '}
         <span className="text-(--c-accent) normal-case tracking-normal font-normal">
-          — up to {maxSlots}, {avail?.beds_total ?? 6} beds each
+          {maxSlots === 1 ? '— pick one' : `— pick up to ${maxSlots}`}
         </span>
       </span>
 
@@ -379,7 +393,7 @@ export const FacilitySlotBooking: React.FC<Props> = ({ onClose }) => {
         <div className="grid grid-cols-2 gap-3 mb-6">
           {avail.slots.map((s) => {
             const isChosen = chosen.includes(s.slot);
-            const full = s.beds_available <= 0;
+            const full = s.available <= 0;
             const blocked = !isChosen && chosen.length >= maxSlots;
             return (
               <button
@@ -387,7 +401,7 @@ export const FacilitySlotBooking: React.FC<Props> = ({ onClose }) => {
                 type="button"
                 disabled={full}
                 aria-pressed={isChosen}
-                onClick={() => toggleSlot(s.slot, s.beds_available)}
+                onClick={() => toggleSlot(s.slot, s.available)}
                 className={`relative text-left p-3 border transition-colors ${
                   full
                     ? 'border-(--c-line)/40 bg-(--c-surface-2) text-(--c-mute-2) cursor-not-allowed'
@@ -401,7 +415,7 @@ export const FacilitySlotBooking: React.FC<Props> = ({ onClose }) => {
                 {isChosen && <Check className="absolute top-2 right-2 w-4 h-4" />}
                 <span className="block font-medium text-sm">{s.label}</span>
                 <span className={`block text-xs mt-1 ${isChosen ? 'text-white/80' : 'text-(--c-accent)'}`}>
-                  {full ? 'Full' : `${s.beds_available} of ${s.beds_total} beds free`}
+                  {full ? 'Full' : `${s.available} of ${s.capacity} left`}
                 </span>
               </button>
             );
@@ -431,7 +445,7 @@ export const FacilitySlotBooking: React.FC<Props> = ({ onClose }) => {
       </button>
       <p className="text-xs text-(--c-accent) mt-3 leading-relaxed">
         Your slots are held for a few minutes while you enter your details, then the clinic confirms
-        by phone. Day care is offered alongside a course of physiotherapy.
+        by phone.
       </p>
     </div>
   );

@@ -73,26 +73,30 @@ export const BookingPanel: React.FC<BookingPanelProps> = ({ availableCodes }) =>
 
   const isOpen = !!bookParam;
 
-  // Choosing the Indoor Facility in the general form swaps to its slot/bed
-  // picker IN PLACE -- no navigation and no `#book` hash, so the panel never
-  // jumps or scrolls (the reason an earlier navigate-based version felt wrong).
-  // Reset when the panel closes so the next open starts from the form again.
-  const [facilityChosen, setFacilityChosen] = React.useState(false);
+  // Choosing a service in the general form swaps to its one-hour slot picker IN
+  // PLACE -- no navigation and no `#book` hash, so the panel never jumps or
+  // scrolls (the reason an earlier navigate-based version felt wrong). Reset
+  // when the panel closes so the next open starts from the form again.
+  const [chosenCode, setChosenCode] = React.useState('');
   React.useEffect(() => {
-    if (!isOpen) setFacilityChosen(false);
+    if (!isOpen) setChosenCode('');
   }, [isOpen]);
 
-  const facilityService = React.useMemo(
+  const chosenService = React.useMemo(
     () =>
       BOOKABLE_SERVICES.find(
-        (s) => s.code === 'IndoorFacility' && availableCodes.includes(s.code),
+        (s) => s.code === chosenCode && availableCodes.includes(s.code),
       ) ?? null,
-    [availableCodes],
+    [chosenCode, availableCodes],
   );
 
-  // What the panel presents: the service named in the URL, or the Indoor
-  // Facility once it is picked from the general form's selector.
-  const effectiveService = service ?? (facilityChosen ? facilityService : null);
+  // What the panel presents: the service named in the URL, or the one picked
+  // from the general form's selector.
+  const effectiveService = service ?? chosenService;
+
+  // Every bookable service uses the one-hour slot picker, EXCEPT the Indoor
+  // Facility, which takes the general "we'll call you" enquiry form.
+  const useSlots = !!effectiveService && effectiveService.code !== 'IndoorFacility';
 
   const close = React.useCallback(() => {
     const next = new URLSearchParams(search);
@@ -213,12 +217,12 @@ export const BookingPanel: React.FC<BookingPanelProps> = ({ availableCodes }) =>
             )}
 
             <div className="pt-2 border-t border-(--c-line)/40">
-              {/* The Indoor Facility books real bed inventory by the hour, so it
-                  gets the slot picker instead of the generic "we'll call you"
-                  form. Every other service keeps the request form. */}
-              {effectiveService && effectiveService.code === 'IndoorFacility' ? (
+              {/* Every bookable service takes the one-hour slot picker, so a
+                  visitor reserves a real time. The Indoor Facility is the one
+                  exception -- it stays on the generic "we'll call you" form. */}
+              {useSlots ? (
                 <div className="mt-6">
-                  <FacilitySlotBooking onClose={close} />
+                  <FacilitySlotBooking onClose={close} serviceLabel={effectiveService!.title} />
                 </div>
               ) : (
                 <>
@@ -231,10 +235,10 @@ export const BookingPanel: React.FC<BookingPanelProps> = ({ availableCodes }) =>
                     initialService={service ? service.code : ''}
                     initialCondition={reasonFor}
                     onServiceChange={(code) => {
-                      // Indoor Facility is booked as real bed inventory, so
-                      // choosing it swaps to its slot/bed picker IN PLACE via
-                      // state -- no navigation, so the panel does not jump.
-                      setFacilityChosen(code === 'IndoorFacility');
+                      // Choosing any service other than the Indoor Facility swaps
+                      // to its slot picker IN PLACE via state -- no navigation, so
+                      // the panel does not jump.
+                      setChosenCode(code);
                     }}
                     onSubmitSuccess={handleSuccess}
                   />

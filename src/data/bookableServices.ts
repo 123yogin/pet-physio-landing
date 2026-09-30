@@ -39,7 +39,7 @@ export const BOOKABLE_SERVICES: BookableService[] = [
   {
     code: 'IndoorFacility',
     title: 'Indoor Facility',
-    summary: 'Supervised time for your pet in our indoor facility, booked by the hour between 9:30 AM and 1:30 PM.',
+    summary: 'Supervised day care for your pet in our indoor facility, 9:30 AM to 1:30 PM. Request it and we will confirm the time by phone.',
     includes: [
       'Supervised care, 9:30 AM \u2013 1:30 PM',
       'Under experienced vet observation',
