@@ -1,6 +1,7 @@
 import React from 'react';
 import type { ConditionItem } from '../types';
 import { CONDITIONS, SERVICES } from '../data/clinicData';
+import { conditionFaqs } from '../data/conditionFaqs';
 import { PageShell, DetailCta, FactList } from './PageShell';
 import { Link, servicePathLink } from './links';
 import { conditionPath } from '../seo/routes';
@@ -72,6 +73,31 @@ export const ConditionPage: React.FC<{ condition: ConditionItem }> = ({ conditio
           <FactList title={`Signs of ${condition.title}`} items={condition.symptoms} />
           <FactList title="Therapies we use" items={condition.recommendedTherapies} />
         </div>
+
+        {/* Citable answer blocks. Each question is a self-contained passage an
+            answer engine can lift and attribute — direct answer first, a concrete
+            fact, clinic + locality named. Mirrored exactly in the FAQPage schema
+            (see seo/schema.ts) from the same source. */}
+        <section aria-labelledby="condition-faqs" className="border-t border-(--c-line)/30 pt-12 mb-16">
+          <h2
+            id="condition-faqs"
+            className="font-(family-name:--f-display) text-2xl sm:text-3xl text-(--c-ink) font-light mb-8"
+          >
+            Common questions about {condition.title}
+          </h2>
+          <div className="grid grid-cols-1 gap-8 max-w-[820px]">
+            {conditionFaqs(condition).map((faq) => (
+              <div key={faq.q}>
+                <h3 className="font-(family-name:--f-display) text-lg sm:text-xl text-(--c-ink) font-medium mb-2">
+                  {faq.q}
+                </h3>
+                <p className="font-(family-name:--f-body) text-base text-(--c-body) font-light leading-relaxed">
+                  {faq.a}
+                </p>
+              </div>
+            ))}
+          </div>
+        </section>
 
         {relatedServices.length > 0 && (
           <section aria-labelledby="related-treatments" className="border-t border-(--c-line)/30 pt-12">
