@@ -120,7 +120,9 @@ export const SITE: SiteConfig = {
     + 'Clinic visits at Shilaj, Ahmedabad, and home visits across the city.',
 
   // Must be the real production origin — every canonical URL is built from it.
-  origin: 'https://petphysio.vercel.app',
+  // The primary domain is www (the apex 308-redirects to it), so canonicals use
+  // www to avoid a redirect hop on the canonical URL itself.
+  origin: 'https://www.thepetphysiovet.com',
 
   locale: 'en_IN',
   lang: 'en-IN',
