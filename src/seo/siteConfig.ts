@@ -194,18 +194,16 @@ export const SITE: SiteConfig = {
   // generator omits openingHoursSpecification entirely and Google uses the
   // profile. Fill it in once the real seven-day hours are known.
   //
-  // UPDATE 2026-09-19: the clinic confirmed Monday to Friday, 9:30 AM to 1:30
+  // UPDATE 2026-10-02: the clinic confirmed Monday to SATURDAY, 9:30 AM to 1:30
   // PM, appointment based only. That is now stated here and drives both the
   // visible hours and openingHoursSpecification, so the two cannot disagree.
   //
-  // Saturday and Sunday are deliberately ABSENT rather than listed as closed.
-  // "Monday to Friday" answers which days the window covers; it is not the
-  // same statement as "we are shut at the weekend", and a clinic that takes
-  // the occasional Saturday booking would lose it to a schema entry nobody
-  // meant to make. Add explicit closed days only if the clinic says so.
+  // Sunday is deliberately ABSENT rather than listed as closed. The days array
+  // answers which days the window covers; it is not the same statement as "we
+  // are shut on Sunday". Add explicit closed days only if the clinic says so.
   openingHours: [
     {
-      days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+      days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
       opens: '09:30',
       closes: '13:30',
     },
