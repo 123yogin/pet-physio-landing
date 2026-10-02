@@ -121,9 +121,11 @@ export const SITE: SiteConfig = {
     + 'physiotherapist (M.V.Sc.) treating mobility problems, post-surgical recovery, '
     + 'arthritis and injury in dogs and cats, with avian and exotic experience. '
     + 'Clinic visits at Shilaj, Ahmedabad, and home visits across the city.',
+  // No "&" — it becomes "&amp;" in the HTML attribute, which pushed the rendered
+  // length past Google's 160-char limit even though the source read shorter.
   metaDescription:
-    'Veterinary physiotherapy & rehabilitation in Ahmedabad — arthritis, IVDD, '
-    + 'post-surgery and mobility care for dogs & cats by a qualified vet physiotherapist.',
+    'Veterinary physiotherapy and rehabilitation in Ahmedabad — arthritis, IVDD, '
+    + 'post-surgery and mobility care for dogs and cats by a qualified vet physio.',
 
   // Must be the real production origin — every canonical URL is built from it.
   // The primary domain is www (the apex 308-redirects to it), so canonicals use
