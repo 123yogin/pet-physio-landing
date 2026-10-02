@@ -53,18 +53,15 @@ export const Footer: React.FC = () => {
               <a
                 href={`mailto:${SITE.contact.email}`}
                 data-magnetic
-                className="group flex items-center gap-3 font-(family-name:--f-display) text-2xl sm:text-4xl lg:text-[52px] font-light leading-tight text-(--c-ink) hover:text-(--c-accent) transition-colors"
+                className="group flex items-center gap-3 font-(family-name:--f-display) font-light leading-tight text-(--c-ink) hover:text-(--c-accent) transition-colors"
               >
-                {/* No <Roll> here: its overflow:hidden clips the last glyph of a
-                    long address at this size (".com" became ".co"). Plain text
-                    that can wrap instead, keeping the hover colour and arrow.
-                    The <wbr> after the "@" gives the browser a clean break point,
-                    so at display size the address wraps as "contact@" /
-                    "thepetphysiovet.com" instead of orphaning the final "m". */}
-                <span className="min-w-0 break-words">
-                  {SITE.contact.email.slice(0, SITE.contact.email.indexOf('@') + 1)}
-                  <wbr />
-                  {SITE.contact.email.slice(SITE.contact.email.indexOf('@') + 1)}
+                {/* One line, always. No <Roll> (its overflow:hidden clipped the
+                    ".com"). The address is kept on a single line with
+                    whitespace-nowrap, and the font size is a fluid clamp so the
+                    full "contact@thepetphysiovet.com" scales to fit its column
+                    from mobile to desktop instead of wrapping or overflowing. */}
+                <span className="min-w-0 whitespace-nowrap text-[clamp(1.05rem,4.8vw,2.75rem)]">
+                  {SITE.contact.email}
                 </span>
                 <ArrowUpRight
                   aria-hidden="true"
