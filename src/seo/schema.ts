@@ -19,6 +19,7 @@ import { SITE, absoluteUrl, formattedAddress } from './siteConfig';
 import { matchRoute, conditionPath, servicePath, specialistPath, type RouteEntity } from './routes';
 import { getPageMeta } from './metadata';
 import { CONDITIONS, FAQS, SERVICES, SPECIALISTS, HERO_IMAGE } from '../data/clinicData';
+import { conditionFaqs } from '../data/conditionFaqs';
 import type { ConditionItem, ServiceItem, Specialist } from '../types';
 
 /** Loosely-typed JSON-LD node. */
@@ -303,6 +304,22 @@ export function faqNode(path: string): Node {
   };
 }
 
+/** FAQPage for a condition page, built from the SAME generator that renders the
+ *  visible Q&A (see data/conditionFaqs.ts), so structured data and page text
+ *  always match. */
+export function conditionFaqNode(condition: ConditionItem, path: string): Node {
+  return {
+    '@type': 'FAQPage',
+    '@id': ID.faq(path),
+    isPartOf: { '@id': ID.webpage(path) },
+    mainEntity: conditionFaqs(condition).map((faq) => ({
+      '@type': 'Question',
+      name: faq.q,
+      acceptedAnswer: { '@type': 'Answer', text: faq.a },
+    })),
+  };
+}
+
 /**
  * Assemble the full @graph for a pathname. One script tag per page.
  */
@@ -318,6 +335,9 @@ export function buildGraph(pathname: string): Node {
 
   if (isCondition(entity)) {
     graph.push(conditionNode(entity));
+    // The on-page "Common questions" answer blocks, marked up so AI engines can
+    // match the visible passages to structured Q&A.
+    graph.push(conditionFaqNode(entity, path));
     // Therapies named on the page, linked to the real service entities where they match.
     const related = SERVICES.filter((s) =>
       entity.recommendedTherapies.some((t) => t.toLowerCase().includes(s.title.toLowerCase())),
