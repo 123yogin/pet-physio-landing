@@ -80,6 +80,11 @@ export function renderHeadHtml(pathname: string): string {
   const lines = [
     `<title>${escapeAttr(head.title)}</title>`,
     `<link rel="canonical" href="${escapeAttr(head.canonical)}" />`,
+    // Single-language site: a self-referencing hreflang plus x-default is the
+    // correct, explicit signal (it tells search/AI engines the page targets this
+    // language and is the default for all others), not an omission.
+    `<link rel="alternate" hreflang="${escapeAttr(SITE.lang.toLowerCase())}" href="${escapeAttr(head.canonical)}" />`,
+    `<link rel="alternate" hreflang="x-default" href="${escapeAttr(head.canonical)}" />`,
     ...head.metas.map((m) => `<meta ${m.key}="${m.keyValue}" content="${escapeAttr(m.content)}" />`),
     `<script type="application/ld+json">${head.jsonLd}</script>`,
   ];

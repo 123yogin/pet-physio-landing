@@ -28,22 +28,32 @@ const lowerFirst = (s: string) => (s ? s[0].toLowerCase() + s.slice(1) : s);
 export function conditionFaqs(condition: ConditionItem): Array<{ q: string; a: string }> {
   const brand = SITE.brandName;
   const locality = SITE.address.addressLocality;
+  const therapyCount = condition.recommendedTherapies.length;
+  const signCount = condition.symptoms.length;
+  // Each answer carries a concrete number (therapy count, recovery timeframe,
+  // sign count) — the "statistical density" an answer engine looks for when
+  // deciding a passage is worth quoting. All numbers are counts of / restatements
+  // of the condition's own data, never invented.
   return [
     {
       q: `How is ${condition.title} treated in dogs and cats?`,
-      a: `${condition.fullDesc} At ${brand} in ${locality}, treatment combines ${naturalList(
+      a: `${condition.fullDesc} At ${brand} in ${locality}, treatment combines ${therapyCount} evidence-based therapies — ${naturalList(
         condition.recommendedTherapies,
-      )} — tailored to each pet and coordinated with your primary veterinarian.`,
+      )} — tailored to each pet and coordinated with your primary veterinarian. Typical recovery is ${lowerFirst(
+        condition.expectedRecoveryTime,
+      )}.`,
     },
     {
       q: `How long does ${condition.title} recovery take?`,
-      a: `${condition.expectedRecoveryTime}. The outlook depends on the individual pet, the severity of the condition and consistency with the home-care programme, and progress is reviewed at every session.`,
+      a: `Typical recovery is ${lowerFirst(
+        condition.expectedRecoveryTime,
+      )}. The outlook depends on the individual pet, the severity of the condition and consistency with the home-care programme, and progress is measured against objective goals at every session.`,
     },
     {
       q: `What are the signs of ${condition.title} in pets?`,
-      a: `Common signs include ${naturalList(
+      a: `The ${signCount} most common signs are ${naturalList(
         condition.symptoms.map(lowerFirst),
-      )}. If your dog or cat shows these, a veterinary physiotherapy assessment at ${brand} can identify the cause and build a recovery plan.`,
+      )}. If your dog or cat shows any of these, a veterinary physiotherapy assessment at ${brand} can identify the cause and build a recovery plan.`,
     },
   ];
 }

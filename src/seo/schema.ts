@@ -202,6 +202,10 @@ function webPageNode(path: string): Node {
     about: { '@id': ID.business() },
     primaryImageOfPage: { '@type': 'ImageObject', url: meta.image, caption: meta.imageAlt },
     breadcrumb: { '@id': ID.breadcrumb(path) },
+    // Which parts an assistant should read aloud / is safe to quote. Headings
+    // carry the page's question-and-answer structure, so they point AI answer
+    // engines straight at the citable passages.
+    speakable: { '@type': 'SpeakableSpecification', cssSelector: ['h1', 'h2', 'h3'] },
   };
 }
 
