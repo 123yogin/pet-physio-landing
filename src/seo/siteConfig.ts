@@ -41,6 +41,9 @@ export interface SiteConfig {
   titleSuffix: string;
   tagline: string;
   description: string;
+  /** A complete ~150-char sentence for the home page's meta/OG description, so it
+      reads whole in search results instead of truncating the longer `description`. */
+  metaDescription: string;
   /** Absolute origin, NO trailing slash. Drives every canonical, OG url and sitemap entry. */
   origin: string;
   locale: string;
@@ -118,6 +121,9 @@ export const SITE: SiteConfig = {
     + 'physiotherapist (M.V.Sc.) treating mobility problems, post-surgical recovery, '
     + 'arthritis and injury in dogs and cats, with avian and exotic experience. '
     + 'Clinic visits at Shilaj, Ahmedabad, and home visits across the city.',
+  metaDescription:
+    'Veterinary physiotherapy & rehabilitation in Ahmedabad — arthritis, IVDD, '
+    + 'post-surgery and mobility care for dogs & cats by a qualified vet physiotherapist.',
 
   // Must be the real production origin — every canonical URL is built from it.
   // The primary domain is www (the apex 308-redirects to it), so canonicals use
