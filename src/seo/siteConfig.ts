@@ -138,7 +138,7 @@ export const SITE: SiteConfig = {
   contact: {
     phone: '+917284073241',
     phoneDisplay: '+91 72840 73241',
-    email: 'thepetphysiovet@gmail.com',
+    email: 'contact@thepetphysiovet.com',
 
     // The clinic confirmed (2026-09-19) that out-of-hours enquiries go to the
     // same number. It is published, but the footer keeps the line saying this

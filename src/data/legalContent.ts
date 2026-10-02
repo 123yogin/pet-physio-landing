@@ -120,7 +120,7 @@ export const PRIVACY: LegalDoc = {
       body: [
         'You can ask what the clinic holds about you, ask for it to be corrected, '
         + 'or ask for it to be deleted.',
-        'Write to thepetphysiovet@gmail.com, or call +91 72840 73241, and say '
+        'Write to contact@thepetphysiovet.com, or call +91 72840 73241, and say '
         + 'what you would like done. It helps to give the phone number you used '
         + 'on the form, since that is how an enquiry is found.',
         // The contact route above is now real. What is still missing is
