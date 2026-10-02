@@ -17,7 +17,6 @@
  */
 import React, { useEffect, useLayoutEffect, useRef } from 'react';
 import { onFrame, progress, track, wake } from './engine';
-import Lenis from 'lenis';
 
 const useIsoLayoutEffect = typeof window === 'undefined' ? useEffect : useLayoutEffect;
 
@@ -290,7 +289,13 @@ export const CountUp: React.FC<{ value: string; className?: string; duration?: n
 
 /* ----------------------------------------------------------- Smooth scroll -- */
 
-/** Lenis inertia scrolling for the whole document. Mount once. */
+/** Lenis inertia scrolling for the whole document. Mount once.
+ *
+ * Lenis is loaded with a dynamic import() rather than a static top-level one so
+ * it ships as its own chunk, fetched only when this component mounts (after
+ * hydration + idle, see SiteMotion) instead of weighing down the main bundle
+ * that every page parses on first paint. Until it arrives the browser's native
+ * scroll is used, so nothing is broken in the gap. */
 export const SmoothScroll: React.FC = () => {
   useEffect(() => {
     if (prefersReduced()) return;
@@ -299,9 +304,15 @@ export const SmoothScroll: React.FC = () => {
     // index.html sets `scroll-smooth`; the browser's own smoothing and Lenis
     // would otherwise both try to animate the same jump.
     html.style.scrollBehavior = 'auto';
-    const lenis = new Lenis({ autoRaf: true, lerp: 0.1, anchors: true });
+    let lenis: { destroy: () => void } | null = null;
+    let cancelled = false;
+    import('lenis').then(({ default: Lenis }) => {
+      if (cancelled) return;
+      lenis = new Lenis({ autoRaf: true, lerp: 0.1, anchors: true });
+    });
     return () => {
-      lenis.destroy();
+      cancelled = true;
+      lenis?.destroy();
       html.style.scrollBehavior = prev;
     };
   }, []);

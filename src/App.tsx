@@ -9,8 +9,7 @@ import { NotFoundPage } from './pages/NotFoundPage';
 import { LegalPage } from './pages/LegalPage';
 import { PRIVACY, TERMS } from './data/legalContent';
 import type { ConditionItem, ServiceItem, Specialist } from './types';
-import { PageCurtain, CursorBubble, Magnetic, ImageDrift, Tilt, ImageFadeIn } from './motion/extras';
-import { SmoothScroll, CursorTrail, ScrollTicks } from './motion';
+import { SiteMotion } from './motion/SiteMotion';
 import { LabProvider } from './lab/Lab';
 import { MobileActionBar } from './components/MobileActionBar';
 
@@ -46,17 +45,11 @@ export default function App({ initialPath }: { initialPath?: string }) {
     <RouterProvider initialPath={initialPath}>
       <LabProvider>
       <RouteView />
-      {/* Site-wide motion: behaviour only, nothing rendered at rest except
-          the scroll ticks and the pointer trail. */}
-      <SmoothScroll />
-      <CursorTrail />
-      <ScrollTicks />
-      <PageCurtain />
-      <CursorBubble />
-      <Magnetic />
-      <ImageDrift />
-      <Tilt />
-      <ImageFadeIn />
+      {/* Site-wide decorative motion (smooth scroll, cursor trail/bubble,
+          magnetic buttons, image drift/tilt/fade, scroll ticks, page curtain).
+          Mounted after hydration + idle by SiteMotion so it never competes with
+          first paint — behaviour only, nothing rendered at rest, no layout. */}
+      <SiteMotion />
       <MobileActionBar />
       </LabProvider>
     </RouterProvider>
