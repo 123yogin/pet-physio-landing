@@ -57,8 +57,15 @@ export const Footer: React.FC = () => {
               >
                 {/* No <Roll> here: its overflow:hidden clips the last glyph of a
                     long address at this size (".com" became ".co"). Plain text
-                    that can wrap instead, keeping the hover colour and arrow. */}
-                <span className="min-w-0 break-words">{SITE.contact.email}</span>
+                    that can wrap instead, keeping the hover colour and arrow.
+                    The <wbr> after the "@" gives the browser a clean break point,
+                    so at display size the address wraps as "contact@" /
+                    "thepetphysiovet.com" instead of orphaning the final "m". */}
+                <span className="min-w-0 break-words">
+                  {SITE.contact.email.slice(0, SITE.contact.email.indexOf('@') + 1)}
+                  <wbr />
+                  {SITE.contact.email.slice(SITE.contact.email.indexOf('@') + 1)}
+                </span>
                 <ArrowUpRight
                   aria-hidden="true"
                   className="w-6 h-6 sm:w-8 sm:h-8 shrink-0 opacity-50 transition-all group-hover:opacity-100 group-hover:translate-x-1 group-hover:-translate-y-1"
