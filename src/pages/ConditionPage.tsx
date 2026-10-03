@@ -1,6 +1,6 @@
 import React from 'react';
 import type { ConditionItem } from '../types';
-import { CONDITIONS, SERVICES } from '../data/clinicData';
+import { CONDITIONS, SPECIALISTS, servicesForCondition, CONTENT_REVIEWED_DISPLAY } from '../data/clinicData';
 import { conditionFaqs } from '../data/conditionFaqs';
 import { PageShell, DetailCta, FactList } from './PageShell';
 import { Link, servicePathLink } from './links';
@@ -15,13 +15,10 @@ import { conditionPath } from '../seo/routes';
  * one — that is what lets an answer engine lift a passage and attribute it.
  */
 export const ConditionPage: React.FC<{ condition: ConditionItem }> = ({ condition }) => {
-  const relatedServices = SERVICES.filter((service) =>
-    condition.recommendedTherapies.some(
-      (therapy) =>
-        therapy.toLowerCase().includes(service.title.toLowerCase()) ||
-        service.title.toLowerCase().includes(therapy.split(' ')[0].toLowerCase()),
-    ),
-  );
+  // Shared with the JSON-LD graph (seo/schema.ts) so the visible list below and
+  // the related-service structured data can never disagree.
+  const relatedServices = servicesForCondition(condition);
+  const reviewer = SPECIALISTS[0];
 
   const otherConditions = CONDITIONS.filter(
     (item) => item.id !== condition.id && item.category === condition.category,
@@ -51,6 +48,13 @@ export const ConditionPage: React.FC<{ condition: ConditionItem }> = ({ conditio
               </dt>
               <dd className="font-(family-name:--f-body) text-sm text-(--c-ink)">{condition.expectedRecoveryTime}</dd>
             </dl>
+            {/* Visible reviewer line backing the MedicalWebPage reviewedBy/lastReviewed
+                JSON-LD (seo/schema.ts) — structured data must mirror on-page content. */}
+            {reviewer && (
+              <p className="mt-6 text-xs text-(--c-body)/70 font-(family-name:--f-body)">
+                Medically reviewed by {reviewer.name} · {CONTENT_REVIEWED_DISPLAY}
+              </p>
+            )}
           </div>
 
           <div className="lg:col-span-5">
