@@ -13,7 +13,7 @@ import { CalendarCheck, Check, Loader2 } from 'lucide-react';
  * the reason the clinic reads.
  */
 
-import { CLINIC_API, isoDate } from '../lib/clinicApi';
+import { isoDate, postEnquiry } from '../lib/clinicApi';
 
 interface Package { label: string; price: number }
 
@@ -90,33 +90,25 @@ export const ServiceRequestBooking: React.FC<Props> = ({
       .join(' — ');
 
     try {
-      const res = await fetch(`${CLINIC_API}/enquiries`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          firstName: form.ownerName,
-          petName: form.petName,
-          email: form.email,
-          phone: form.phone,
-          reason,
-          service: serviceCode || undefined,
-          preferredDate: date || undefined,
-          website,
-        }),
+      const data = await postEnquiry({
+        firstName: form.ownerName,
+        petName: form.petName,
+        email: form.email,
+        phone: form.phone,
+        reason,
+        service: serviceCode || undefined,
+        preferredDate: date || undefined,
+        website,
       });
-      const data = await res.json().catch(() => ({}));
-      if (!res.ok) {
-        setError(data.detail || 'We could not send your request. Please try again.');
-        return;
-      }
       setBooked({
         reference: data.reference,
         detail:
           data.detail ||
           `Thanks, ${form.ownerName}! We have your request for ${serviceLabel} and will call you to confirm a time.`,
       });
-    } catch {
-      setError('Something went wrong. Please try again.');
+    } catch (err) {
+      // postEnquiry throws with the API's RFC-7807 `detail` sentence; surface it.
+      setError(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
     } finally {
       setBusy(false);
     }

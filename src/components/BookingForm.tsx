@@ -7,7 +7,7 @@ import { SITE, formattedAddress, openingHoursSummary } from '../seo/siteConfig';
 // Same-origin in production: the landing page is served from the clinic
 // app's own domain, so /api/v1 is the same deployment. Overridable for
 // local development, where the API runs on :8000 and Vite on :3000.
-import { CLINIC_API } from '../lib/clinicApi';
+import { CLINIC_API, postEnquiry } from '../lib/clinicApi';
 
 interface BookingFormProps {
   initialSpecialist?: string;
@@ -135,30 +135,19 @@ export const BookingForm: React.FC<BookingFormProps> = ({
       // anywhere -- the visitor saw a confirmation and the clinic never heard
       // about it. It now creates a real enquiry the vet triages, and the
       // reference shown is the one the server actually recorded.
-      const res = await fetch(`${CLINIC_API}/enquiries`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          firstName: formData.firstName,
-          lastName: formData.lastName,
-          petName: formData.petName,
-          speciesBreed: formData.speciesBreed,
-          email: formData.email,
-          phone: formData.phone,
-          reason: formData.reason,
-          website: honeypot,
-          service: formData.service || undefined,
-          preferredDate: formData.preferredDate || undefined,
-          preferredSpecialist: formData.preferredSpecialist || undefined,
-        }),
+      const body = await postEnquiry({
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        petName: formData.petName,
+        speciesBreed: formData.speciesBreed,
+        email: formData.email,
+        phone: formData.phone,
+        reason: formData.reason,
+        website: honeypot,
+        service: formData.service || undefined,
+        preferredDate: formData.preferredDate || undefined,
+        preferredSpecialist: formData.preferredSpecialist || undefined,
       });
-
-      const body = await res.json().catch(() => ({}));
-      if (!res.ok) {
-        // The clinic API speaks RFC-7807, so `detail` is a real sentence --
-        // show it rather than a generic failure the visitor cannot act on.
-        throw new Error(body?.detail || 'We could not send your enquiry. Please try again.');
-      }
       onSubmitSuccess(formData, body.reference);
     } catch (err) {
       setSubmitError(

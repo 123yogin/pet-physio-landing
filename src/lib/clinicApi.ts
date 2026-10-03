@@ -16,3 +16,22 @@ export function isoDate(offsetDays = 0): string {
     d.getDate(),
   ).padStart(2, '0')}`;
 }
+
+/**
+ * POST an enquiry to the clinic's /enquiries pipeline and return the created
+ * record. The clinic API speaks RFC-7807, so on failure we surface `detail` (a
+ * real sentence) rather than a generic message. Shared by BookingForm and
+ * ServiceRequestBooking, which both feed the same pipeline.
+ */
+export async function postEnquiry(payload: Record<string, unknown>): Promise<any> {
+  const res = await fetch(`${CLINIC_API}/enquiries`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+  const body = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    throw new Error(body?.detail || 'We could not send your enquiry. Please try again.');
+  }
+  return body;
+}
