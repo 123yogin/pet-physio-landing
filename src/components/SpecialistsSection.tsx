@@ -1,6 +1,6 @@
 import React from 'react';
 import { SPECIALISTS } from '../data/clinicData';
-import { Award, Calendar } from 'lucide-react';
+import { Calendar } from 'lucide-react';
 import { EntityCardLink } from './EntityCardLink';
 import { specialistPath } from '../seo/routes';
 import { SplitWords, useStagger } from '../motion';

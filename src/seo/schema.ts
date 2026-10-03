@@ -15,7 +15,7 @@
  *    reviews in the data. Never mark up ratings you don't have.
  */
 
-import { SITE, absoluteUrl, formattedAddress } from './siteConfig';
+import { SITE, absoluteUrl } from './siteConfig';
 import { matchRoute, conditionPath, servicePath, specialistPath, type RouteEntity } from './routes';
 import { getPageMeta } from './metadata';
 import { CONDITIONS, FAQS, SERVICES, SPECIALISTS, HERO_IMAGE, servicesForCondition, CONTENT_REVIEWED_DATE } from '../data/clinicData';
@@ -376,6 +376,3 @@ export function buildGraph(pathname: string): Node {
 export function serializeGraph(pathname: string): string {
   return JSON.stringify(buildGraph(pathname)).replace(/</g, '\\u003c');
 }
-
-/** Convenience for the NAP block so visible text and markup can't drift apart. */
-export const napText = { address: formattedAddress };
