@@ -43,7 +43,11 @@ export function bookingHref(
   const params = new URLSearchParams();
   params.set('book', options?.service || '1');
   if (options?.reasonFor) params.set('for', options.reasonFor);
-  return `${currentPath}?${params.toString()}#book`;
+  // No "#book" hash: the booking panel is a full-screen modal overlay (fixed
+  // inset-0), so opening it must not move the page behind it. The hash used to
+  // scroll the background to the on-page "#book" bento section every time the
+  // modal opened — a visible, pointless jump. Opening is purely `?book=…`.
+  return `${currentPath}?${params.toString()}`;
 }
 
 interface BookingPanelProps {
