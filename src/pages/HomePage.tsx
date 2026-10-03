@@ -11,7 +11,7 @@
  * The booking panels inside BookableServices are the same category -- a form,
  * not a page.
  */
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from '../seo/router';
 import { Navbar } from '../components/Navbar';
 import { Hero } from '../components/Hero';

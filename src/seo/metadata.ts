@@ -12,7 +12,7 @@
  */
 
 import { SITE, absoluteUrl, primaryLocality } from './siteConfig';
-import { indexableRoutes, matchRoute, type RouteDef, type RouteEntity } from './routes';
+import { matchRoute, type RouteEntity } from './routes';
 import { HERO_IMAGE } from '../data/clinicData';
 import { PRIVACY, TERMS } from '../data/legalContent';
 import type { ConditionItem, ServiceItem, Specialist } from '../types';
@@ -189,9 +189,4 @@ export function getPageMeta(pathname: string): PageMeta {
     ogType: 'website',
     breadcrumbs: base.breadcrumbs,
   };
-}
-
-/** All routes with their resolved metadata — used by the prerender and sitemap steps. */
-export function allRouteMeta(): Array<{ route: RouteDef; meta: PageMeta }> {
-  return indexableRoutes().map((route) => ({ route, meta: getPageMeta(route.path) }));
 }

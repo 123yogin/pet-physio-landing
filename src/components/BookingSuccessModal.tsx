@@ -1,6 +1,6 @@
 import React from 'react';
 import { AppointmentData } from '../types';
-import { Check, Calendar, PhoneCall, Copy, X } from 'lucide-react';
+import { Check, Copy, X } from 'lucide-react';
 
 interface BookingSuccessModalProps {
   data: AppointmentData | null;

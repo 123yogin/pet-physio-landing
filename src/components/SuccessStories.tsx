@@ -1,10 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { SUCCESS_STORIES } from '../data/clinicData';
-import { SuccessStory } from '../types';
 import { Quote, Sparkles } from 'lucide-react';
 
 export const SuccessStories: React.FC = () => {
-  const [activeStory, setActiveStory] = useState<SuccessStory | null>(null);
 
   // "Real outcomes, restored joy" over an empty grid is worse than no section
   // at all. Hooks run first so this stays a legal early return.

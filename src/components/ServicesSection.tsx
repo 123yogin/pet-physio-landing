@@ -1,12 +1,7 @@
 /// <reference types="vite/client" />
 import React from 'react';
-import { SERVICES } from '../data/clinicData';
-import { ArrowUpRight, Activity, Waves, Zap, Hand, Dumbbell, Home, Sparkles, BedDouble } from 'lucide-react';
-import { EntityCardLink } from './EntityCardLink';
-import { servicePath } from '../seo/routes';
 import { SplitWords, useStagger } from '../motion';
 import { useLab } from '../lab/Lab';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Pulse } from '../motion/extras';
 import ServicesPanels from './services/ServicesPanels';
 

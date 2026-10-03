@@ -64,7 +64,7 @@ export const TreatmentJourney: React.FC = () => {
               style={{ transform: 'scaleY(0)' }}
             />
             <PawTrail ref={railPaws} vertical count={16} className="absolute left-[19px] sm:left-[23px] top-16 bottom-10 w-0" />
-            {JOURNEY_STEPS.map((step, idx) => {
+            {JOURNEY_STEPS.map((step) => {
               return (
                 <li key={step.number} className="relative pb-14 last:pb-0">
                   <span

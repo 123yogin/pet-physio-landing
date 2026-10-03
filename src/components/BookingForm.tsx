@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { AppointmentData } from '../types';
 import { SPECIALISTS } from '../data/clinicData';
-import { MapPin, Phone, Mail, Clock, Calendar, Check } from 'lucide-react';
+import { MapPin, Phone, Mail, Clock, Calendar } from 'lucide-react';
 import { SITE, formattedAddress, openingHoursSummary } from '../seo/siteConfig';
 
 // Same-origin in production: the landing page is served from the clinic
