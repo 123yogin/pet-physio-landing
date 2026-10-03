@@ -14,7 +14,7 @@ export { SITE } from './seo/siteConfig';
 export { ROUTES, indexableRoutes, normalizePath } from './seo/routes';
 export { getPageMeta } from './seo/metadata';
 export { renderHeadHtml, lcpPreloadHtml } from './seo/head';
-export { buildRobotsTxt, buildSitemapXml, buildLlmsTxt } from './seo/generators';
+export { buildRobotsTxt, buildSitemapXml, buildLlmsTxt, buildLlmsFullTxt } from './seo/generators';
 
 export interface RenderResult {
   html: string;

@@ -189,10 +189,19 @@ export function websiteNode(): Node {
   };
 }
 
+// Date the clinical (condition) content was last reviewed by the vet. Fixed, not
+// generated from the clock, so server and client markup stay identical — bump it
+// when condition pages are materially revised.
+const CONTENT_REVIEWED_DATE = '2026-10-03';
+
 function webPageNode(path: string): Node {
   const meta = getPageMeta(path);
+  const isConditionPage = matchRoute(path).route.kind === 'condition';
   return {
-    '@type': 'WebPage',
+    // Condition pages are health content, so they are MedicalWebPage (a stronger
+    // E-E-A-T signal for AI/Google on health topics) with an explicit reviewer
+    // and review date; every other page stays a plain WebPage.
+    '@type': isConditionPage ? 'MedicalWebPage' : 'WebPage',
     '@id': ID.webpage(path),
     url: meta.canonical,
     name: meta.title,
@@ -206,6 +215,9 @@ function webPageNode(path: string): Node {
     // carry the page's question-and-answer structure, so they point AI answer
     // engines straight at the citable passages.
     speakable: { '@type': 'SpeakableSpecification', cssSelector: ['h1', 'h2', 'h3'] },
+    ...(isConditionPage
+      ? { reviewedBy: { '@id': ID.person(SPECIALISTS[0].id) }, lastReviewed: CONTENT_REVIEWED_DATE }
+      : {}),
   };
 }
 
@@ -342,6 +354,9 @@ export function buildGraph(pathname: string): Node {
     // The on-page "Common questions" answer blocks, marked up so AI engines can
     // match the visible passages to structured Q&A.
     graph.push(conditionFaqNode(entity, path));
+    // The vet who reviewed this medical content — referenced by the
+    // MedicalWebPage's reviewedBy, so the @id resolves within this page's graph.
+    if (SPECIALISTS[0]) graph.push(personNode(SPECIALISTS[0]));
     // Therapies named on the page, linked to the real service entities where they match.
     const related = SERVICES.filter((s) =>
       entity.recommendedTherapies.some((t) => t.toLowerCase().includes(s.title.toLowerCase())),
