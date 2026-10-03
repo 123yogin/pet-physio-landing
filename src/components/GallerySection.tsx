@@ -98,12 +98,17 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ onSelectImage })
                 }}
               >
                 {[...row, ...row].map((item, i) => (
-                  <div
+                  <button
+                    type="button"
                     key={`${item.id}-${i}`}
                     aria-hidden={i >= row.length}
+                    // The marquee duplicates each tile for a seamless loop; the
+                    // clones are aria-hidden AND removed from the tab order so
+                    // keyboard users don't hit every item twice.
+                    tabIndex={i >= row.length ? -1 : undefined}
                     onClick={() => onSelectImage(item)}
                     data-cursor={item.videoUrl ? 'Play' : 'Open'}
-                    className="relative group shrink-0 w-[240px] sm:w-[300px] overflow-hidden bg-(--c-surface-3) cursor-pointer border border-(--c-line)/30 hover:border-(--c-ink) transition-all"
+                    className="relative group shrink-0 w-[240px] sm:w-[300px] overflow-hidden bg-(--c-surface-3) cursor-pointer border border-(--c-line)/30 hover:border-(--c-ink) transition-all text-left block appearance-none"
                   >
                     {/* Portrait tiles, because every asset is portrait.
 
@@ -161,7 +166,7 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ onSelectImage })
                         <Maximize2 className="w-4 h-4 text-(--c-card)" />
                       </h4>
                     </div>
-                  </div>
+                  </button>
                 ))}
               </div>
             );
