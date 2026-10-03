@@ -138,32 +138,23 @@ export const BookingPanel: React.FC<BookingPanelProps> = ({ availableCodes }) =>
     navigate(`${path}${query ? `?${query}` : ''}`, { replace: true });
   }, [path, search, navigate]);
 
-  // Escape, scroll lock, and focus into the dialog. Without that last part a
-  // keyboard or screen-reader user opens the form and their focus is still
-  // behind it, which makes the whole thing unreachable.
+  // The modal is a native <dialog>, so Escape, the focus TRAP, initial focus and
+  // focus-restore-on-close all come from the platform (the old hand-rolled
+  // versions trapped nothing — Tab walked into the page behind). We only add the
+  // body scroll-lock, which <dialog> does not do; data-lenis-prevent on the
+  // element keeps the site's Lenis smooth-scroll from hijacking the modal.
+  const dialogRef = React.useRef<HTMLDialogElement>(null);
   React.useEffect(() => {
-    if (!isOpen) return;
-
-    const previouslyFocused = document.activeElement as HTMLElement | null;
-    const onKey = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') close();
-    };
-    window.addEventListener('keydown', onKey);
-
+    const dlg = dialogRef.current;
+    if (!isOpen || !dlg) return;
+    if (!dlg.open) dlg.showModal();
     const priorOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
-
-    const timer = window.setTimeout(() => {
-      document.querySelector<HTMLElement>('[role="dialog"] input, [role="dialog"] button')?.focus();
-    }, 0);
-
     return () => {
-      window.removeEventListener('keydown', onKey);
       document.body.style.overflow = priorOverflow;
-      window.clearTimeout(timer);
-      previouslyFocused?.focus?.();
+      if (dlg.open) dlg.close();
     };
-  }, [isOpen, close]);
+  }, [isOpen]);
 
   const handleSuccess = (data: AppointmentData, refId: string) => {
     setSuccessData(data);
@@ -174,10 +165,12 @@ export const BookingPanel: React.FC<BookingPanelProps> = ({ availableCodes }) =>
   return (
     <>
       {isOpen && (
-        <div
-          className="fixed inset-0 z-50 flex items-stretch sm:items-center justify-center sm:p-4 bg-(--c-ink)/40 animate-in fade-in"
-          role="dialog"
-          aria-modal="true"
+        <dialog
+          ref={dialogRef}
+          data-lenis-prevent
+          onCancel={close}
+          onClose={close}
+          onClick={close}
           aria-label={
             effectiveService
               ? effectiveService.title
@@ -185,7 +178,7 @@ export const BookingPanel: React.FC<BookingPanelProps> = ({ availableCodes }) =>
                 ? `Request an appointment for ${reasonFor}`
                 : 'Tell us about your pet'
           }
-          onClick={close}
+          className="m-0 max-w-none max-h-none w-screen h-screen border-0 bg-(--c-ink)/40 flex items-stretch sm:items-center justify-center sm:p-4 backdrop:bg-black/40 animate-in fade-in"
         >
           {/* Full screen on a phone. At 390px a centred box holding a
               seven-field form is a scroll inside a scroll, with the submit
@@ -341,7 +334,7 @@ export const BookingPanel: React.FC<BookingPanelProps> = ({ availableCodes }) =>
               )}
             </div>
           </div>
-        </div>
+        </dialog>
       )}
 
       {/* Confirmation follows the request onto whatever page it was made from,
