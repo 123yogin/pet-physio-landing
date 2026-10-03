@@ -28,18 +28,27 @@ const lowerFirst = (s: string) => (s ? s[0].toLowerCase() + s.slice(1) : s);
 export function conditionFaqs(condition: ConditionItem): Array<{ q: string; a: string }> {
   const brand = SITE.brandName;
   const locality = SITE.address.addressLocality;
-  const therapyCount = condition.recommendedTherapies.length;
-  const signCount = condition.symptoms.length;
+  const therapies = condition.recommendedTherapies;
+  const signs = condition.symptoms;
   // Each answer carries a concrete number (therapy count, recovery timeframe,
   // sign count) — the "statistical density" an answer engine looks for when
   // deciding a passage is worth quoting. All numbers are counts of / restatements
-  // of the condition's own data, never invented.
+  // of the condition's own data, never invented. Singular/empty cases are handled
+  // so the prose never reads "combines 1 evidence-based therapies".
+  const therapyClause = therapies.length
+    ? `treatment combines ${therapies.length} evidence-based ${therapies.length === 1 ? 'therapy' : 'therapies'} — ${naturalList(
+        therapies,
+      )} — tailored`
+    : 'treatment is tailored';
+  const signsClause = signs.length === 1
+    ? `The main sign is ${lowerFirst(signs[0])}`
+    : signs.length > 1
+      ? `The ${signs.length} most common signs are ${naturalList(signs.map(lowerFirst))}`
+      : `Signs vary from pet to pet`;
   return [
     {
       q: `How is ${condition.title} treated in dogs and cats?`,
-      a: `${condition.fullDesc} At ${brand} in ${locality}, treatment combines ${therapyCount} evidence-based therapies — ${naturalList(
-        condition.recommendedTherapies,
-      )} — tailored to each pet and coordinated with your primary veterinarian. Typical recovery is ${lowerFirst(
+      a: `${condition.fullDesc} At ${brand} in ${locality}, ${therapyClause} to each pet and coordinated with your primary veterinarian. Typical recovery is ${lowerFirst(
         condition.expectedRecoveryTime,
       )}.`,
     },
@@ -51,9 +60,7 @@ export function conditionFaqs(condition: ConditionItem): Array<{ q: string; a: s
     },
     {
       q: `What are the signs of ${condition.title} in pets?`,
-      a: `The ${signCount} most common signs are ${naturalList(
-        condition.symptoms.map(lowerFirst),
-      )}. If your dog or cat shows any of these, a veterinary physiotherapy assessment at ${brand} can identify the cause and build a recovery plan.`,
+      a: `${signsClause}. If your dog or cat shows ${signs.length === 1 ? 'it' : 'any of these'}, a veterinary physiotherapy assessment at ${brand} can identify the cause and build a recovery plan.`,
     },
   ];
 }

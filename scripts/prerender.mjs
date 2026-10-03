@@ -32,6 +32,22 @@ function loadTemplate() {
   return readFileSync(templatePath, 'utf8');
 }
 
+/** Replace that FAILS LOUDLY if the pattern isn't found. The head/body injections
+ *  are exact-string matches against Vite's index.html; if that template ever
+ *  changes shape (an attribute on <div id="root">, different <head> casing) a
+ *  silent no-op would ship an empty #root at HTTP 200 on every route — the exact
+ *  SEO catastrophe this prerender exists to prevent. Better to break the build. */
+function mustReplace(html, pattern, replacement, label) {
+  const out = html.replace(pattern, replacement);
+  if (out === html) {
+    throw new Error(
+      `prerender: "${label}" replacement matched nothing — index.html structure changed. ` +
+        `Aborting so we never ship empty prerendered pages.`,
+    );
+  }
+  return out;
+}
+
 /** Inject generated head tags and rendered markup into the built client template. */
 function composePage(template, { head, body, lang }) {
   let html = template;
@@ -39,8 +55,9 @@ function composePage(template, { head, body, lang }) {
   // Replace the build-time <title> so the generated, per-route one is the only title.
   html = html.replace(/<title>[\s\S]*?<\/title>\s*/i, '');
 
-  html = html.replace('<head>', `<head>\n    ${head}`);
-  html = html.replace('<div id="root"></div>', `<div id="root">${body}</div>`);
+  // These two are load-bearing (head tags + the rendered app), so assert they hit.
+  html = mustReplace(html, '<head>', `<head>\n    ${head}`, '<head> injection');
+  html = mustReplace(html, '<div id="root"></div>', `<div id="root">${body}</div>`, '#root body injection');
   html = html.replace(/<html([^>]*)lang="[^"]*"/i, `<html$1lang="${lang}"`);
 
   return html;

@@ -462,3 +462,33 @@ export const FAQS: FAQItem[] = [
     answer: 'Your pet is introduced to our indoor pool gradually, never rushed, with a dedicated hydrotherapist in the water alongside them and a flotation aid where it helps. Water temperature is kept at a soothing 29-31°C (84-88°F), and treats/praise are used throughout.'
   }
 ];
+
+/**
+ * The treatment Services recommended for a condition — the SINGLE matcher used
+ * both by the condition page's visible "Treatments used for X" list and by the
+ * JSON-LD related-service nodes (seo/schema.ts), so the two can never diverge.
+ * Two-way substring match between each recommended therapy and a service title;
+ * the first-word token is guarded against '' (an empty therapy string used to
+ * make `title.includes('')` match every service).
+ */
+export function servicesForCondition(condition: ConditionItem): ServiceItem[] {
+  return SERVICES.filter((service) =>
+    condition.recommendedTherapies.some((therapy) => {
+      const t = therapy.toLowerCase();
+      const title = service.title.toLowerCase();
+      const firstWord = t.split(' ')[0];
+      return t.includes(title) || (firstWord !== '' && title.includes(firstWord));
+    }),
+  );
+}
+
+/**
+ * When the clinical (condition) content was last reviewed by the vet.
+ * CONTENT_REVIEWED_DATE is the machine value for schema.org `lastReviewed`
+ * (ISO 8601); CONTENT_REVIEWED_DISPLAY is the human string shown on the page.
+ * Both are fixed constants (never computed from the clock) so server and client
+ * markup are identical — no hydration drift. Bump both together when the
+ * condition content is materially revised.
+ */
+export const CONTENT_REVIEWED_DATE = '2026-10-03';
+export const CONTENT_REVIEWED_DISPLAY = 'October 2026';

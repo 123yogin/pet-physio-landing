@@ -18,7 +18,7 @@
 import { SITE, absoluteUrl, formattedAddress } from './siteConfig';
 import { matchRoute, conditionPath, servicePath, specialistPath, type RouteEntity } from './routes';
 import { getPageMeta } from './metadata';
-import { CONDITIONS, FAQS, SERVICES, SPECIALISTS, HERO_IMAGE } from '../data/clinicData';
+import { CONDITIONS, FAQS, SERVICES, SPECIALISTS, HERO_IMAGE, servicesForCondition, CONTENT_REVIEWED_DATE } from '../data/clinicData';
 import { conditionFaqs } from '../data/conditionFaqs';
 import type { ConditionItem, ServiceItem, Specialist } from '../types';
 
@@ -189,11 +189,6 @@ export function websiteNode(): Node {
   };
 }
 
-// Date the clinical (condition) content was last reviewed by the vet. Fixed, not
-// generated from the clock, so server and client markup stay identical — bump it
-// when condition pages are materially revised.
-const CONTENT_REVIEWED_DATE = '2026-10-03';
-
 function webPageNode(path: string): Node {
   const meta = getPageMeta(path);
   const isConditionPage = matchRoute(path).route.kind === 'condition';
@@ -215,7 +210,10 @@ function webPageNode(path: string): Node {
     // carry the page's question-and-answer structure, so they point AI answer
     // engines straight at the citable passages.
     speakable: { '@type': 'SpeakableSpecification', cssSelector: ['h1', 'h2', 'h3'] },
-    ...(isConditionPage
+    // Guard SPECIALISTS[0]: if the clinicians list is ever emptied, emit a plain
+    // MedicalWebPage rather than throwing on `SPECIALISTS[0].id` and taking down
+    // the whole graph build. (The sibling person-node push is guarded the same way.)
+    ...(isConditionPage && SPECIALISTS[0]
       ? { reviewedBy: { '@id': ID.person(SPECIALISTS[0].id) }, lastReviewed: CONTENT_REVIEWED_DATE }
       : {}),
   };
@@ -357,11 +355,10 @@ export function buildGraph(pathname: string): Node {
     // The vet who reviewed this medical content — referenced by the
     // MedicalWebPage's reviewedBy, so the @id resolves within this page's graph.
     if (SPECIALISTS[0]) graph.push(personNode(SPECIALISTS[0]));
-    // Therapies named on the page, linked to the real service entities where they match.
-    const related = SERVICES.filter((s) =>
-      entity.recommendedTherapies.some((t) => t.toLowerCase().includes(s.title.toLowerCase())),
-    );
-    graph.push(...related.map(serviceNode));
+    // Therapies named on the page, linked to the real service entities where they
+    // match — via the SAME matcher the condition page renders (servicesForCondition),
+    // so the JSON-LD related services and the visible "Treatments used" list agree.
+    graph.push(...servicesForCondition(entity).map(serviceNode));
   }
 
   if (isService(entity)) {
