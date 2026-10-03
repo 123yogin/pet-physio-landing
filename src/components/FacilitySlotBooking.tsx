@@ -22,7 +22,7 @@ import { CalendarCheck, Check, Loader2, Clock, AlertCircle } from 'lucide-react'
  * — this is a reservation, not a paid ticket, and the copy says so.
  */
 
-const CLINIC_API = (import.meta as any).env?.VITE_CLINIC_API_URL ?? '/api/v1';
+import { CLINIC_API, isoDate } from '../lib/clinicApi';
 
 interface Slot {
   slot: number;
@@ -56,13 +56,6 @@ interface Props {
 }
 
 /** YYYY-MM-DD for a date `offsetDays` from today, in the visitor's own zone. */
-function isoDate(offsetDays = 0): string {
-  const d = new Date();
-  d.setDate(d.getDate() + offsetDays);
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(
-    d.getDate(),
-  ).padStart(2, '0')}`;
-}
 
 const field =
   'w-full bg-transparent border-b border-(--c-line) focus:border-(--c-accent) outline-none py-2 text-(--c-ink) placeholder:text-(--c-mute-2)';
