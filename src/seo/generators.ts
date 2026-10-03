@@ -10,7 +10,8 @@
 import { SITE, absoluteUrl } from './siteConfig';
 import { indexableRoutes } from './routes';
 import { getPageMeta } from './metadata';
-import { CONDITIONS, SERVICES, SPECIALISTS } from '../data/clinicData';
+import { CONDITIONS, SERVICES, SPECIALISTS, FAQS } from '../data/clinicData';
+import { conditionFaqs } from '../data/conditionFaqs';
 import { conditionPath, servicePath, specialistPath } from './routes';
 
 /**
@@ -152,4 +153,67 @@ export function buildLlmsTxt(): string {
     `- Canonical origin: ${SITE.origin}`,
     '',
   ].join('\n');
+}
+
+/**
+ * llms-full.txt — the expanded companion to llms.txt.
+ *
+ * Where llms.txt is a one-line-per-page index, this carries the full text an AI
+ * agent needs to answer about the clinic without fetching every page: each
+ * condition's full description, signs, therapies, recovery outlook and Q&A; each
+ * treatment's detail; clinician bios; and the site FAQ. Generated from the same
+ * data, so it can never drift from the pages.
+ */
+export function buildLlmsFullTxt(): string {
+  const clean = (s: string) => s.replace(/\s+/g, ' ').trim();
+  const out: string[] = [
+    `# ${SITE.brandName} — Full Reference`,
+    '',
+    `> ${SITE.description}`,
+    '',
+    SITE.organizationNote,
+    '',
+    `Location: ${SITE.address.streetAddress}, ${SITE.address.addressLocality}, ${SITE.address.addressRegion} ${SITE.address.postalCode}, ${SITE.address.addressCountry}`,
+    `Phone: ${SITE.contact.phoneDisplay} · Email: ${SITE.contact.email}`,
+    `Areas served: ${SITE.areaServed.join(', ')}`,
+    '',
+    '## Conditions treated',
+    '',
+  ];
+
+  for (const c of CONDITIONS) {
+    out.push(`### ${c.title}`);
+    out.push(absoluteUrl(conditionPath(c.id)));
+    out.push(clean(c.fullDesc));
+    out.push(`Signs: ${c.symptoms.join('; ')}`);
+    out.push(`Therapies used: ${c.recommendedTherapies.join(', ')}`);
+    out.push(`Expected recovery: ${clean(c.expectedRecoveryTime)}`);
+    for (const f of conditionFaqs(c)) out.push(`Q: ${clean(f.q)} A: ${clean(f.a)}`);
+    out.push('');
+  }
+
+  out.push('## Treatment modalities', '');
+  for (const s of SERVICES) {
+    out.push(`### ${s.title}`);
+    out.push(absoluteUrl(servicePath(s.id)));
+    out.push(clean(s.fullDesc));
+    if (s.duration) out.push(`Typical session: ${s.duration}`);
+    out.push('');
+  }
+
+  out.push('## Clinicians', '');
+  for (const p of SPECIALISTS) {
+    out.push(`### ${p.name}`);
+    out.push(absoluteUrl(specialistPath(p.id)));
+    out.push([p.role, p.credentials].filter(Boolean).map(clean).join('. '));
+    if (p.bio) out.push(clean(p.bio));
+    out.push('');
+  }
+
+  out.push('## Frequently asked questions', '');
+  for (const f of FAQS) out.push(`Q: ${clean(f.question)} A: ${clean(f.answer)}`);
+  out.push('');
+
+  out.push('## Notes', '', `- Canonical origin: ${SITE.origin}`, '- Fully rendered HTML; no JavaScript needed to read any page.', '');
+  return out.join('\n');
 }

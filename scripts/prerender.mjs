@@ -60,6 +60,7 @@ async function main() {
     buildRobotsTxt,
     buildSitemapXml,
     buildLlmsTxt,
+    buildLlmsFullTxt,
   } = mod;
 
   const routes = indexableRoutes();
@@ -98,7 +99,8 @@ async function main() {
   writeFileSync(join(DIST, 'robots.txt'), buildRobotsTxt(), 'utf8');
   writeFileSync(join(DIST, 'sitemap.xml'), buildSitemapXml(lastmod), 'utf8');
   writeFileSync(join(DIST, 'llms.txt'), buildLlmsTxt(), 'utf8');
-  log('✓ robots.txt · sitemap.xml · llms.txt');
+  writeFileSync(join(DIST, 'llms-full.txt'), buildLlmsFullTxt(), 'utf8');
+  log('✓ robots.txt · sitemap.xml · llms.txt · llms-full.txt');
 
   rmSync(SSR_DIST, { recursive: true, force: true });
 
