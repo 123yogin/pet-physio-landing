@@ -8,20 +8,49 @@ interface BookingSuccessModalProps {
   onClose: () => void;
 }
 
-export const BookingSuccessModal: React.FC<BookingSuccessModalProps> = ({
-  data,
-  refId,
-  onClose,
-}) => {
+/**
+ * Booking confirmation, on the native <dialog> element (focus-trap, Escape,
+ * aria-modal for free; `data-lenis-prevent` keeps Lenis off the modal). Mirrors
+ * the LightboxModal pattern.
+ */
+export const BookingSuccessModal: React.FC<BookingSuccessModalProps> = ({ data, refId, onClose }) => {
+  const dialogRef = React.useRef<HTMLDialogElement>(null);
+  const [copied, setCopied] = React.useState(false);
+  const open = !!(data && refId);
+
+  React.useEffect(() => {
+    const dlg = dialogRef.current;
+    if (!dlg) return;
+    if (open && !dlg.open) dlg.showModal();
+    else if (!open && dlg.open) dlg.close();
+  }, [open]);
+
   if (!data || !refId) return null;
 
-  const handleCopyRef = () => {
-    navigator.clipboard.writeText(refId);
-    alert('Reference ID copied to clipboard!');
+  const handleCopyRef = async () => {
+    try {
+      await navigator.clipboard.writeText(refId);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // Clipboard API unavailable (insecure context / denied permission). The
+      // reference is shown on screen for manual copy, so fail silently rather
+      // than throw — no blocking alert().
+    }
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs animate-in fade-in duration-200">
+    <dialog
+      ref={dialogRef}
+      data-lenis-prevent
+      onCancel={onClose}
+      onClose={onClose}
+      onClick={(e) => {
+        if (e.target === dialogRef.current) onClose();
+      }}
+      aria-labelledby="booking-success-title"
+      className="m-0 max-w-none max-h-none w-screen h-screen border-0 bg-black/70 backdrop-blur-xs p-4 flex items-center justify-center backdrop:bg-black/40"
+    >
       <div className="bg-(--c-bg) border border-(--c-line) max-w-lg w-full p-6 sm:p-8 shadow-2xl relative font-(family-name:--f-body) text-center">
         <button
           onClick={onClose}
@@ -39,7 +68,10 @@ export const BookingSuccessModal: React.FC<BookingSuccessModalProps> = ({
           Request Received
         </span>
 
-        <h2 className="font-(family-name:--f-display) text-2xl sm:text-3xl text-(--c-ink) font-medium mb-3">
+        <h2
+          id="booking-success-title"
+          className="font-(family-name:--f-display) text-2xl sm:text-3xl text-(--c-ink) font-medium mb-3"
+        >
           Appointment Request Confirmed
         </h2>
 
@@ -53,9 +85,10 @@ export const BookingSuccessModal: React.FC<BookingSuccessModalProps> = ({
             <button
               onClick={handleCopyRef}
               className="inline-flex items-center gap-1 text-(--c-accent) font-mono font-bold hover:underline cursor-pointer"
+              aria-label={copied ? 'Reference copied' : 'Copy reference ID'}
             >
               <span>{refId}</span>
-              <Copy className="w-3.5 h-3.5" />
+              {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
             </button>
           </div>
 
@@ -80,10 +113,10 @@ export const BookingSuccessModal: React.FC<BookingSuccessModalProps> = ({
             onClick={onClose}
             className="w-full bg-(--c-ink) text-white py-3 text-xs uppercase tracking-widest font-medium hover:bg-(--c-body) transition-colors cursor-pointer"
           >
-            Done & Return To Main Site
+            Done &amp; Return To Main Site
           </button>
         </div>
       </div>
-    </div>
+    </dialog>
   );
 };
