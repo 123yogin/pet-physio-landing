@@ -257,6 +257,11 @@ export const ServiceRequestBooking: React.FC<Props> = ({
             </label>
             <input
               id="req-phone"
+              type="tel"
+              inputMode="tel"
+              autoComplete="tel"
+              required
+              aria-required="true"
               className={field}
               placeholder="e.g. 98765 43210"
               value={form.phone}
