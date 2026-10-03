@@ -13,7 +13,7 @@ import { CalendarCheck, Check, Loader2 } from 'lucide-react';
  * the reason the clinic reads.
  */
 
-const CLINIC_API = (import.meta as any).env?.VITE_CLINIC_API_URL ?? '/api/v1';
+import { CLINIC_API, isoDate } from '../lib/clinicApi';
 
 interface Package { label: string; price: number }
 
@@ -35,13 +35,6 @@ interface Props {
     Indoor Facility's walk options. */
 const WALK_TIMES = ['Morning', 'Evening', 'Late'];
 
-function isoDate(offsetDays = 0): string {
-  const d = new Date();
-  d.setDate(d.getDate() + offsetDays);
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(
-    d.getDate(),
-  ).padStart(2, '0')}`;
-}
 
 const field =
   'w-full bg-transparent border-b border-(--c-line) focus:border-(--c-accent) outline-none py-2 text-(--c-ink) placeholder:text-(--c-mute-2)';

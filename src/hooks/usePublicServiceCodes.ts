@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
 // Same origin in production; overridable in local dev, matching BookingForm.
-const CLINIC_API = (import.meta as any).env?.VITE_CLINIC_API_URL ?? '/api/v1';
+import { CLINIC_API } from '../lib/clinicApi';
 
 /**
  * Visit-type codes the clinic currently offers the public, from its own API.

@@ -14,7 +14,7 @@ import { isValidAadhaar } from '../lib/aadhaar';
  * GET /facility/boarding/availability; nothing is hard-coded here.
  */
 
-const CLINIC_API = (import.meta as any).env?.VITE_CLINIC_API_URL ?? '/api/v1';
+import { CLINIC_API, isoDate } from '../lib/clinicApi';
 
 interface Duration { key: string; label: string; days: number; price: number }
 interface WalkOption { key: string; label: string; minutes: number }
@@ -28,11 +28,6 @@ interface Props {
   onClose: () => void;
 }
 
-function isoDate(offsetDays = 0): string {
-  const d = new Date();
-  d.setDate(d.getDate() + offsetDays);
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-}
 
 const field =
   'w-full bg-transparent border-b border-(--c-line) focus:border-(--c-accent) outline-none py-2 text-(--c-ink) placeholder:text-(--c-mute-2)';

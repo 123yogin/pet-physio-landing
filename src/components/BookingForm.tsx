@@ -7,8 +7,7 @@ import { SITE, formattedAddress, openingHoursSummary } from '../seo/siteConfig';
 // Same-origin in production: the landing page is served from the clinic
 // app's own domain, so /api/v1 is the same deployment. Overridable for
 // local development, where the API runs on :8000 and Vite on :3000.
-const CLINIC_API =
-  (import.meta as any).env?.VITE_CLINIC_API_URL ?? '/api/v1';
+import { CLINIC_API } from '../lib/clinicApi';
 
 interface BookingFormProps {
   initialSpecialist?: string;
